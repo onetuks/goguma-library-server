@@ -70,5 +70,6 @@ subprojects {
 }
 
 dependencies {
-
+    implementation(project(':module-storage'))
+    implementation(project(':module-storage:db-storage'))
 }
