@@ -45,7 +45,22 @@ allprojects {
         // Spring Boot Actuator
         implementation 'org.springframework.boot:spring-boot-starter-actuator'
     }
+}
 
+subprojects {
+    bootJar {
+        enabled = false
+    }
+
+    jar {
+        enabled = true
+    }
+
+    dependencies {
+        // Lombok
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+    }
 }
 
 
