@@ -12,6 +12,7 @@ apply from: 'gradle/spotless.gradle'
 apply from: 'gradle/jacoco.gradle'
 apply from: 'gradle/test.gradle'
 apply from: 'gradle/sonar.gradle'
+apply from: 'gradle/cloud-config.gradle'
 
 allprojects {
     apply plugin: 'java'
@@ -24,7 +25,7 @@ allprojects {
     repositories {
         mavenCentral()
     }
-    
+
     configurations {
         compileOnly {
             extendsFrom annotationProcessor
