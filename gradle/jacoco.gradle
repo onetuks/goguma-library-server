@@ -1,0 +1,91 @@
+def jacocoExclude = List.of(
+        "**/Q*",
+        "**/error/*",
+        "**/exception/*",
+        "**/config/*",
+        "**/global/*",
+        "**/controller/*",
+        "**/model/*",
+        "**/entity/*",
+        "**/dto/*",
+        "**/vo/*",
+        "**/enums/*",
+        "**/api/*",
+        "**/coreauth/*",
+        "**/*Application.class"
+)
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+
+    jacoco {
+        toolVersion = '0.8.8'
+    }
+
+    tasks.jacocoTestReport {
+        reports {
+            xml.required = true
+            html.required = true
+            csv.required = false
+
+            xml.destination(file("build/jacoco/jacoco.xml"))
+            html.destination(file("build/jacoco/jacoco.html"))
+        }
+
+        finalizedBy(tasks.jacocoTestCoverageVerification)
+
+        afterEvaluate {
+            classDirectories.setFrom(files(classDirectories.files.collect {
+                fileTree(dir: it, exclude: jacocoExclude)
+            }))
+        }
+    }
+
+    tasks.jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                enabled = true
+                element = 'CLASS'
+
+                // 클래스 당 커버리지 50% 이상
+                limit {
+                    counter = "LINE"
+                    value = "COVEREDRATIO"
+                    minimum = BigDecimal.valueOf(0.5)
+                }
+
+                // 클래스 당 150줄 미만
+                limit {
+                    counter = "LINE"
+                    value = "TOTALCOUNT"
+                    maximum = BigDecimal.valueOf(150)
+                }
+
+                limit {
+                    counter = 'COMPLEXITY'
+                    minimum = 0.5
+                }
+
+                excludes = jacocoExclude.stream()
+                        .collect { exclude ->
+                            exclude
+                                    .replace("**", "*")
+                                    .replace('/', '.')
+                        }
+            }
+        }
+    }
+}
+
+tasks.testCodeCoverageReport {
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: jacocoExclude)
+        }))
+    }
+}
+
+tasks.named('check') {
+    dependsOn tasks.named('testCodeCoverageReport', JacocoReport)
+}

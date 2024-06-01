@@ -1,26 +1,73 @@
 plugins {
     id 'java'
+    id 'jacoco'
+    id 'jacoco-report-aggregation'
     id 'org.springframework.boot' version '3.3.0'
     id 'io.spring.dependency-management' version '1.1.5'
+    id 'com.diffplug.spotless' version '6.25.0'
+    id 'org.sonarqube' version '5.0.0.4638'
 }
 
-group = 'com.onetuks'
-version = '0.0.1-SNAPSHOT'
+apply from: 'gradle/spotless.gradle'
+apply from: 'gradle/jacoco.gradle'
+apply from: 'gradle/test.gradle'
+apply from: 'gradle/sonar.gradle'
 
-java {
-    sourceCompatibility = '17'
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    group = 'com.onetuks'
+    version = '0.0.1-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+    }
+    
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    java {
+        sourceCompatibility = '17'
+    }
+
+    bootJar {
+        enabled = true
+    }
+
+    jar {
+        enabled = false
+    }
+
+    dependencies {
+        // Netty/Resolver/DNS/Native/MacOS
+        implementation 'io.netty:netty-resolver-dns-native-macos:4.1.110.Final:osx-aarch_64'
+
+        // Spring Boot Actuator
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    }
 }
 
-repositories {
-    mavenCentral()
+subprojects {
+    bootJar {
+        enabled = false
+    }
+
+    jar {
+        enabled = true
+    }
+
+    dependencies {
+        // Lombok
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+    }
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
 
-tasks.named('test') {
-    useJUnitPlatform()
 }

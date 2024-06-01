@@ -1,0 +1,14 @@
+#!/bin/sh
+
+targetFiles=$(git diff --staged --name-only)
+
+echo "Apply Spotless.."
+./gradlew spotlessApply
+
+# git 커밋마다 spotlessApply를 실행하면 모든 파일이 변경되기 때문에 변경된 파일만 add하도록 함
+for file in $targetFiles; do
+  if test -f "$file"; then
+    # shellcheck disable=SC2086
+    git add $file # 파일 단위로 add 되기 때문에 일부분만 커밋하려면 stash 기능 활용해야함
+  fi
+done
