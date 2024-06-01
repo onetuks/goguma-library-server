@@ -2,18 +2,52 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.0'
     id 'io.spring.dependency-management' version '1.1.5'
+    id 'com.diffplug.spotless' version '6.25.0'
 }
 
-group = 'com.onetuks'
-version = '0.0.1-SNAPSHOT'
+apply from: 'gradle/spotless.gradle'
 
-java {
-    sourceCompatibility = '17'
+allprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    group = 'com.onetuks'
+    version = '0.0.1-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+    }
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    java {
+        sourceCompatibility = '17'
+    }
+
+    bootJar {
+        enabled = true
+    }
+
+    jar {
+        enabled = false
+    }
+
+    dependencies {
+        // Netty/Resolver/DNS/Native/MacOS
+        implementation 'io.netty:netty-resolver-dns-native-macos:4.1.110.Final:osx-aarch_64'
+
+        // Spring Boot Actuator
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    }
+
 }
 
-repositories {
-    mavenCentral()
-}
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'

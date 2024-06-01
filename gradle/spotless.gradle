@@ -1,0 +1,19 @@
+allprojects {
+    apply plugin: 'com.diffplug.spotless'
+
+    spotless {
+        java {
+            googleJavaFormat()
+
+            removeUnusedImports()
+            trimTrailingWhitespace() // 불필요한 공백 트림
+            indentWithSpaces(4) // 들여쓰기 4칸
+            endWithNewline() // 파일 끝에 개행 추가
+        }
+    }
+
+    tasks.register("addGitPreCommitHook", Copy) {
+        from 'script/pre-commit'
+        into '.git/hooks'
+    }
+}
