@@ -1,22 +1,12 @@
 sonar {
-    def envFile = file('../.env')
-    if (envFile.exists()) {
-        def env = new Properties()
-        envFile.withReader { reader ->
-            env.load(reader)
-        }
-
-        properties {
-            property("sonar.host.url", "http://localhost:9000")
-            property("sonar.login", env['SONAR_TOKEN'])
-            property("sonar.sourceEncoding", "UTF-8")
-            property("sonar.projectKey", "goguma-bookstore")
-            property("sonar.projectName", "goguma-bookstore")
-            property("sonar.converage.jacoco.xmlReportPaths",
-                    "build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml")
-        }
-    } else {
-        println ".env file not exists"
+    properties {
+        property("sonar.host.url", "http://localhost:9000")
+        property("sonar.login", System.getenv('SONAR_TOKEN'))
+        property("sonar.sourceEncoding", "UTF-8")
+        property("sonar.projectKey", "goguma-bookstore")
+        property("sonar.projectName", "goguma-bookstore")
+        property("sonar.converage.jacoco.xmlReportPaths",
+                "build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml")
     }
 }
 
