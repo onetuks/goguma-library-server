@@ -33,7 +33,7 @@ allprojects {
     }
 
     java {
-        sourceCompatibility = '17'
+        sourceCompatibility = '21'
     }
 
     bootJar {
@@ -70,5 +70,6 @@ subprojects {
 }
 
 dependencies {
-
+    implementation(project(':module-storage'))
+    implementation(project(':module-storage:db-storage'))
 }
