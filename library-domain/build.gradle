@@ -1,0 +1,20 @@
+plugins {
+    id 'java-test-fixtures'
+}
+
+dependencies {
+    // Module
+    implementation(project(':library-object'))
+
+    // Test
+    testImplementation(testFixtures(project(':library-object')))
+    testImplementation(testFixtures(project(':library-domain')))
+
+    // TestFixture
+    testFixturesImplementation(project(':library-object'))
+    testFixturesImplementation(testFixtures(project(':library-object')))
+
+    // Spring Transaction
+    implementation('org.springframework:spring-tx')
+
+}

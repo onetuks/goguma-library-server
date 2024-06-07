@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class MultipartFileFixture {
 
-  public static MultipartFile create(ImageType imageType, String fileName) {
+  protected static MultipartFile create(ImageType imageType, String fileName) {
     try {
       Path path = getTestFilePath(imageType, fileName);
       Files.createDirectories(path.getParent());

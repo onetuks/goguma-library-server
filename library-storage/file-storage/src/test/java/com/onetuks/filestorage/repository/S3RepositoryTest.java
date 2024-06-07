@@ -9,6 +9,7 @@ import com.onetuks.libraryobject.ImageFileFixture;
 import com.onetuks.libraryobject.enums.ImageType;
 import com.onetuks.libraryobject.vo.ImageFile;
 import java.io.File;
+import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,8 @@ class S3RepositoryTest extends FileStorageIntegrationTest {
   @DisplayName("파일이 성공적으로 S3에 업로드된다.")
   void s3PutFileSuccessTest() {
     // Given
-    long id = 123_123L;
-    ImageFile imageFile = ImageFileFixture.create(ImageType.PROFILE_IMAGE, id);
+    String uuid = UUID.randomUUID().toString();
+    ImageFile imageFile = ImageFileFixture.create(ImageType.PROFILE_IMAGE, uuid);
 
     // When
     s3Repository.putFile(imageFile);
@@ -50,7 +51,8 @@ class S3RepositoryTest extends FileStorageIntegrationTest {
   @DisplayName("S3에 있는 파일을 성공적으로 제거한다.")
   void s3DeleteFileSuccessTest() {
     // Given
-    ImageFile imageFile = ImageFileFixture.create(ImageType.PROFILE_IMAGE, 123_123L);
+    String uuid = UUID.randomUUID().toString();
+    ImageFile imageFile = ImageFileFixture.create(ImageType.PROFILE_IMAGE, uuid);
     s3Repository.putFile(imageFile);
 
     // When
