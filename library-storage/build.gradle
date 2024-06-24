@@ -1,0 +1,16 @@
+plugins {
+    id 'java-test-fixtures'
+}
+
+subprojects {
+    apply plugin: 'java-test-fixtures'
+
+    dependencies {
+        // Module
+        compileOnly(project(':library-domain'))
+        implementation(project(':library-object'))
+
+        // Test
+        testImplementation(project(':library-domain'))
+    }
+}
