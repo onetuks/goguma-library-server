@@ -13,12 +13,8 @@ import com.onetuks.libraryobject.enums.RoleType;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 class AuthServiceTest extends CoreAuthIntegrationTest {
-
-  @Autowired
-  private AuthService authService;
 
   @Test
   @DisplayName("JWT 토큰을 저장한다.")

@@ -1,5 +1,4 @@
 dependencies {
-
     // Module
     implementation(project(':library-object'))
     implementation(project(':library-external'))

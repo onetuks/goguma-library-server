@@ -19,7 +19,6 @@ import com.onetuks.coreauth.service.dto.RefreshResult;
 import com.onetuks.coreauth.util.LoginId;
 import com.onetuks.librarydomain.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,7 +27,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Slf4j
 @RestController
 @RequestMapping(path = "/auth")
 public class AuthRestController {
