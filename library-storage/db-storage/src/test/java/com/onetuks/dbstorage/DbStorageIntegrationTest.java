@@ -3,10 +3,12 @@ package com.onetuks.dbstorage;
 import com.onetuks.dbstorage.DbStorageIntegrationTest.DbStorageConfig;
 import com.onetuks.dbstorage.DbStorageIntegrationTest.DbStorageInitializer;
 import com.onetuks.dbstorage.member.repository.MemberEntityRepository;
+import com.onetuks.libraryobject.vo.TestFileCleaner;
 import java.util.HashMap;
 import java.util.Map;
 import org.flywaydb.core.Flyway;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
@@ -29,8 +31,18 @@ public class DbStorageIntegrationTest {
   public MemberEntityRepository memberEntityRepository;
 
   @Configuration
-  @ComponentScan(basePackages = "com.onetuks.dbstorage")
+  @ComponentScan(
+      basePackages = "com.onetuks.dbstorage",
+      basePackageClasses = TestFileCleaner.class)
   public static class DbStorageConfig {}
+
+  @Autowired
+  private TestFileCleaner testFileCleaner;
+
+  @AfterEach
+  void tearDown() {
+    testFileCleaner.deleteAllTestStatic();
+  }
 
   private static final MySQLContainer<?> database;
   private static final Flyway flyway;
