@@ -1,3 +1,13 @@
+CREATE TABLE IF NOT EXISTS member_statics
+(
+    member_statics_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '멤버 통계 식별자',
+    review_counts BIGINT NOT NULL DEFAULT 0 COMMENT '서평 수',
+    follower_counts BIGINT NOT NULL DEFAULT 0 COMMENT '팔로워 수',
+    following_counts BIGINT NOT NULL DEFAULT 0 COMMENT '팔로잉 수',
+    review_category_counts JSON COMMENT '리뷰 카테고리 별 서평수',
+    PRIMARY KEY (member_statics_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='멤버 통계 테이블';
+
 CREATE TABLE IF NOT EXISTS members
 (
     member_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '멤버 식별자',
@@ -10,21 +20,12 @@ CREATE TABLE IF NOT EXISTS members
     points BIGINT NOT NULL DEFAULT 0 COMMENT '멤버 포인트',
     profile_img_uri VARCHAR(255) NOT NULL DEFAULT '/profile/default-profile.png' COMMENT '멤버 프로필 이미지 URI',
     is_alarm_accepted BOOLEAN NOT NULL DEFAULT TRUE COMMENT '알림 수신 여부',
+    member_statics_id BIGINT NOT NULL COMMENT '멤버 통계 식별자',
     PRIMARY KEY (member_id),
-    UNIQUE KEY unq_social_id_client_provider (social_id, client_provider)
+    UNIQUE KEY unq_social_id_client_provider (social_id, client_provider),
+    UNIQUE KEY unq_nickname (nickname),
+    FOREIGN KEY (member_statics_id) REFERENCES member_statics (member_statics_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='멤버 테이블';
-
-CREATE TABLE IF NOT EXISTS member_statics
-(
-    member_statics_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '멤버 통계 식별자',
-    member_id BIGINT NOT NULL COMMENT '멤버 식별자',
-    review_counts BIGINT NOT NULL DEFAULT 0 COMMENT '서평 수',
-    follower_counts BIGINT NOT NULL DEFAULT 0 COMMENT '팔로워 수',
-    following_counts BIGINT NOT NULL DEFAULT 0 COMMENT '팔로잉 수',
-    review_category_counts JSON COMMENT '리뷰 카테고리 별 서평수',
-    PRIMARY KEY (member_statics_id),
-    FOREIGN KEY (member_id) REFERENCES members (member_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='멤버 통계 테이블';
 
 CREATE TABLE IF NOT EXISTS follows
 (

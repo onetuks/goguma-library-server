@@ -1,17 +1,11 @@
 def jacocoExclude = List.of(
         "**/Q*",
-        "**/error/*",
-        "**/exception/*",
         "**/config/*",
-        "**/global/*",
-        "**/controller/*",
         "**/model/*",
         "**/entity/*",
         "**/dto/*",
-        "**/vo/*",
-        "**/enums/*",
-        "**/api/*",
-        "**/coreauth/*",
+        "**/*object/*",
+        "**/*auth/*",
         "**/*Application.class"
 )
 
@@ -20,7 +14,7 @@ subprojects {
     apply plugin: 'jacoco'
 
     jacoco {
-        toolVersion = '0.8.8'
+        toolVersion = '0.8.12'
     }
 
     tasks.jacocoTestReport {

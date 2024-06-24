@@ -1,0 +1,13 @@
+plugins {
+    id 'java-test-fixtures'
+}
+
+dependencies {
+    // TestFixture
+    testFixturesImplementation(project(':library-domain'))
+    testFixturesImplementation('org.springframework.boot:spring-boot-starter-web')
+    testFixturesImplementation('org.springframework.boot:spring-boot-starter-test')
+
+    // Spring Web
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+}
