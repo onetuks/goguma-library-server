@@ -21,8 +21,7 @@ public class DomainIntegrationTest {
 
   @MockBean public FileRepository fileRepository;
   @MockBean public MemberRepository memberRepository;
-  @Autowired
-  private TestFileCleaner testFileCleaner;
+  @Autowired private TestFileCleaner testFileCleaner;
 
   @Configuration
   @ComponentScan(

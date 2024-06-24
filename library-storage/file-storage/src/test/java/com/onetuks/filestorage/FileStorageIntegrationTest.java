@@ -36,8 +36,7 @@ public class FileStorageIntegrationTest {
 
   static final LocalStackContainer localStack;
 
-  @Autowired
-  private TestFileCleaner testFileCleaner;
+  @Autowired private TestFileCleaner testFileCleaner;
 
   @AfterEach
   void tearDown() {

@@ -7,5 +7,4 @@ public record MemberStatics(
     long reviewCounts,
     long followerCounts,
     long followingCounts,
-    List<Long> reviewCategoryCounts
-) {}
+    List<Long> reviewCategoryCounts) {}

@@ -27,7 +27,8 @@ public class MemberEntityRepository implements MemberRepository {
   @Override
   public Member read(long memberId) {
     return converter.toDomain(
-        repository.findById(memberId)
+        repository
+            .findById(memberId)
             .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다.")));
   }
 
@@ -44,7 +45,8 @@ public class MemberEntityRepository implements MemberRepository {
         repository.save(
             converter.toEntity(
                 member,
-                repository.findById(member.memberId())
+                repository
+                    .findById(member.memberId())
                     .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."))
                     .getMemberStaticsEntity())));
   }

@@ -43,8 +43,9 @@ class MemberEntityRepositoryTest extends DbStorageIntegrationTest {
         () -> assertThat(result.nickname().value()).isEqualTo(member.nickname().value()),
         () -> assertThat(result.introduction()).isEqualTo(member.introduction()),
         () -> assertThat(result.authInfo().socialId()).isEqualTo(member.authInfo().socialId()),
-        () -> assertThat(result.authInfo().clientProvider()).isEqualTo(member.authInfo().clientProvider())
-    );
+        () ->
+            assertThat(result.authInfo().clientProvider())
+                .isEqualTo(member.authInfo().clientProvider()));
   }
 
   @Test
@@ -55,7 +56,8 @@ class MemberEntityRepositoryTest extends DbStorageIntegrationTest {
 
     // When
     Optional<Member> result =
-        memberEntityRepository.read(member.authInfo().socialId(), member.authInfo().clientProvider());
+        memberEntityRepository.read(
+            member.authInfo().socialId(), member.authInfo().clientProvider());
 
     // Then
     assertThat(result).isPresent();
@@ -69,7 +71,8 @@ class MemberEntityRepositoryTest extends DbStorageIntegrationTest {
     ClientProvider notExistsClientProvider = ClientProvider.NAVER;
 
     // When
-    Optional<Member> result = memberEntityRepository.read(notExistsSocialId, notExistsClientProvider);
+    Optional<Member> result =
+        memberEntityRepository.read(notExistsSocialId, notExistsClientProvider);
 
     // Then
     assertThat(result).isEmpty();
@@ -89,8 +92,7 @@ class MemberEntityRepositoryTest extends DbStorageIntegrationTest {
     assertAll(
         () -> assertThat(result.memberId()).isEqualTo(expected.memberId()),
         () -> assertThat(result.authInfo().roles()).contains(RoleType.ADMIN),
-        () -> assertThat(result.nickname().value()).isEqualTo(expected.nickname().value())
-    );
+        () -> assertThat(result.nickname().value()).isEqualTo(expected.nickname().value()));
   }
 
   @Test

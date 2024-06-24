@@ -27,17 +27,13 @@ import org.testcontainers.containers.MySQLContainer;
 @ContextConfiguration(initializers = DbStorageInitializer.class)
 public class DbStorageIntegrationTest {
 
-  @Autowired
-  public MemberEntityRepository memberEntityRepository;
+  @Autowired public MemberEntityRepository memberEntityRepository;
 
   @Configuration
-  @ComponentScan(
-      basePackages = "com.onetuks.dbstorage",
-      basePackageClasses = TestFileCleaner.class)
+  @ComponentScan(basePackages = "com.onetuks.dbstorage", basePackageClasses = TestFileCleaner.class)
   public static class DbStorageConfig {}
 
-  @Autowired
-  private TestFileCleaner testFileCleaner;
+  @Autowired private TestFileCleaner testFileCleaner;
 
   @AfterEach
   void tearDown() {
@@ -48,16 +44,18 @@ public class DbStorageIntegrationTest {
   private static final Flyway flyway;
 
   static {
-    database = new MySQLContainer<>("mysql:8.0")
-        .withDatabaseName("goguma-library-test")
-        .withUsername("root")
-        .withPassword("password");
+    database =
+        new MySQLContainer<>("mysql:8.0")
+            .withDatabaseName("goguma-library-test")
+            .withUsername("root")
+            .withPassword("password");
     database.start();
 
-    flyway = Flyway.configure()
-        .dataSource(database.getJdbcUrl(), database.getUsername(), database.getPassword())
-        .locations("filesystem:migration/sql")
-        .load();
+    flyway =
+        Flyway.configure()
+            .dataSource(database.getJdbcUrl(), database.getUsername(), database.getPassword())
+            .locations("filesystem:migration/sql")
+            .load();
     flyway.migrate();
   }
 

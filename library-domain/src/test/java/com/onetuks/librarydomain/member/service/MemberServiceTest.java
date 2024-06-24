@@ -1,8 +1,8 @@
 package com.onetuks.librarydomain.member.service;
 
-import static org.mockito.BDDMockito.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.*;
 
 import com.onetuks.librarydomain.DomainIntegrationTest;
 import com.onetuks.librarydomain.MemberFixture;
@@ -32,8 +32,9 @@ class MemberServiceTest extends DomainIntegrationTest {
     assertAll(
         () -> assertThat(result.isNewMember()).isTrue(),
         () -> assertThat(result.memberId()).isEqualTo(member.memberId()),
-        () -> assertThat(result.roles()).containsExactlyInAnyOrderElementsOf(member.authInfo().roles())
-    );
+        () ->
+            assertThat(result.roles())
+                .containsExactlyInAnyOrderElementsOf(member.authInfo().roles()));
   }
 
   @Test
@@ -52,8 +53,9 @@ class MemberServiceTest extends DomainIntegrationTest {
     assertAll(
         () -> assertThat(result.isNewMember()).isFalse(),
         () -> assertThat(result.memberId()).isEqualTo(member.memberId()),
-        () -> assertThat(result.roles()).containsExactlyInAnyOrderElementsOf(member.authInfo().roles())
-    );
+        () ->
+            assertThat(result.roles())
+                .containsExactlyInAnyOrderElementsOf(member.authInfo().roles()));
   }
 
   @Test

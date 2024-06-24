@@ -5,7 +5,6 @@ import static jakarta.persistence.CascadeType.REMOVE;
 
 import com.onetuks.dbstorage.member.entity.embed.AuthInfoEmbeddable;
 import com.onetuks.libraryobject.enums.Category;
-import com.onetuks.libraryobject.enums.ImageType;
 import com.onetuks.libraryobject.vo.ImageFile;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
@@ -57,7 +56,9 @@ public class MemberEntity {
   @Column(name = "profile_img_uri", nullable = false)
   private String profileImgUri;
 
-  @OneToOne(fetch = FetchType.LAZY, cascade = {PERSIST, REMOVE})
+  @OneToOne(
+      fetch = FetchType.LAZY,
+      cascade = {PERSIST, REMOVE})
   @JoinColumn(name = "member_statics_id", unique = true, nullable = false)
   private MemberStaticsEntity memberStaticsEntity;
 
@@ -78,7 +79,9 @@ public class MemberEntity {
     this.interestedCategories = Objects.requireNonNullElse(interestedCategories, List.of());
     this.points = Objects.requireNonNullElse(points, 0L);
     this.isAlarmAccepted = Objects.requireNonNullElse(isAlarmAccepted, true);
-    this.profileImgUri = Objects.requireNonNullElse(profileImgUri, ImageFile.getDefaultProfileImagUri());
-    this.memberStaticsEntity = Objects.requireNonNullElse(memberStaticsEntity, MemberStaticsEntity.init());
+    this.profileImgUri =
+        Objects.requireNonNullElse(profileImgUri, ImageFile.getDefaultProfileImagUri());
+    this.memberStaticsEntity =
+        Objects.requireNonNullElse(memberStaticsEntity, MemberStaticsEntity.init());
   }
 }

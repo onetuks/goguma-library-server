@@ -24,8 +24,7 @@ public class MemberConverter {
         member.points(),
         member.isAlarmAccepted(),
         member.profileImageFile().getUri(),
-        toStaticsEntity(member.memberStatics())
-    );
+        toStaticsEntity(member.memberStatics()));
   }
 
   public MemberEntity toEntity(Member member, MemberStaticsEntity memberStaticsEntity) {
@@ -38,8 +37,7 @@ public class MemberConverter {
         member.points(),
         member.isAlarmAccepted(),
         member.profileImageFile().getUri(),
-        memberStaticsEntity
-    );
+        memberStaticsEntity);
   }
 
   public Member toDomain(MemberEntity memberEntity) {
@@ -52,8 +50,7 @@ public class MemberConverter {
         memberEntity.getPoints(),
         memberEntity.getIsAlarmAccepted(),
         ImageFile.of(ImageType.PROFILE_IMAGE, memberEntity.getProfileImgUri()),
-        toStaticsDomain(memberEntity.getMemberStaticsEntity())
-    );
+        toStaticsDomain(memberEntity.getMemberStaticsEntity()));
   }
 
   private AuthInfoEmbeddable toEmbeddable(AuthInfo authInfo) {
@@ -77,8 +74,7 @@ public class MemberConverter {
         memberStatics.reviewCounts(),
         memberStatics.followerCounts(),
         memberStatics.followingCounts(),
-        memberStatics.reviewCategoryCounts()
-    );
+        memberStatics.reviewCategoryCounts());
   }
 
   private MemberStatics toStaticsDomain(MemberStaticsEntity memberStaticsEntity) {
@@ -87,7 +83,6 @@ public class MemberConverter {
         memberStaticsEntity.getReviewCounts(),
         memberStaticsEntity.getFollowerCounts(),
         memberStaticsEntity.getFollowingCounts(),
-        memberStaticsEntity.getReviewCategoryCounts()
-    );
+        memberStaticsEntity.getReviewCategoryCounts());
   }
 }

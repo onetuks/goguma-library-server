@@ -16,8 +16,8 @@ import java.util.UUID;
 public class MemberFixture {
 
   private static final Random random = new Random();
-  private static final List<String> nicknames = List.of(
-      "빠니보틀", "곽튜브", "침착맨", "허니콤보", "김용명", "궤도", "셜록현준", "조승연", "별별역사");
+  private static final List<String> nicknames =
+      List.of("빠니보틀", "곽튜브", "침착맨", "허니콤보", "김용명", "궤도", "셜록현준", "조승연", "별별역사");
 
   public static Member create(Long memberId, RoleType roleType) {
     return new Member(
@@ -29,8 +29,7 @@ public class MemberFixture {
         createPoints(),
         createIsAlarmAccepted(),
         ImageFileFixture.create(ImageType.PROFILE_IMAGE, UUID.randomUUID().toString()),
-        null
-    );
+        null);
   }
 
   private static AuthInfo createAuthInfo(RoleType roleType) {
@@ -51,8 +50,7 @@ public class MemberFixture {
 
   private static List<Category> createCategories() {
     int count = random.nextInt(Category.values().length);
-    return Arrays.stream(Category.values(), 0, count)
-        .toList();
+    return Arrays.stream(Category.values(), 0, count).toList();
   }
 
   private static long createPoints() {

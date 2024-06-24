@@ -6,8 +6,4 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record AuthInfo(
-    String socialId,
-    ClientProvider clientProvider,
-    List<RoleType> roles
-) {}
+public record AuthInfo(String socialId, ClientProvider clientProvider, List<RoleType> roles) {}
