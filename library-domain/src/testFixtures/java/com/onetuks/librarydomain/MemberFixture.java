@@ -28,7 +28,8 @@ public class MemberFixture {
         createCategories(),
         createPoints(),
         createIsAlarmAccepted(),
-        ImageFileFixture.create(ImageType.PROFILE_IMAGE, UUID.randomUUID().toString())
+        ImageFileFixture.create(ImageType.PROFILE_IMAGE, UUID.randomUUID().toString()),
+        null
     );
   }
 

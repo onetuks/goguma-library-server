@@ -16,4 +16,6 @@ public record Member(
     List<Category> interestedCategories,
     long points,
     boolean isAlarmAccepted,
-    ImageFile profileImageFile) {}
+    ImageFile profileImageFile,
+    MemberStatics memberStatics
+) {}
