@@ -9,6 +9,8 @@ import com.onetuks.librarydomain.member.model.vo.AuthInfo;
 import com.onetuks.librarydomain.member.model.vo.Nickname;
 import com.onetuks.libraryobject.enums.ImageType;
 import com.onetuks.libraryobject.vo.ImageFile;
+import java.util.Objects;
+import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,12 +20,12 @@ public class MemberConverter {
     return new MemberEntity(
         member.memberId(),
         toEmbeddable(member.authInfo()),
-        member.nickname().value(),
+        Optional.ofNullable(member.nickname()).map(Nickname::value).orElse(null),
         member.introduction(),
         member.interestedCategories(),
         member.points(),
         member.isAlarmAccepted(),
-        member.profileImageFile().getUri(),
+        Optional.ofNullable(member.profileImageFile()).map(ImageFile::getUri).orElse(null),
         toStaticsEntity(member.memberStatics()));
   }
 
