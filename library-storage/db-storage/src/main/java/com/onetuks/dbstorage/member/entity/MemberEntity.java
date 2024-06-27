@@ -47,14 +47,17 @@ public class MemberEntity {
   @Column(name = "interested_categories")
   private List<Category> interestedCategories;
 
-  @Column(name = "points", nullable = false)
-  private Long points;
-
   @Column(name = "is_alarm_accepted", nullable = false)
   private Boolean isAlarmAccepted;
 
+  @Column(name = "points", nullable = false)
+  private Long points;
+
   @Column(name = "profile_img_uri", nullable = false)
   private String profileImgUri;
+
+  @Column(name = "profile_bg_img_uri", nullable = false)
+  private String profileBgImgUri;
 
   @OneToOne(
       fetch = FetchType.LAZY,
@@ -68,19 +71,23 @@ public class MemberEntity {
       String nickname,
       String introduction,
       List<Category> interestedCategories,
-      Long points,
       Boolean isAlarmAccepted,
+      Long points,
       String profileImgUri,
+      String profileBgImgUri,
       MemberStaticsEntity memberStaticsEntity) {
     this.memberId = memberId;
     this.authInfoEmbeddable = authInfoEmbeddable;
     this.nickname = nickname;
     this.introduction = introduction;
     this.interestedCategories = Objects.requireNonNullElse(interestedCategories, List.of());
-    this.points = Objects.requireNonNullElse(points, 0L);
     this.isAlarmAccepted = Objects.requireNonNullElse(isAlarmAccepted, true);
+    this.points = Objects.requireNonNullElse(points, 0L);
     this.profileImgUri =
         Objects.requireNonNullElse(profileImgUri, ImageFile.getDefaultProfileImagUri());
+    this.profileBgImgUri =
+        Objects.requireNonNullElse(
+            profileBgImgUri, ImageFile.getDefaultProfileBackgroundImageUri());
     this.memberStaticsEntity =
         Objects.requireNonNullElse(memberStaticsEntity, MemberStaticsEntity.init());
   }

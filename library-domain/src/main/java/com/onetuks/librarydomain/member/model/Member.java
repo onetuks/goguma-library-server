@@ -14,7 +14,8 @@ public record Member(
     Nickname nickname,
     String introduction,
     List<Category> interestedCategories,
-    long points,
     boolean isAlarmAccepted,
+    long points,
     ImageFile profileImageFile,
+    ImageFile profileBgImageFile,
     MemberStatics memberStatics) {}

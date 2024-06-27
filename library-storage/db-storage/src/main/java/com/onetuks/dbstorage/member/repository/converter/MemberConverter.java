@@ -9,7 +9,6 @@ import com.onetuks.librarydomain.member.model.vo.AuthInfo;
 import com.onetuks.librarydomain.member.model.vo.Nickname;
 import com.onetuks.libraryobject.enums.ImageType;
 import com.onetuks.libraryobject.vo.ImageFile;
-import java.util.Objects;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
 
@@ -23,9 +22,10 @@ public class MemberConverter {
         Optional.ofNullable(member.nickname()).map(Nickname::value).orElse(null),
         member.introduction(),
         member.interestedCategories(),
-        member.points(),
         member.isAlarmAccepted(),
+        member.points(),
         Optional.ofNullable(member.profileImageFile()).map(ImageFile::getUri).orElse(null),
+        Optional.ofNullable(member.profileBgImageFile()).map(ImageFile::getUri).orElse(null),
         toStaticsEntity(member.memberStatics()));
   }
 
@@ -36,9 +36,10 @@ public class MemberConverter {
         member.nickname().value(),
         member.introduction(),
         member.interestedCategories(),
-        member.points(),
         member.isAlarmAccepted(),
+        member.points(),
         member.profileImageFile().getUri(),
+        member.profileBgImageFile().getUri(),
         memberStaticsEntity);
   }
 
@@ -49,9 +50,10 @@ public class MemberConverter {
         new Nickname(memberEntity.getNickname()),
         memberEntity.getIntroduction(),
         memberEntity.getInterestedCategories(),
-        memberEntity.getPoints(),
         memberEntity.getIsAlarmAccepted(),
+        memberEntity.getPoints(),
         ImageFile.of(ImageType.PROFILE_IMAGE, memberEntity.getProfileImgUri()),
+        ImageFile.of(ImageType.PROFILE_BACKGROUND_IMAGE, memberEntity.getProfileBgImgUri()),
         toStaticsDomain(memberEntity.getMemberStaticsEntity()));
   }
 
