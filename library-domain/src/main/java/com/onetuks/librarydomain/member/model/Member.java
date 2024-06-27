@@ -17,5 +17,6 @@ public record Member(
     boolean isAlarmAccepted,
     long points,
     ImageFile profileImageFile,
-    ImageFile profileBgImageFile,
-    MemberStatics memberStatics) {}
+    ImageFile profileBackgroundImageFile,
+    MemberStatics memberStatics
+) {}

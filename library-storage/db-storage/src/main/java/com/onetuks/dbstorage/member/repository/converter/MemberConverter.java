@@ -19,13 +19,15 @@ public class MemberConverter {
     return new MemberEntity(
         member.memberId(),
         toEmbeddable(member.authInfo()),
-        Optional.ofNullable(member.nickname()).map(Nickname::value).orElse(null),
+        member.nickname().value(),
         member.introduction(),
         member.interestedCategories(),
         member.isAlarmAccepted(),
         member.points(),
         Optional.ofNullable(member.profileImageFile()).map(ImageFile::getUri).orElse(null),
-        Optional.ofNullable(member.profileBgImageFile()).map(ImageFile::getUri).orElse(null),
+        Optional.ofNullable(member.profileBackgroundImageFile())
+            .map(ImageFile::getUri)
+            .orElse(null),
         toStaticsEntity(member.memberStatics()));
   }
 
@@ -38,8 +40,10 @@ public class MemberConverter {
         member.interestedCategories(),
         member.isAlarmAccepted(),
         member.points(),
-        member.profileImageFile().getUri(),
-        member.profileBgImageFile().getUri(),
+        Optional.ofNullable(member.profileImageFile()).map(ImageFile::getUri).orElse(null),
+        Optional.ofNullable(member.profileBackgroundImageFile())
+            .map(ImageFile::getUri)
+            .orElse(null),
         memberStaticsEntity);
   }
 
@@ -52,8 +56,9 @@ public class MemberConverter {
         memberEntity.getInterestedCategories(),
         memberEntity.getIsAlarmAccepted(),
         memberEntity.getPoints(),
-        ImageFile.of(ImageType.PROFILE_IMAGE, memberEntity.getProfileImgUri()),
-        ImageFile.of(ImageType.PROFILE_BACKGROUND_IMAGE, memberEntity.getProfileBgImgUri()),
+        ImageFile.of(ImageType.PROFILE_IMAGE, memberEntity.getProfileImageUri()),
+        ImageFile.of(
+            ImageType.PROFILE_BACKGROUND_IMAGE, memberEntity.getProfileBackgroundImageUri()),
         toStaticsDomain(memberEntity.getMemberStaticsEntity()));
   }
 
