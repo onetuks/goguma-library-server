@@ -1,9 +1,10 @@
-def jacocoExclude = List.of(
+ext.coverageExclude = List.of(
         "**/Q*",
         "**/config/*",
         "**/model/*",
         "**/entity/*",
         "**/dto/*",
+        "**/*api/*",
         "**/*auth/*",
         "**/*object/*",
         "**/*Application.class"
@@ -31,7 +32,7 @@ subprojects {
 
         afterEvaluate {
             classDirectories.setFrom(files(classDirectories.files.collect {
-                fileTree(dir: it, exclude: jacocoExclude)
+                fileTree(dir: it, exclude: coverageExclude)
             }))
         }
     }
@@ -61,9 +62,9 @@ subprojects {
                     minimum = 0.5
                 }
 
-                excludes = jacocoExclude.stream()
+                excludes = coverageExclude.stream()
                         .collect { exclude ->
-                            exclude
+                            exclude.toString()
                                     .replace("**", "*")
                                     .replace('/', '.')
                         }
@@ -75,7 +76,7 @@ subprojects {
 tasks.testCodeCoverageReport {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: jacocoExclude)
+            fileTree(dir: it, exclude: coverageExclude)
         }))
     }
 }
