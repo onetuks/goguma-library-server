@@ -24,10 +24,12 @@ public class MemberConverter {
         member.interestedCategories(),
         member.isAlarmAccepted(),
         member.points(),
-        Optional.ofNullable(member.profileImageFile()).map(ImageFile::getUri).orElse(null),
+        Optional.ofNullable(member.profileImageFile())
+            .map(ImageFile::getUri)
+            .orElse(ImageFile.DEFAULT_PROFILE_IMAGE_URI),
         Optional.ofNullable(member.profileBackgroundImageFile())
             .map(ImageFile::getUri)
-            .orElse(null),
+            .orElse(ImageFile.DEFAULT_PROFILE_BACKGROUND_IMAGE_URI),
         toStaticsEntity(member.memberStatics()));
   }
 
@@ -40,10 +42,12 @@ public class MemberConverter {
         member.interestedCategories(),
         member.isAlarmAccepted(),
         member.points(),
-        Optional.ofNullable(member.profileImageFile()).map(ImageFile::getUri).orElse(null),
+        Optional.ofNullable(member.profileImageFile())
+            .map(ImageFile::getUri)
+            .orElse(ImageFile.DEFAULT_PROFILE_IMAGE_URI),
         Optional.ofNullable(member.profileBackgroundImageFile())
             .map(ImageFile::getUri)
-            .orElse(null),
+            .orElse(ImageFile.DEFAULT_PROFILE_BACKGROUND_IMAGE_URI),
         memberStaticsEntity);
   }
 

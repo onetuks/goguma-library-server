@@ -12,18 +12,12 @@ sonar {
 
 def jacocoExclude = List.of(
         "**/Q*",
-        "**/error/*",
-        "**/exception/*",
         "**/config/*",
-        "**/global/*",
-        "**/controller/*",
         "**/model/*",
         "**/entity/*",
         "**/dto/*",
-        "**/vo/*",
-        "**/enums/*",
-        "**/api/*",
-        "**/coreauth/*",
+        "**/*auth/*",
+        "**/*object/*",
         "**/*Application.class"
 )
 

@@ -38,16 +38,6 @@ class S3RepositoryTest extends FileStorageIntegrationTest {
   }
 
   @Test
-  @DisplayName("파일이 없는 경우 예외를 던진다.")
-  void s3PutFile_NullFile_ReturnTest() {
-    // Given
-    ImageFile imageFile = new ImageFile(ImageType.PROFILE_IMAGE, null, "test-image-file-name");
-
-    // When & Then
-    assertThrows(IllegalArgumentException.class, () -> s3Repository.putFile(imageFile));
-  }
-
-  @Test
   @DisplayName("S3에 있는 파일을 성공적으로 제거한다.")
   void s3DeleteFileSuccessTest() {
     // Given

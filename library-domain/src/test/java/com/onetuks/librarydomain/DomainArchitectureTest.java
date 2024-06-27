@@ -43,7 +43,6 @@ public class DomainArchitectureTest extends DomainIntegrationTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("param 패키지 안에 있는 클래스는 Param 로 끝난다.")
     void param_ClassNamePostfix_Test() {
       ArchRule rule =

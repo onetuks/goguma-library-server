@@ -4,10 +4,13 @@ import com.onetuks.librarydomain.file.FileRepository;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.member.model.vo.AuthInfo;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
+import com.onetuks.librarydomain.member.service.dto.param.MemberProfileParam;
 import com.onetuks.librarydomain.member.service.dto.result.MemberAuthResult;
+import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class MemberService {
@@ -35,7 +38,27 @@ public class MemberService {
   }
 
   @Transactional
-  public void deleteMember(Long memberId) {
+  public Member updateMember(
+      long loginId,
+      long memberId,
+      MemberProfileParam param,
+      MultipartFile profileImage,
+      MultipartFile profileBackgroundImage) {
+    if (loginId != memberId) {
+      throw new ApiAccessDeniedException("해당 유저에게 권한이 없는 요청입니다.");
+    }
+
+    Member member =
+        memberRepository.read(memberId).changeProfile(param, profileImage, profileBackgroundImage);
+
+    fileRepository.putFile(member.profileImageFile());
+    fileRepository.putFile(member.profileBackgroundImageFile());
+
+    return memberRepository.update(member);
+  }
+
+  @Transactional
+  public void deleteMember(long memberId) {
     Member member = memberRepository.read(memberId);
 
     fileRepository.deleteFile(member.profileImageFile().getUri());

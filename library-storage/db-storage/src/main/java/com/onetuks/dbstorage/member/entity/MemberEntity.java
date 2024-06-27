@@ -29,18 +29,18 @@ import org.hibernate.annotations.Type;
 @Entity
 @Table(
     name = "members",
-    uniqueConstraints = @UniqueConstraint(
-        name = "unq_social_id_client_provider",
-        columnNames = {"social_id", "client_provider"}))
+    uniqueConstraints =
+        @UniqueConstraint(
+            name = "unq_social_id_client_provider",
+            columnNames = {"social_id", "client_provider"}))
 public class MemberEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "member_id", nullable = false)
   private Long memberId;
 
-  @Embedded
-  private AuthInfoEmbeddable authInfoEmbeddable;
+  @Embedded private AuthInfoEmbeddable authInfoEmbeddable;
 
   @Column(name = "nickname", nullable = false)
   private String nickname;

@@ -4,8 +4,8 @@ def jacocoExclude = List.of(
         "**/model/*",
         "**/entity/*",
         "**/dto/*",
-        "**/*object/*",
         "**/*auth/*",
+        "**/*object/*",
         "**/*Application.class"
 )
 
