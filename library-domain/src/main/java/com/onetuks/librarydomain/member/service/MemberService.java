@@ -37,6 +37,11 @@ public class MemberService {
     return MemberAuthResult.of(optionalMember.isEmpty(), savedMember);
   }
 
+  @Transactional(readOnly = true)
+  public Member readMember(Long memberId) {
+    return memberRepository.read(memberId);
+  }
+
   @Transactional
   public Member updateMember(
       long loginId,

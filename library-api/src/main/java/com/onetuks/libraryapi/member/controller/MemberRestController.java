@@ -1,6 +1,7 @@
 package com.onetuks.libraryapi.member.controller;
 
 import com.onetuks.libraryapi.member.controller.dto.request.MemberPatchRequest;
+import com.onetuks.libraryapi.member.controller.dto.response.MemberGetResponse;
 import com.onetuks.libraryapi.member.controller.dto.response.MemberPatchResponse;
 import com.onetuks.libraryauth.util.LoginId;
 import com.onetuks.librarydomain.member.model.Member;
@@ -8,6 +9,7 @@ import com.onetuks.librarydomain.member.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,6 +51,15 @@ public class MemberRestController {
         memberService.updateMember(
             loginId, memberId, request.to(), profileImage, profileBackgroundImage);
     MemberPatchResponse response = MemberPatchResponse.from(result);
+
+    return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  @GetMapping(path = "/{memberId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<MemberGetResponse> getMemberProfile(
+      @PathVariable(name = "memberId") Long memberId) {
+    Member result = memberService.readMember(memberId);
+    MemberGetResponse response = MemberGetResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }

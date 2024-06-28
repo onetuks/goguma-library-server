@@ -71,6 +71,21 @@ class MemberServiceTest extends DomainIntegrationTest {
   }
 
   @Test
+  @DisplayName("멤버 프로필을 조회한다.")
+  void readMemberTest() {
+    // Given
+    Member member = MemberFixture.create(123L, RoleType.USER);
+
+    given(memberRepository.read(member.memberId())).willReturn(member);
+
+    // When
+    Member result = memberService.readMember(member.memberId());
+
+    // Then
+    assertThat(result.memberId()).isEqualTo(member.memberId());
+  }
+
+  @Test
   @DisplayName("멤버 프로필을 수정한다. 프로필 이미지가 주어지면 저장하고, 기존 이미지를 대체한다.")
   void updateMemberTest() {
     // Given
