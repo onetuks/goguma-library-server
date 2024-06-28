@@ -55,6 +55,11 @@ public class MemberRestController {
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
+  /**
+   * 멤버 프로필 단건 조회
+   * @param memberId : 조회할 멤버의 ID
+   * @return : 조회된 멤버의 프로필 정보
+   */
   @GetMapping(path = "/{memberId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<MemberGetResponse> getMemberProfile(
       @PathVariable(name = "memberId") Long memberId) {
