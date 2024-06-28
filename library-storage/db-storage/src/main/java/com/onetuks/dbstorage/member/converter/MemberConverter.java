@@ -1,4 +1,4 @@
-package com.onetuks.dbstorage.member.repository.converter;
+package com.onetuks.dbstorage.member.converter;
 
 import com.onetuks.dbstorage.member.entity.MemberEntity;
 import com.onetuks.dbstorage.member.entity.MemberStaticsEntity;
@@ -25,10 +25,10 @@ public class MemberConverter {
         member.isAlarmAccepted(),
         member.points(),
         Optional.ofNullable(member.profileImageFile())
-            .map(ImageFile::getUri)
+            .map(ImageFile::fileName)
             .orElse(ImageFile.DEFAULT_PROFILE_IMAGE_URI),
         Optional.ofNullable(member.profileBackgroundImageFile())
-            .map(ImageFile::getUri)
+            .map(ImageFile::fileName)
             .orElse(ImageFile.DEFAULT_PROFILE_BACKGROUND_IMAGE_URI),
         toStaticsEntity(member.memberStatics()));
   }
@@ -43,10 +43,10 @@ public class MemberConverter {
         member.isAlarmAccepted(),
         member.points(),
         Optional.ofNullable(member.profileImageFile())
-            .map(ImageFile::getUri)
+            .map(ImageFile::fileName)
             .orElse(ImageFile.DEFAULT_PROFILE_IMAGE_URI),
         Optional.ofNullable(member.profileBackgroundImageFile())
-            .map(ImageFile::getUri)
+            .map(ImageFile::fileName)
             .orElse(ImageFile.DEFAULT_PROFILE_BACKGROUND_IMAGE_URI),
         memberStaticsEntity);
   }

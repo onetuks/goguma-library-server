@@ -116,12 +116,10 @@ class MemberServiceTest extends DomainIntegrationTest {
             assertThat(result.interestedCategories())
                 .containsExactlyInAnyOrderElementsOf(param.interestedCategories()),
         () -> assertThat(result.isAlarmAccepted()).isEqualTo(param.isAlarmAccepted()),
+        () -> assertThat(result.profileImageFile()).isEqualTo(updatedMember.profileImageFile()),
         () ->
-            assertThat(result.profileImageFile().getUri())
-                .isEqualTo(updatedMember.profileImageFile().getUri()),
-        () ->
-            assertThat(result.profileBackgroundImageFile().getUri())
-                .isEqualTo(updatedMember.profileBackgroundImageFile().getUri()));
+            assertThat(result.profileBackgroundImageFile())
+                .isEqualTo(updatedMember.profileBackgroundImageFile()));
 
     verify(fileRepository, times(1)).putFile(updatedMember.profileImageFile());
     verify(fileRepository, times(1)).putFile(updatedMember.profileBackgroundImageFile());
@@ -151,7 +149,7 @@ class MemberServiceTest extends DomainIntegrationTest {
     memberService.deleteMember(member.memberId());
 
     // Then
-    verify(fileRepository, times(1)).deleteFile(member.profileImageFile().getUri());
+    verify(fileRepository, times(1)).deleteFile(member.profileImageFile().getKey());
     verify(memberRepository, times(1)).delete(member.memberId());
   }
 }

@@ -34,7 +34,7 @@ public class S3Repository implements FileRepository {
       s3Client.putObject(
           PutObjectRequest.builder()
               .bucket(s3Config.getBucketName())
-              .key(imageFile.getUri())
+              .key(imageFile.getKey())
               .build(),
           RequestBody.fromInputStream(
               imageFile.file().getInputStream(), imageFile.file().getSize()));

@@ -30,7 +30,7 @@ class S3RepositoryTest extends FileStorageIntegrationTest {
     s3Repository.putFile(imageFile);
 
     // Then
-    File result = s3Repository.getFile(imageFile.getUri());
+    File result = s3Repository.getFile(imageFile.getKey());
 
     assertAll(
         () -> assertThat(result).isFile(),
@@ -46,10 +46,10 @@ class S3RepositoryTest extends FileStorageIntegrationTest {
     s3Repository.putFile(imageFile);
 
     // When
-    s3Repository.deleteFile(imageFile.getUri());
+    s3Repository.deleteFile(imageFile.getKey());
 
     // Then
-    assertThrows(NoSuchKeyException.class, () -> s3Repository.getFile(imageFile.getUri()));
+    assertThrows(NoSuchKeyException.class, () -> s3Repository.getFile(imageFile.getKey()));
   }
 
   @Test

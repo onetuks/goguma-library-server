@@ -1,4 +1,4 @@
-package com.onetuks.libraryapi.member.controller.dto.request;
+package com.onetuks.libraryapi.member.dto.request;
 
 import com.onetuks.librarydomain.member.service.dto.param.MemberProfileParam;
 import com.onetuks.libraryobject.enums.Category;

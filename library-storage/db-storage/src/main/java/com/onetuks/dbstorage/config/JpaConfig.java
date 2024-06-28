@@ -1,4 +1,4 @@
-package com.onetuks.dbstorage.member.config;
+package com.onetuks.dbstorage.config;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;

@@ -43,7 +43,7 @@ public record Member(
                         file,
                         profileImageFile.isDefault()
                             ? UUID.randomUUID().toString()
-                            : profileImageFile.getUri()))
+                            : profileImageFile.fileName()))
             .orElse(profileImageFile),
         Optional.ofNullable(profileBackgroundImage)
             .map(
@@ -53,7 +53,7 @@ public record Member(
                         file,
                         profileBackgroundImageFile.isDefault()
                             ? UUID.randomUUID().toString()
-                            : profileBackgroundImageFile.getUri()))
+                            : profileBackgroundImageFile.fileName()))
             .orElse(profileBackgroundImageFile),
         memberStatics);
   }

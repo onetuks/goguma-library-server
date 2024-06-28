@@ -1,4 +1,4 @@
-package com.onetuks.libraryapi.member.controller.dto.response;
+package com.onetuks.libraryapi.member.dto.response;
 
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.member.model.MemberStatics;

@@ -16,7 +16,7 @@ import java.util.UUID;
 public class MemberFixture {
 
   private static final Random random = new Random();
-  private static final List<String> nicknames =
+  private static final List<String> NICKNAMES =
       List.of("빠니보틀", "곽튜브", "침착맨", "허니콤보", "김용명", "궤도", "셜록현준", "조승연", "별별역사");
 
   public static Member create(Long memberId, RoleType roleType) {
@@ -46,7 +46,7 @@ public class MemberFixture {
 
   private static String createNickname() {
     String postFix = UUID.randomUUID().toString().substring(0, 5).replace("-", "");
-    return nicknames.get(random.nextInt(nicknames.size())) + postFix;
+    return NICKNAMES.get(random.nextInt(NICKNAMES.size())) + postFix;
   }
 
   private static List<Category> createCategories() {

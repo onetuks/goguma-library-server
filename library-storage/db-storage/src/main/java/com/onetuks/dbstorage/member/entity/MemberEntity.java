@@ -4,6 +4,7 @@ import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.CascadeType.REMOVE;
 
 import com.onetuks.dbstorage.member.entity.embed.AuthInfoEmbeddable;
+import com.onetuks.libraryobject.annotation.Generated;
 import com.onetuks.libraryobject.enums.Category;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
@@ -92,5 +93,24 @@ public class MemberEntity {
     this.profileBackgroundImageUri = profileBackgroundImageUri;
     this.memberStaticsEntity =
         Objects.requireNonNullElse(memberStaticsEntity, MemberStaticsEntity.init());
+  }
+
+  @Override
+  @Generated
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    MemberEntity that = (MemberEntity) o;
+    return Objects.equals(memberId, that.memberId);
+  }
+
+  @Override
+  @Generated
+  public int hashCode() {
+    return Objects.hashCode(memberId);
   }
 }

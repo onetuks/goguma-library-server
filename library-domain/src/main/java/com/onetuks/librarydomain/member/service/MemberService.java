@@ -66,7 +66,7 @@ public class MemberService {
   public void deleteMember(long memberId) {
     Member member = memberRepository.read(memberId);
 
-    fileRepository.deleteFile(member.profileImageFile().getUri());
+    fileRepository.deleteFile(member.profileImageFile().getKey());
     memberRepository.delete(memberId);
   }
 }

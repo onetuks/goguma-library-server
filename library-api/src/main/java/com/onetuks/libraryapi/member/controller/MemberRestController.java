@@ -1,8 +1,8 @@
 package com.onetuks.libraryapi.member.controller;
 
-import com.onetuks.libraryapi.member.controller.dto.request.MemberPatchRequest;
-import com.onetuks.libraryapi.member.controller.dto.response.MemberGetResponse;
-import com.onetuks.libraryapi.member.controller.dto.response.MemberPatchResponse;
+import com.onetuks.libraryapi.member.dto.request.MemberPatchRequest;
+import com.onetuks.libraryapi.member.dto.response.MemberGetResponse;
+import com.onetuks.libraryapi.member.dto.response.MemberPatchResponse;
 import com.onetuks.libraryauth.util.LoginId;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.member.service.MemberService;
@@ -57,6 +57,7 @@ public class MemberRestController {
 
   /**
    * 멤버 프로필 단건 조회
+   *
    * @param memberId : 조회할 멤버의 ID
    * @return : 조회된 멤버의 프로필 정보
    */

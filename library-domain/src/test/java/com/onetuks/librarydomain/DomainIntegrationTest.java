@@ -1,6 +1,8 @@
 package com.onetuks.librarydomain;
 
 import com.onetuks.librarydomain.DomainIntegrationTest.DomainConfig;
+import com.onetuks.librarydomain.book.repository.BookRepository;
+import com.onetuks.librarydomain.book.service.BookService;
 import com.onetuks.librarydomain.file.FileRepository;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
 import com.onetuks.librarydomain.member.service.MemberService;
@@ -18,9 +20,12 @@ import org.springframework.test.context.ActiveProfiles;
 public class DomainIntegrationTest {
 
   @Autowired public MemberService memberService;
+  @Autowired public BookService bookService;
 
   @MockBean public FileRepository fileRepository;
   @MockBean public MemberRepository memberRepository;
+  @MockBean public BookRepository bookRepository;
+
   @Autowired private TestFileCleaner testFileCleaner;
 
   @Configuration

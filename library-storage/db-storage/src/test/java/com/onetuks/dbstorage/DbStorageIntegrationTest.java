@@ -2,6 +2,7 @@ package com.onetuks.dbstorage;
 
 import com.onetuks.dbstorage.DbStorageIntegrationTest.DbStorageConfig;
 import com.onetuks.dbstorage.DbStorageIntegrationTest.DbStorageInitializer;
+import com.onetuks.dbstorage.book.repository.BookEntityRepository;
 import com.onetuks.dbstorage.member.repository.MemberEntityRepository;
 import com.onetuks.libraryobject.vo.TestFileCleaner;
 import java.util.HashMap;
@@ -28,6 +29,7 @@ import org.testcontainers.containers.MySQLContainer;
 public class DbStorageIntegrationTest {
 
   @Autowired public MemberEntityRepository memberEntityRepository;
+  @Autowired public BookEntityRepository bookEntityRepository;
 
   @Configuration
   @ComponentScan(basePackages = "com.onetuks.dbstorage", basePackageClasses = TestFileCleaner.class)
