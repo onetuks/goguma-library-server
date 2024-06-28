@@ -4,16 +4,18 @@ import java.util.List;
 
 public record Nickname(String value) {
 
+  private static final String DEFAULT_NICKNAME = "고구마 침팬치";
   private static final List<String> FORBIDDEN_TOKENS =
       List.of("admin", "administrator", "root", "관리자", "운영자", "시스템");
   private static final List<String> SPECIAL_CHARACTERS =
       List.of("!", "@", "#", "$", "%", "^", "&", "*");
 
   public Nickname {
-    if (value != null) {
-      validateNicknameValueForbiddenToken(value);
-      validateNicknameValueSpecialCharacter(value);
+    if (value == null) {
+      value = DEFAULT_NICKNAME;
     }
+    validateNicknameValueForbiddenToken(value);
+    validateNicknameValueSpecialCharacter(value);
   }
 
   private void validateNicknameValueSpecialCharacter(String value) {

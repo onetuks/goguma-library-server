@@ -9,7 +9,6 @@ import com.onetuks.librarydomain.member.model.vo.AuthInfo;
 import com.onetuks.librarydomain.member.model.vo.Nickname;
 import com.onetuks.libraryobject.enums.ImageType;
 import com.onetuks.libraryobject.vo.ImageFile;
-import java.util.Objects;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
 
@@ -20,12 +19,17 @@ public class MemberConverter {
     return new MemberEntity(
         member.memberId(),
         toEmbeddable(member.authInfo()),
-        Optional.ofNullable(member.nickname()).map(Nickname::value).orElse(null),
+        member.nickname().value(),
         member.introduction(),
         member.interestedCategories(),
-        member.points(),
         member.isAlarmAccepted(),
-        Optional.ofNullable(member.profileImageFile()).map(ImageFile::getUri).orElse(null),
+        member.points(),
+        Optional.ofNullable(member.profileImageFile())
+            .map(ImageFile::getUri)
+            .orElse(ImageFile.DEFAULT_PROFILE_IMAGE_URI),
+        Optional.ofNullable(member.profileBackgroundImageFile())
+            .map(ImageFile::getUri)
+            .orElse(ImageFile.DEFAULT_PROFILE_BACKGROUND_IMAGE_URI),
         toStaticsEntity(member.memberStatics()));
   }
 
@@ -36,9 +40,14 @@ public class MemberConverter {
         member.nickname().value(),
         member.introduction(),
         member.interestedCategories(),
-        member.points(),
         member.isAlarmAccepted(),
-        member.profileImageFile().getUri(),
+        member.points(),
+        Optional.ofNullable(member.profileImageFile())
+            .map(ImageFile::getUri)
+            .orElse(ImageFile.DEFAULT_PROFILE_IMAGE_URI),
+        Optional.ofNullable(member.profileBackgroundImageFile())
+            .map(ImageFile::getUri)
+            .orElse(ImageFile.DEFAULT_PROFILE_BACKGROUND_IMAGE_URI),
         memberStaticsEntity);
   }
 
@@ -49,9 +58,11 @@ public class MemberConverter {
         new Nickname(memberEntity.getNickname()),
         memberEntity.getIntroduction(),
         memberEntity.getInterestedCategories(),
-        memberEntity.getPoints(),
         memberEntity.getIsAlarmAccepted(),
-        ImageFile.of(ImageType.PROFILE_IMAGE, memberEntity.getProfileImgUri()),
+        memberEntity.getPoints(),
+        ImageFile.of(ImageType.PROFILE_IMAGE, memberEntity.getProfileImageUri()),
+        ImageFile.of(
+            ImageType.PROFILE_BACKGROUND_IMAGE, memberEntity.getProfileBackgroundImageUri()),
         toStaticsDomain(memberEntity.getMemberStaticsEntity()));
   }
 

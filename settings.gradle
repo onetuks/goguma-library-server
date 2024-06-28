@@ -6,6 +6,8 @@ include ':library-external'
 
 include ':library-auth'
 
+include ':library-api'
+
 include ':library-domain'
 
 include ':library-storage'

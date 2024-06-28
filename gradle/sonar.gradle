@@ -10,23 +10,6 @@ sonar {
     }
 }
 
-def jacocoExclude = List.of(
-        "**/Q*",
-        "**/error/*",
-        "**/exception/*",
-        "**/config/*",
-        "**/global/*",
-        "**/controller/*",
-        "**/model/*",
-        "**/entity/*",
-        "**/dto/*",
-        "**/vo/*",
-        "**/enums/*",
-        "**/api/*",
-        "**/coreauth/*",
-        "**/*Application.class"
-)
-
 allprojects {
     if (!project.name.contains('api')) {
         apply plugin: 'org.sonarqube'
@@ -36,8 +19,8 @@ allprojects {
                 property("sonar.sources", "src/main/java")
                 property("sonar.tests", "src/test/java")
                 property("sonar.coverage.exclusions",
-                        jacocoExclude.stream().map {
-                            it.replace('/*', '/**')
+                        project.ext.coverageExclude.stream().map {
+                            it.toString().replace('/*', '/**')
                         }.toList().join(','))
             }
         }

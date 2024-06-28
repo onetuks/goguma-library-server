@@ -5,7 +5,6 @@ import static jakarta.persistence.CascadeType.REMOVE;
 
 import com.onetuks.dbstorage.member.entity.embed.AuthInfoEmbeddable;
 import com.onetuks.libraryobject.enums.Category;
-import com.onetuks.libraryobject.vo.ImageFile;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -17,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.util.List;
 import java.util.Objects;
 import lombok.AccessLevel;
@@ -27,7 +27,12 @@ import org.hibernate.annotations.Type;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "members")
+@Table(
+    name = "members",
+    uniqueConstraints =
+        @UniqueConstraint(
+            name = "unq_social_id_client_provider",
+            columnNames = {"social_id", "client_provider"}))
 public class MemberEntity {
 
   @Id
@@ -37,7 +42,7 @@ public class MemberEntity {
 
   @Embedded private AuthInfoEmbeddable authInfoEmbeddable;
 
-  @Column(name = "nickname")
+  @Column(name = "nickname", nullable = false)
   private String nickname;
 
   @Column(name = "introduction")
@@ -47,14 +52,17 @@ public class MemberEntity {
   @Column(name = "interested_categories")
   private List<Category> interestedCategories;
 
-  @Column(name = "points", nullable = false)
-  private Long points;
-
   @Column(name = "is_alarm_accepted", nullable = false)
   private Boolean isAlarmAccepted;
 
-  @Column(name = "profile_img_uri", nullable = false)
-  private String profileImgUri;
+  @Column(name = "points", nullable = false)
+  private Long points;
+
+  @Column(name = "profile_image_uri")
+  private String profileImageUri;
+
+  @Column(name = "profile_background_image_uri")
+  private String profileBackgroundImageUri;
 
   @OneToOne(
       fetch = FetchType.LAZY,
@@ -68,19 +76,20 @@ public class MemberEntity {
       String nickname,
       String introduction,
       List<Category> interestedCategories,
-      Long points,
       Boolean isAlarmAccepted,
-      String profileImgUri,
+      Long points,
+      String profileImageUri,
+      String profileBackgroundImageUri,
       MemberStaticsEntity memberStaticsEntity) {
     this.memberId = memberId;
     this.authInfoEmbeddable = authInfoEmbeddable;
     this.nickname = nickname;
     this.introduction = introduction;
     this.interestedCategories = Objects.requireNonNullElse(interestedCategories, List.of());
-    this.points = Objects.requireNonNullElse(points, 0L);
     this.isAlarmAccepted = Objects.requireNonNullElse(isAlarmAccepted, true);
-    this.profileImgUri =
-        Objects.requireNonNullElse(profileImgUri, ImageFile.getDefaultProfileImagUri());
+    this.points = Objects.requireNonNullElse(points, 0L);
+    this.profileImageUri = profileImageUri;
+    this.profileBackgroundImageUri = profileBackgroundImageUri;
     this.memberStaticsEntity =
         Objects.requireNonNullElse(memberStaticsEntity, MemberStaticsEntity.init());
   }

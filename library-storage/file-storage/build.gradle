@@ -2,9 +2,6 @@ dependencies {
     // Test
     testImplementation(testFixtures(project(':library-object')))
 
-    // Spring Web
-    implementation('org.springframework.boot:spring-boot-starter-web')
-
     // AWS S3
     implementation(platform('software.amazon.awssdk:bom:2.25.67'))
     implementation('commons-io:commons-io:2.16.1')

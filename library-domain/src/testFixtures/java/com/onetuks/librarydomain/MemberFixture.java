@@ -26,9 +26,10 @@ public class MemberFixture {
         new Nickname(createNickname()),
         "소개글입니다.",
         createCategories(),
-        createPoints(),
         createIsAlarmAccepted(),
+        createPoints(),
         ImageFileFixture.create(ImageType.PROFILE_IMAGE, UUID.randomUUID().toString()),
+        ImageFileFixture.create(ImageType.PROFILE_BACKGROUND_IMAGE, UUID.randomUUID().toString()),
         null);
   }
 

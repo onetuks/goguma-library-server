@@ -100,6 +100,11 @@ jobs:
           distribution: zulu
           cache: 'gradle'
 
+      - name: Style Apply
+        if: steps.changes.outputs.application == 'true'
+        run: |
+          ./gradlew spotlessApply
+
       - name: Style Check
         if: steps.changes.outputs.application == 'true'
         run: |

@@ -16,5 +16,4 @@ dependencies {
 
     // Spring Transaction
     implementation('org.springframework:spring-tx')
-
 }
