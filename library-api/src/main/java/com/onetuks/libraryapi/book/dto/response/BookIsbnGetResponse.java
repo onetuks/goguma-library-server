@@ -10,7 +10,7 @@ public record BookIsbnGetResponse(
     String publisher,
     String isbn,
     List<Category> category,
-    String coverImageUrl) {추
+    String coverImageUrl) {
 
   public static BookIsbnGetResponse from(IsbnResult isbnResult) {
     return new BookIsbnGetResponse(

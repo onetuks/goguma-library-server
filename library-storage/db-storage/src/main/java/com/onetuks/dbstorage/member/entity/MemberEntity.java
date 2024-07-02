@@ -86,13 +86,12 @@ public class MemberEntity {
     this.authInfoEmbeddable = authInfoEmbeddable;
     this.nickname = nickname;
     this.introduction = introduction;
-    this.interestedCategories = Objects.requireNonNullElse(interestedCategories, List.of());
-    this.isAlarmAccepted = Objects.requireNonNullElse(isAlarmAccepted, true);
-    this.points = Objects.requireNonNullElse(points, 0L);
+    this.interestedCategories = interestedCategories;
+    this.isAlarmAccepted = isAlarmAccepted;
+    this.points = points;
     this.profileImageUri = profileImageUri;
     this.profileBackgroundImageUri = profileBackgroundImageUri;
-    this.memberStaticsEntity =
-        Objects.requireNonNullElse(memberStaticsEntity, MemberStaticsEntity.init());
+    this.memberStaticsEntity = memberStaticsEntity;
   }
 
   @Override

@@ -53,13 +53,14 @@ public class CollectionIsbnSearchStrategy implements IsbnSearchStrategy {
                         null,
                         response.request())))
         .bodyToMono(String.class)
-        .<CollectionQueryResponse>handle((body, sink) -> {
-          try {
-            sink.next(objectMapper.readValue(body, CollectionQueryResponse.class));
-          } catch (JsonProcessingException e) {
-            sink.error(new IllegalStateException("Json 파싱에 실패했습니다."));
-          }
-        })
+        .<CollectionQueryResponse>handle(
+            (body, sink) -> {
+              try {
+                sink.next(objectMapper.readValue(body, CollectionQueryResponse.class));
+              } catch (JsonProcessingException e) {
+                sink.error(new IllegalStateException("Json 파싱에 실패했습니다."));
+              }
+            })
         .map(IsbnResult::from)
         .block();
   }

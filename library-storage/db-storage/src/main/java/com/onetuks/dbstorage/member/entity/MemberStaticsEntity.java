@@ -49,8 +49,4 @@ public class MemberStaticsEntity {
     this.followingCounts = followingCounts;
     this.reviewCategoryCounts = reviewCategoryCounts;
   }
-
-  public static MemberStaticsEntity init() {
-    return new MemberStaticsEntity(null, 0L, 0L, 0L, List.of(0L, 0L, 0L));
-  }
 }

@@ -1,5 +1,8 @@
 package com.onetuks.dbstorage.member.converter;
 
+import static com.onetuks.libraryobject.enums.ImageType.PROFILE_BACKGROUND_IMAGE;
+import static com.onetuks.libraryobject.enums.ImageType.PROFILE_IMAGE;
+
 import com.onetuks.dbstorage.member.entity.MemberEntity;
 import com.onetuks.dbstorage.member.entity.MemberStaticsEntity;
 import com.onetuks.dbstorage.member.entity.embed.AuthInfoEmbeddable;
@@ -7,9 +10,7 @@ import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.member.model.MemberStatics;
 import com.onetuks.librarydomain.member.model.vo.AuthInfo;
 import com.onetuks.librarydomain.member.model.vo.Nickname;
-import com.onetuks.libraryobject.enums.ImageType;
 import com.onetuks.libraryobject.vo.ImageFile;
-import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,13 +25,9 @@ public class MemberConverter {
         member.interestedCategories(),
         member.isAlarmAccepted(),
         member.points(),
-        Optional.ofNullable(member.profileImageFile())
-            .map(ImageFile::fileName)
-            .orElse(ImageFile.DEFAULT_PROFILE_IMAGE_URI),
-        Optional.ofNullable(member.profileBackgroundImageFile())
-            .map(ImageFile::fileName)
-            .orElse(ImageFile.DEFAULT_PROFILE_BACKGROUND_IMAGE_URI),
-        null);
+        member.profileImageFile().fileName(),
+        member.profileBackgroundImageFile().fileName(),
+        toStaticsEntity(member.memberStatics()));
   }
 
   public MemberEntity toEntity(Member member, MemberStaticsEntity memberStaticsEntity) {
@@ -42,12 +39,8 @@ public class MemberConverter {
         member.interestedCategories(),
         member.isAlarmAccepted(),
         member.points(),
-        Optional.ofNullable(member.profileImageFile())
-            .map(ImageFile::fileName)
-            .orElse(ImageFile.DEFAULT_PROFILE_IMAGE_URI),
-        Optional.ofNullable(member.profileBackgroundImageFile())
-            .map(ImageFile::fileName)
-            .orElse(ImageFile.DEFAULT_PROFILE_BACKGROUND_IMAGE_URI),
+        member.profileImageFile().fileName(),
+        member.profileBackgroundImageFile().fileName(),
         memberStaticsEntity);
   }
 
@@ -60,9 +53,8 @@ public class MemberConverter {
         memberEntity.getInterestedCategories(),
         memberEntity.getIsAlarmAccepted(),
         memberEntity.getPoints(),
-        ImageFile.of(ImageType.PROFILE_IMAGE, memberEntity.getProfileImageUri()),
-        ImageFile.of(
-            ImageType.PROFILE_BACKGROUND_IMAGE, memberEntity.getProfileBackgroundImageUri()),
+        ImageFile.of(PROFILE_IMAGE, memberEntity.getProfileImageUri()),
+        ImageFile.of(PROFILE_BACKGROUND_IMAGE, memberEntity.getProfileBackgroundImageUri()),
         toStaticsDomain(memberEntity.getMemberStaticsEntity()));
   }
 
@@ -75,6 +67,15 @@ public class MemberConverter {
         authInfoEmbeddable.getSocialId(),
         authInfoEmbeddable.getClientProvider(),
         authInfoEmbeddable.getRoles());
+  }
+
+  private MemberStaticsEntity toStaticsEntity(MemberStatics memberStatics) {
+    return new MemberStaticsEntity(
+        memberStatics.memberStaticsId(),
+        memberStatics.reviewCounts(),
+        memberStatics.followerCounts(),
+        memberStatics.followingCounts(),
+        memberStatics.reviewCategoryCounts());
   }
 
   private MemberStatics toStaticsDomain(MemberStaticsEntity memberStaticsEntity) {

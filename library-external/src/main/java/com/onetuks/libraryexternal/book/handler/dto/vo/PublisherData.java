@@ -10,7 +10,8 @@ public record PublisherData(String value) implements IsbnResultData {
   }
 
   private boolean isEnglish(String value) {
-    return value.chars()
+    return value
+        .chars()
         .filter(c -> !Character.isWhitespace(c))
         .allMatch(
             c -> Character.isLetter(c) && (Character.isLowerCase(c) || Character.isUpperCase(c)));

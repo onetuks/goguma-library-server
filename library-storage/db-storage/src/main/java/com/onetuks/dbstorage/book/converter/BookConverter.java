@@ -1,5 +1,7 @@
 package com.onetuks.dbstorage.book.converter;
 
+import static com.onetuks.libraryobject.enums.ImageType.COVER_IMAGE;
+
 import com.onetuks.dbstorage.book.entity.BookEntity;
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.libraryobject.enums.ImageType;
@@ -19,9 +21,7 @@ public class BookConverter {
         book.isbn(),
         book.publisher(),
         book.categories(),
-        Optional.ofNullable(book.coverImageFile())
-            .map(ImageFile::fileName)
-            .orElse(ImageFile.DEFAULT_COVER_IMAGE_URI),
+        book.coverImageFile().fileName(),
         book.isIndie(),
         book.isPermitted());
   }
@@ -35,7 +35,7 @@ public class BookConverter {
         bookEntity.getIsbn(),
         bookEntity.getPublisher(),
         bookEntity.getCategories(),
-        ImageFile.of(ImageType.COVER_IMAGE, bookEntity.getCoverImageUri()),
+        ImageFile.of(COVER_IMAGE, bookEntity.getCoverImageUri()),
         bookEntity.getIsIndie(),
         bookEntity.getIsPermitted());
   }

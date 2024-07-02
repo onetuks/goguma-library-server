@@ -20,6 +20,10 @@ public record Nickname(String value) {
     validateNicknameValueSpecialCharacter(value);
   }
 
+  public static Nickname init() {
+    return new Nickname(null);
+  }
+
   private void validateNicknameValueSpecialCharacter(String value) {
     if (SPECIAL_CHARACTERS.stream().anyMatch(value::contains)) {
       throw new IllegalArgumentException("특수문자는 사용할 수 없습니다.");
