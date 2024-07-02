@@ -45,7 +45,7 @@ public class AuthToken {
 
     String socialId = claims.getSubject();
     Long loginId = claims.get(LOGIN_ID_KEY, Long.class);
-    List<String> roles = Arrays.asList(claims.get(AUTHORITIES_KEY, String[].class));
+    List<String> roles = claims.get(AUTHORITIES_KEY, List.class);
 
     List<SimpleGrantedAuthority> authorities =
         roles.stream().map(SimpleGrantedAuthority::new).toList();
