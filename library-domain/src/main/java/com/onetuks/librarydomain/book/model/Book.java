@@ -2,6 +2,7 @@ package com.onetuks.librarydomain.book.model;
 
 import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.vo.ImageFile;
+import java.util.List;
 
 public record Book(
     Long bookId,
@@ -10,7 +11,7 @@ public record Book(
     String introduction,
     String isbn,
     String publisher,
-    Category category,
+    List<Category> categories,
     ImageFile coverImageFile,
     boolean isIndie,
     boolean isPermitted) {}

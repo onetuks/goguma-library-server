@@ -30,7 +30,7 @@ public class MemberConverter {
         Optional.ofNullable(member.profileBackgroundImageFile())
             .map(ImageFile::fileName)
             .orElse(ImageFile.DEFAULT_PROFILE_BACKGROUND_IMAGE_URI),
-        toStaticsEntity(member.memberStatics()));
+        null);
   }
 
   public MemberEntity toEntity(Member member, MemberStaticsEntity memberStaticsEntity) {
@@ -75,19 +75,6 @@ public class MemberConverter {
         authInfoEmbeddable.getSocialId(),
         authInfoEmbeddable.getClientProvider(),
         authInfoEmbeddable.getRoles());
-  }
-
-  private MemberStaticsEntity toStaticsEntity(MemberStatics memberStatics) {
-    if (memberStatics == null) {
-      return null;
-    }
-
-    return new MemberStaticsEntity(
-        memberStatics.memberStaticsId(),
-        memberStatics.reviewCounts(),
-        memberStatics.followerCounts(),
-        memberStatics.followingCounts(),
-        memberStatics.reviewCategoryCounts());
   }
 
   private MemberStatics toStaticsDomain(MemberStaticsEntity memberStaticsEntity) {

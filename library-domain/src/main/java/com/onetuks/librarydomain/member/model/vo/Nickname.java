@@ -8,7 +8,9 @@ public record Nickname(String value) {
   private static final List<String> FORBIDDEN_TOKENS =
       List.of("admin", "administrator", "root", "관리자", "운영자", "시스템");
   private static final List<String> SPECIAL_CHARACTERS =
-      List.of("!", "@", "#", "$", "%", "^", "&", "*");
+      List.of(
+          "`", "~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "+", "=", "<", ">", "/", ":",
+          ";", "\\'", "\"", "|", "\\");
 
   public Nickname {
     if (value == null) {

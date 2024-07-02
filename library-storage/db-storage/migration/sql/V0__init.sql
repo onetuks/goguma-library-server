@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS books
     introduction    VARCHAR(5000) COMMENT '책 소개',
     isbn            VARCHAR(50) COMMENT '국제 표준 도서 번호',
     publisher       VARCHAR(255) COMMENT '출판사',
-    category        VARCHAR(50) COMMENT '카테고리',
+    categories      JSON         NOT NULL COMMENT '카테고리',
     cover_image_uri VARCHAR(255) NOT NULL DEFAULT 'default-cover.png' COMMENT '책 표지 이미지 URI',
     is_indie        BOOLEAN      NOT NULL DEFAULT FALSE COMMENT '독립출판물 여부',
     is_permitted    BOOLEAN      NOT NULL DEFAULT FALSE COMMENT '서비스 제공 허가 여부',

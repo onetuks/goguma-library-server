@@ -2,4 +2,5 @@ dependencies {
     compileOnly(project(':library-auth'))
     implementation(project(':library-domain'))
     implementation(project(':library-object'))
+    implementation(project(':library-external'))
 }

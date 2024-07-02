@@ -1,4 +1,4 @@
-package com.onetuks.librarydomain;
+package com.onetuks.libraryexternal;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-public class DomainArchitectureTest extends DomainIntegrationTest {
+public class ExternalArchitectureTest extends ExternalIntegrationTest {
 
   JavaClasses javaClasses;
 
@@ -30,27 +30,27 @@ public class DomainArchitectureTest extends DomainIntegrationTest {
   class ClassNameTest {
 
     @Test
-    @DisplayName("result 패키지 안에 있는 클래스는 Result 로 끝난다.")
+    @DisplayName("strategy 패키지 안에 있는 클래스는 Strategy 로 끝난다.")
     void result_ClassNamePostfix_Test() {
       ArchRule rule =
           ArchRuleDefinition.classes()
               .that()
-              .resideInAnyPackage("..result..")
+              .resideInAnyPackage("..strategy")
               .should()
-              .haveSimpleNameEndingWith("Result");
+              .haveSimpleNameEndingWith("Strategy");
 
       rule.check(javaClasses);
     }
 
     @Test
-    @DisplayName("param 패키지 안에 있는 클래스는 Param 로 끝난다.")
+    @DisplayName("handler 패키지 안에 있는 클래스는 Handler 로 끝난다.")
     void param_ClassNamePostfix_Test() {
       ArchRule rule =
           ArchRuleDefinition.classes()
               .that()
-              .resideInAnyPackage("..param..")
+              .resideInAnyPackage("..handler")
               .should()
-              .haveSimpleNameEndingWith("Param");
+              .haveSimpleNameEndingWith("Handler");
 
       rule.check(javaClasses);
     }
@@ -76,6 +76,23 @@ public class DomainArchitectureTest extends DomainIntegrationTest {
               .beAnnotatedWith(Service.class)
               .orShould()
               .beAnnotatedWith(Component.class);
+
+      rule.check(javaClasses);
+    }
+
+    @Test
+    @DisplayName("config 패키지 안에 있는 클래스는 Config 로 끝난다.")
+    void config_ClassNamePostfix_Test() {
+      ArchRule rule =
+          ArchRuleDefinition.classes()
+              .that()
+              .resideInAnyPackage("..config..")
+              .and()
+              .doNotHaveSimpleName("AuthPermittedEndpoint")
+              .should()
+              .haveSimpleNameEndingWith("Config")
+              .andShould()
+              .beAnnotatedWith(Configuration.class);
 
       rule.check(javaClasses);
     }

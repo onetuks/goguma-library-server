@@ -1,4 +1,4 @@
-package com.onetuks.libraryexternal.config;
+package com.onetuks.libraryexternal.util;
 
 import java.net.URI;
 import org.springframework.stereotype.Component;
@@ -13,12 +13,5 @@ public class URIBuilder {
     factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
 
     return factory.uriString(baseUri).queryParams(params).build();
-  }
-
-  public URI buildUri(String uri) {
-    DefaultUriBuilderFactory factory = new DefaultUriBuilderFactory();
-    factory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
-
-    return factory.uriString(uri).build();
   }
 }

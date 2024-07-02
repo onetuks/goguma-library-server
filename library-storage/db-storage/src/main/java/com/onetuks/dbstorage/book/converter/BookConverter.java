@@ -18,7 +18,7 @@ public class BookConverter {
         book.introduction(),
         book.isbn(),
         book.publisher(),
-        book.category(),
+        book.categories(),
         Optional.ofNullable(book.coverImageFile())
             .map(ImageFile::fileName)
             .orElse(ImageFile.DEFAULT_COVER_IMAGE_URI),
@@ -34,7 +34,7 @@ public class BookConverter {
         bookEntity.getIntroduction(),
         bookEntity.getIsbn(),
         bookEntity.getPublisher(),
-        bookEntity.getCategory(),
+        bookEntity.getCategories(),
         ImageFile.of(ImageType.COVER_IMAGE, bookEntity.getCoverImageUri()),
         bookEntity.getIsIndie(),
         bookEntity.getIsPermitted());

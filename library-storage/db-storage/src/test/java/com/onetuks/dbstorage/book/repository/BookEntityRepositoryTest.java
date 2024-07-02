@@ -53,7 +53,9 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
         () -> assertThat(result.introduction()).isEqualTo(expected.introduction()),
         () -> assertThat(result.isbn()).isEqualTo(expected.isbn()),
         () -> assertThat(result.publisher()).isEqualTo(expected.publisher()),
-        () -> assertThat(result.category()).isEqualTo(expected.category()),
+        () ->
+            assertThat(result.categories())
+                .containsExactlyInAnyOrderElementsOf(expected.categories()),
         () -> assertThat(result.coverImageFile()).isEqualTo(expected.coverImageFile()),
         () -> assertThat(result.isIndie()).isEqualTo(expected.isIndie()),
         () -> assertThat(result.isPermitted()).isEqualTo(expected.isPermitted()));

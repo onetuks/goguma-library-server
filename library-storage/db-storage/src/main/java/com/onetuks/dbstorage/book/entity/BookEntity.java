@@ -2,18 +2,19 @@ package com.onetuks.dbstorage.book.entity;
 
 import com.onetuks.libraryobject.annotation.Generated;
 import com.onetuks.libraryobject.enums.Category;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.util.List;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -41,9 +42,9 @@ public class BookEntity {
   @Column(name = "publisher")
   private String publisher;
 
-  @Enumerated(value = EnumType.STRING)
-  @Column(name = "category")
-  private Category category;
+  @Type(JsonType.class)
+  @Column(name = "categories", nullable = false)
+  private List<Category> categories;
 
   @Column(name = "cover_image_uri")
   private String coverImageUri;
@@ -61,7 +62,7 @@ public class BookEntity {
       String introduction,
       String isbn,
       String publisher,
-      Category category,
+      List<Category> categories,
       String coverImageUri,
       Boolean isIndie,
       Boolean isPermitted) {
@@ -71,7 +72,7 @@ public class BookEntity {
     this.introduction = introduction;
     this.isbn = isbn;
     this.publisher = publisher;
-    this.category = Objects.requireNonNullElse(category, Category.ETC);
+    this.categories = categories;
     this.coverImageUri = coverImageUri;
     this.isIndie = Objects.requireNonNullElse(isIndie, false);
     this.isPermitted = Objects.requireNonNullElse(isPermitted, false);
