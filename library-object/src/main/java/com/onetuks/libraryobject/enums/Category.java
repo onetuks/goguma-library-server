@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public enum Category {
+  ALL, // 전체
   ETC, // 기타
   POETRY, // 시
   ESSAY, // 에세이

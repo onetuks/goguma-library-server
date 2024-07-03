@@ -30,7 +30,7 @@ public record Member(
 
   public Member {
     nickname = Optional.ofNullable(nickname).orElse(Nickname.init());
-    interestedCategories = Optional.ofNullable(interestedCategories).orElse(List.of());
+    interestedCategories = Optional.ofNullable(interestedCategories).orElse(List.of(Category.ALL));
     profileImageFile =
         Optional.ofNullable(profileImageFile)
             .orElse(ImageFile.of(PROFILE_IMAGE, DEFAULT_PROFILE_IMAGE_URI));

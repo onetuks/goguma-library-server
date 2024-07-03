@@ -183,5 +183,6 @@ public class GlobalExceptionRestHandler {
 
   private void logging(Exception e) {
     log.warn("Handle {} : {}", e.getClass(), e.getMessage());
+    log.warn("Exception StackTrace: ", e);
   }
 }

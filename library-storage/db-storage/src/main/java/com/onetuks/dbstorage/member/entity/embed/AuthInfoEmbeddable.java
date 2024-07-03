@@ -5,6 +5,8 @@ import com.onetuks.libraryobject.enums.RoleType;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,6 +21,7 @@ public class AuthInfoEmbeddable {
   @Column(name = "social_id", nullable = false)
   private String socialId;
 
+  @Enumerated(EnumType.STRING)
   @Column(name = "client_provider", nullable = false)
   private ClientProvider clientProvider;
 

@@ -39,11 +39,11 @@ public class MemberRestController {
   @PatchMapping(
       path = "/{memberId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
+      consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<MemberPatchResponse> patchMemberProfile(
       @LoginId Long loginId,
       @PathVariable(name = "memberId") Long memberId,
-      @RequestBody MemberPatchRequest request,
+      @RequestPart(name = "request") MemberPatchRequest request,
       @RequestPart(name = "profile-image", required = false) MultipartFile profileImage,
       @RequestPart(name = "profile-background-image", required = false)
           MultipartFile profileBackgroundImage) {

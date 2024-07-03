@@ -1,13 +1,18 @@
 package com.onetuks.dbstorage.member.entity;
 
+import com.onetuks.libraryobject.enums.Category;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,14 +40,14 @@ public class MemberStaticsEntity {
 
   @Type(JsonType.class)
   @Column(name = "review_category_counts", nullable = false)
-  private List<Long> reviewCategoryCounts;
+  private Map<Category, Long> reviewCategoryCounts;
 
   public MemberStaticsEntity(
       Long memberStaticsId,
       Long reviewCounts,
       Long followerCounts,
       Long followingCounts,
-      List<Long> reviewCategoryCounts) {
+      Map<Category, Long> reviewCategoryCounts) {
     this.memberStaticsId = memberStaticsId;
     this.reviewCounts = reviewCounts;
     this.followerCounts = followerCounts;

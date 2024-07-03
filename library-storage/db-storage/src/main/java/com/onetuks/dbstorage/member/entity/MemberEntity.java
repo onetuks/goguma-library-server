@@ -50,7 +50,7 @@ public class MemberEntity {
   private String introduction;
 
   @Type(JsonType.class)
-  @Column(name = "interested_categories")
+  @Column(name = "interested_categories", nullable = false)
   private List<Category> interestedCategories;
 
   @Column(name = "is_alarm_accepted", nullable = false)

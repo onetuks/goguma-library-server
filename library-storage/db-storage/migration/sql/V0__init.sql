@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS members
     roles                        JSON         NOT NULL COMMENT '멤버 권한',
     nickname                     VARCHAR(50)  NOT NULL COMMENT '멤버 닉네임',
     introduction                 VARCHAR(100) COMMENT '멤버 소개',
-    interested_categories        JSON COMMENT '멤버 관심 카테고리',
+    interested_categories        JSON         NOT NULL COMMENT '멤버 관심 카테고리',
     is_alarm_accepted            BOOLEAN      NOT NULL DEFAULT TRUE COMMENT '알림 수신 여부',
     points                       BIGINT       NOT NULL DEFAULT 0 COMMENT '멤버 포인트',
     profile_image_uri            VARCHAR(255) NOT NULL DEFAULT 'default-profile.png' COMMENT '멤버 프로필 이미지 URI',
