@@ -104,7 +104,7 @@ public class AuthRestController {
     AuthToken authToken = getAuthToken(request);
 
     authService.logout(authToken);
-    memberService.deleteMember(memberId);
+    memberService.remove(memberId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }

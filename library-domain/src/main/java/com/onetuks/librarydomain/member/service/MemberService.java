@@ -24,7 +24,7 @@ public class MemberService {
   }
 
   @Transactional
-  public MemberAuthResult createMemberIfNotExists(AuthInfo authInfo) {
+  public MemberAuthResult registerIfNotExists(AuthInfo authInfo) {
     Optional<Member> optionalMember =
         memberRepository.read(authInfo.socialId(), authInfo.clientProvider());
 
@@ -38,12 +38,12 @@ public class MemberService {
   }
 
   @Transactional(readOnly = true)
-  public Member readMember(Long memberId) {
+  public Member find(Long memberId) {
     return memberRepository.read(memberId);
   }
 
   @Transactional
-  public Member updateMember(
+  public Member edit(
       long loginId,
       long memberId,
       MemberProfileParam param,
@@ -63,7 +63,7 @@ public class MemberService {
   }
 
   @Transactional
-  public void deleteMember(long memberId) {
+  public void remove(long memberId) {
     Member member = memberRepository.read(memberId);
 
     fileRepository.deleteFile(member.profileImageFile().getKey());

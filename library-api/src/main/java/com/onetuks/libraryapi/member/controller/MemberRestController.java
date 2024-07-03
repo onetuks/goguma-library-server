@@ -48,8 +48,7 @@ public class MemberRestController {
       @RequestPart(name = "profile-background-image", required = false)
           MultipartFile profileBackgroundImage) {
     Member result =
-        memberService.updateMember(
-            loginId, memberId, request.to(), profileImage, profileBackgroundImage);
+        memberService.edit(loginId, memberId, request.to(), profileImage, profileBackgroundImage);
     MemberPatchResponse response = MemberPatchResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -64,7 +63,7 @@ public class MemberRestController {
   @GetMapping(path = "/{memberId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<MemberGetResponse> getMemberProfile(
       @PathVariable(name = "memberId") Long memberId) {
-    Member result = memberService.readMember(memberId);
+    Member result = memberService.find(memberId);
     MemberGetResponse response = MemberGetResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);

@@ -29,7 +29,7 @@ class MemberServiceTest extends DomainIntegrationTest {
 
   @Test
   @DisplayName("존재하지 않는 멤버이면 새로 생성해서 멤버 인증 객체로 반환한다.")
-  void createMemberIfNotExistsTest_NotExistMember_Test() {
+  void registerMemberIfNotExistsTest_NotExist_Test() {
     // Given
     Member member = MemberFixture.create(121L, RoleType.USER);
 
@@ -38,7 +38,7 @@ class MemberServiceTest extends DomainIntegrationTest {
     given(memberRepository.create(any())).willReturn(member);
 
     // When
-    MemberAuthResult result = memberService.createMemberIfNotExists(member.authInfo());
+    MemberAuthResult result = memberService.registerIfNotExists(member.authInfo());
 
     // Then
     assertAll(
@@ -51,7 +51,7 @@ class MemberServiceTest extends DomainIntegrationTest {
 
   @Test
   @DisplayName("존재하는 멤버이면 멤버 인증 객체로 반환한다.")
-  void createMemberIfNotExistsTest_ExistMember_Test() {
+  void registerMemberIfNotExistsTest_Exist_Test() {
     // Given
     Member member = MemberFixture.create(122L, RoleType.USER);
 
@@ -59,7 +59,7 @@ class MemberServiceTest extends DomainIntegrationTest {
         .willReturn(Optional.of(member));
 
     // When
-    MemberAuthResult result = memberService.createMemberIfNotExists(member.authInfo());
+    MemberAuthResult result = memberService.registerIfNotExists(member.authInfo());
 
     // Then
     assertAll(
@@ -72,14 +72,14 @@ class MemberServiceTest extends DomainIntegrationTest {
 
   @Test
   @DisplayName("멤버 프로필을 조회한다.")
-  void readMemberTest() {
+  void findTest() {
     // Given
     Member member = MemberFixture.create(123L, RoleType.USER);
 
     given(memberRepository.read(member.memberId())).willReturn(member);
 
     // When
-    Member result = memberService.readMember(member.memberId());
+    Member result = memberService.find(member.memberId());
 
     // Then
     assertThat(result.memberId()).isEqualTo(member.memberId());
@@ -87,7 +87,7 @@ class MemberServiceTest extends DomainIntegrationTest {
 
   @Test
   @DisplayName("멤버 프로필을 수정한다. 프로필 이미지가 주어지면 저장하고, 기존 이미지를 대체한다.")
-  void updateMemberTest() {
+  void editTest() {
     // Given
     Member member = MemberFixture.create(123L, RoleType.USER);
     MemberProfileParam param =
@@ -105,7 +105,7 @@ class MemberServiceTest extends DomainIntegrationTest {
 
     // When
     Member result =
-        memberService.updateMember(
+        memberService.edit(
             member.memberId(), member.memberId(), param, profileImage, profileBackgroundImage);
 
     // Then
@@ -127,26 +127,26 @@ class MemberServiceTest extends DomainIntegrationTest {
 
   @Test
   @DisplayName("권한이 없는 멤버가 프로필을 수정하려고 하면 예외를 던진다.")
-  void updateMemberTest_AccessDenied_Test() {
+  void editTest_AccessDenied_Test() {
     // Given
     long loginId = 123L;
     long memberId = 124L;
 
     // When & Then
-    assertThatThrownBy(() -> memberService.updateMember(loginId, memberId, null, null, null))
+    assertThatThrownBy(() -> memberService.edit(loginId, memberId, null, null, null))
         .isInstanceOf(ApiAccessDeniedException.class);
   }
 
   @Test
   @DisplayName("멤버를 제거하고, 프로필 이미지 파일을 삭제한다.")
-  void deleteMemberTest() {
+  void removeTest() {
     // Given
     Member member = MemberFixture.create(123L, RoleType.USER);
 
     given(memberRepository.read(member.memberId())).willReturn(member);
 
     // When
-    memberService.deleteMember(member.memberId());
+    memberService.remove(member.memberId());
 
     // Then
     verify(fileRepository, times(1)).deleteFile(member.profileImageFile().getKey());

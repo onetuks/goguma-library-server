@@ -4,9 +4,7 @@ import static com.onetuks.libraryobject.enums.ImageType.COVER_IMAGE;
 
 import com.onetuks.dbstorage.book.entity.BookEntity;
 import com.onetuks.librarydomain.book.model.Book;
-import com.onetuks.libraryobject.enums.ImageType;
 import com.onetuks.libraryobject.vo.ImageFile;
-import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
