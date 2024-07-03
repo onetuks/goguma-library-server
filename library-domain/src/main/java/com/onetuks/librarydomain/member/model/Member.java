@@ -7,7 +7,6 @@ import static com.onetuks.libraryobject.vo.ImageFile.DEFAULT_PROFILE_IMAGE_URI;
 
 import com.onetuks.librarydomain.member.model.vo.AuthInfo;
 import com.onetuks.librarydomain.member.model.vo.Nickname;
-import com.onetuks.librarydomain.member.service.dto.param.MemberProfileParam;
 import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.vo.ImageFile;
 import java.util.List;
@@ -42,14 +41,19 @@ public record Member(
   }
 
   public Member changeProfile(
-      MemberProfileParam param, MultipartFile profileImage, MultipartFile profileBackgroundImage) {
+      String nickname,
+      String introduction,
+      List<Category> interestedCategories,
+      boolean isAlarmAccepted,
+      MultipartFile profileImage,
+      MultipartFile profileBackgroundImage) {
     return new Member(
         memberId,
         authInfo,
-        new Nickname(param.nickname()),
-        param.introduction(),
-        param.interestedCategories(),
-        param.isAlarmAccepted(),
+        new Nickname(nickname),
+        introduction,
+        interestedCategories,
+        isAlarmAccepted,
         points,
         getProfileImageFile(profileImage),
         getProfileBackgroundImageFile(profileBackgroundImage),

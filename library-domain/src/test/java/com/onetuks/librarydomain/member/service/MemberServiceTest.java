@@ -98,7 +98,14 @@ class MemberServiceTest extends DomainIntegrationTest {
     MultipartFile profileBackgroundImage =
         MultipartFileFixture.create(
             ImageType.PROFILE_BACKGROUND_IMAGE, UUID.randomUUID().toString());
-    Member updatedMember = member.changeProfile(param, profileImage, profileBackgroundImage);
+    Member updatedMember =
+        member.changeProfile(
+            param.nickname(),
+            param.introduction(),
+            param.interestedCategories(),
+            param.isAlarmAccepted(),
+            profileImage,
+            profileBackgroundImage);
 
     given(memberRepository.read(member.memberId())).willReturn(member);
     given(memberRepository.update(any())).willReturn(updatedMember);

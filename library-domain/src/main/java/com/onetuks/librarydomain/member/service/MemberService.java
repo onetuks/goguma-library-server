@@ -54,7 +54,15 @@ public class MemberService {
     }
 
     Member member =
-        memberRepository.read(memberId).changeProfile(param, profileImage, profileBackgroundImage);
+        memberRepository
+            .read(memberId)
+            .changeProfile(
+                param.nickname(),
+                param.introduction(),
+                param.interestedCategories(),
+                param.isAlarmAccepted(),
+                profileImage,
+                profileBackgroundImage);
 
     fileRepository.putFile(member.profileImageFile());
     fileRepository.putFile(member.profileBackgroundImageFile());

@@ -28,7 +28,7 @@ public class BookFixture {
         createCategory(),
         ImageFileFixture.create(ImageType.COVER_IMAGE, UUID.randomUUID().toString()),
         createIsIndie(),
-        createIsPermitted());
+        false);
   }
 
   private static String createTitle() {
@@ -55,10 +55,6 @@ public class BookFixture {
   }
 
   private static boolean createIsIndie() {
-    return random.nextBoolean();
-  }
-
-  private static boolean createIsPermitted() {
     return random.nextBoolean();
   }
 }
