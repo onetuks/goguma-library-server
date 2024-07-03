@@ -7,12 +7,14 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.onetuks.dbstorage.DbStorageIntegrationTest;
 import com.onetuks.librarydomain.BookFixture;
 import com.onetuks.librarydomain.book.model.Book;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 class BookEntityRepositoryTest extends DbStorageIntegrationTest {
 
   @Test
+  @DisplayName("도서 엔티티를 생성한다.")
   void create() {
     // Given
     Book book = BookFixture.create(null);
@@ -25,6 +27,7 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
   }
 
   @Test
+  @DisplayName("도서 엔티티를 조회한다.")
   void read() {
     // Given
     Book book = bookEntityRepository.create(BookFixture.create(null));
@@ -37,6 +40,7 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
   }
 
   @Test
+  @DisplayName("도서 엔티티를 수정한다.")
   void update() {
     // Given
     Book book = bookEntityRepository.create(BookFixture.create(null));
@@ -62,6 +66,7 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
   }
 
   @Test
+  @DisplayName("도서 엔티티를 제거한다.")
   void delete() {
     // Given
     Book book = bookEntityRepository.create(BookFixture.create(null));

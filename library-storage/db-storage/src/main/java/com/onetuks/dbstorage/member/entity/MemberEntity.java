@@ -94,6 +94,10 @@ public class MemberEntity {
     this.memberStaticsEntity = memberStaticsEntity;
   }
 
+  public void addPoints(long point) {
+    this.points += point;
+  }
+
   @Override
   @Generated
   public boolean equals(Object o) {

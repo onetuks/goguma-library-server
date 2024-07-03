@@ -3,6 +3,7 @@ package com.onetuks.libraryapi.book.controller;
 import com.onetuks.libraryapi.book.dto.request.BookPostRequest;
 import com.onetuks.libraryapi.book.dto.response.BookIsbnGetResponse;
 import com.onetuks.libraryapi.book.dto.response.BookResponse;
+import com.onetuks.libraryauth.util.LoginId;
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.book.service.BookService;
 import com.onetuks.libraryexternal.book.handler.dto.IsbnResult;
@@ -56,9 +57,10 @@ public class BookRestController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookResponse> postNewBook(
+      @LoginId Long loginId,
       @RequestBody BookPostRequest request,
       @RequestPart(name = "cover-image", required = false) MultipartFile coverImage) {
-    Book result = bookService.register(request.to(), coverImage);
+    Book result = bookService.register(loginId, request.to(), coverImage);
     BookResponse response = BookResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);

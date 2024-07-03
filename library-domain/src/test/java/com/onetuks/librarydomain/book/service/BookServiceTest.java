@@ -1,9 +1,12 @@
 package com.onetuks.librarydomain.book.service;
 
+import static com.onetuks.librarydomain.member.repository.PointRepository.BOOK_REGISTRATION_POINT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import com.onetuks.librarydomain.BookFixture;
 import com.onetuks.librarydomain.DomainIntegrationTest;
@@ -20,6 +23,7 @@ class BookServiceTest extends DomainIntegrationTest {
   @DisplayName("표지 이미지와 함께 도서 등록한다.")
   void register_WithCoverImage_Test() {
     // Given
+    long loginId = 123L;
     Book book = BookFixture.create(123L);
     BookPostParam param =
         new BookPostParam(
@@ -33,7 +37,7 @@ class BookServiceTest extends DomainIntegrationTest {
     given(bookRepository.create(any(Book.class))).willReturn(book);
 
     // When
-    Book result = bookService.register(param, book.coverImageFile().file());
+    Book result = bookService.register(loginId, param, book.coverImageFile().file());
 
     // Then
     assertAll(
@@ -46,12 +50,16 @@ class BookServiceTest extends DomainIntegrationTest {
         () -> assertThat(result.isIndie()).isEqualTo(book.isIndie()),
         () -> assertThat(result.isPermitted()).isFalse(),
         () -> assertThat(result.coverImageFile()).isEqualTo(book.coverImageFile()));
+
+    verify(pointRepository, times(1)).creditPoints(loginId, BOOK_REGISTRATION_POINT);
+    verify(fileRepository, times(1)).putFile(any());
   }
 
   @Test
   @DisplayName("표지 이미지 없이 도서 등록하면 기본 표지 이미지로 할당되어 등록된다.")
   void register_WithOutCoverImage_Test() {
     // Given
+    long loginId = 123L;
     Book book = BookFixture.create(123L);
     BookPostParam param =
         new BookPostParam(
@@ -74,7 +82,7 @@ class BookServiceTest extends DomainIntegrationTest {
     given(bookRepository.create(any(Book.class))).willReturn(expected);
 
     // When
-    Book result = bookService.register(param, null);
+    Book result = bookService.register(loginId, param, null);
 
     // Then
     assertAll(
@@ -88,5 +96,8 @@ class BookServiceTest extends DomainIntegrationTest {
         () ->
             assertThat(result.coverImageFile())
                 .isEqualTo(ImageFile.of(ImageType.COVER_IMAGE, ImageFile.DEFAULT_COVER_IMAGE_URI)));
+
+    verify(pointRepository, times(1)).creditPoints(loginId, BOOK_REGISTRATION_POINT);
+    verify(fileRepository, times(1)).putFile(any());
   }
 }

@@ -5,6 +5,7 @@ import com.onetuks.librarydomain.book.repository.BookRepository;
 import com.onetuks.librarydomain.book.service.BookService;
 import com.onetuks.librarydomain.file.FileRepository;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
+import com.onetuks.librarydomain.member.repository.PointRepository;
 import com.onetuks.librarydomain.member.service.MemberService;
 import com.onetuks.libraryobject.vo.TestFileCleaner;
 import org.junit.jupiter.api.AfterEach;
@@ -23,6 +24,7 @@ public class DomainIntegrationTest {
   @Autowired public BookService bookService;
 
   @MockBean public FileRepository fileRepository;
+  @MockBean public PointRepository pointRepository;
   @MockBean public MemberRepository memberRepository;
   @MockBean public BookRepository bookRepository;
 
