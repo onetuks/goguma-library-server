@@ -14,6 +14,8 @@ public interface BookRepository {
 
   Page<Book> readAll(boolean inspectionMode, Pageable pageable);
 
+  Page<Book> readAll(String keyword, Pageable pageable);
+
   Book update(Book book);
 
   void delete(long bookId);

@@ -70,7 +70,8 @@ class S3RepositoryTest extends FileStorageIntegrationTest {
   @DisplayName("기본 파일인 경우 제거하지 않고 조기반환한다.")
   void s3Delete_DefaultFile_EarlyReturnTest() {
     // Given
-    ImageFile imageFile = ImageFileFixture.create(ImageType.COVER_IMAGE, ImageFile.DEFAULT_COVER_IMAGE_URI);
+    ImageFile imageFile =
+        ImageFileFixture.create(ImageType.COVER_IMAGE, ImageFile.DEFAULT_COVER_IMAGE_URI);
 
     // When
     s3Repository.deleteFile(imageFile);

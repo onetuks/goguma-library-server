@@ -100,6 +100,55 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
   }
 
   @Test
+  @DisplayName("키워드가 주어진 경우, 키워드를 포함하는 제목|저자|출판사를 가진 데이터를 모두 조회한다.")
+  void readAll_WithKeyword_FindContainsTest() {
+    // Given
+    List<Book> books =
+        IntStream.range(0, 5)
+            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null)))
+            .toList();
+    String keyword = books.getFirst().title();
+    Pageable pageable = PageRequest.of(0, 10);
+
+    // When
+    Page<Book> results = bookEntityRepository.readAll(keyword, pageable);
+
+    // Then
+    List<String> tokens = List.of(keyword.split(" "));
+
+    assertThat(results.getContent())
+        .allSatisfy(
+            result -> {
+              boolean contains =
+                  tokens.stream()
+                      .anyMatch(
+                          token ->
+                              result.title().contains(token)
+                                  || result.authorName().contains(token)
+                                  || result.publisher().contains(token));
+
+              assertThat(contains).isTrue();
+            });
+  }
+
+  @Test
+  @DisplayName("키워드 없이 검색하는 경우 모든 도서 데이터를 검색한다.")
+  void readAll_WithOutKeyword_FindAllTest() {
+    // Given
+    Pageable pageable = PageRequest.of(0, 10);
+    List<Book> books =
+        IntStream.range(0, 5)
+            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null)))
+            .toList();
+
+    // When
+    Page<Book> results = bookEntityRepository.readAll(null, pageable);
+
+    // Then
+    assertThat(results.getTotalElements()).isEqualTo(books.size());
+  }
+
+  @Test
   @DisplayName("도서 엔티티를 수정한다.")
   void update() {
     // Given

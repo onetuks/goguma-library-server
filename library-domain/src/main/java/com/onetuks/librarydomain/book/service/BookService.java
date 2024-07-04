@@ -82,4 +82,9 @@ public class BookService {
   public Book find(long bookId) {
     return bookRepository.read(bookId);
   }
+
+  @Transactional(readOnly = true)
+  public Page<Book> findAll(String keyword, Pageable pageable) {
+    return bookRepository.readAll(keyword, pageable);
+  }
 }

@@ -144,4 +144,20 @@ public class BookRestController {
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
+
+  /**
+   * 제목/저자/출판사 포함 도서 다건 조회
+   *
+   * @param keyword : 검색 키워드
+   * @return : 검색 결과 도서 목록
+   */
+  @GetMapping(path = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<BookResponses> getBooks(
+      @RequestParam(name = "keyword", required = false) String keyword,
+      @PageableDefault Pageable pageable) {
+    Page<Book> results = bookService.findAll(keyword, pageable);
+    BookResponses responses = BookResponses.from(results);
+
+    return ResponseEntity.status(HttpStatus.OK).body(responses);
+  }
 }

@@ -43,6 +43,11 @@ public class BookEntityRepository implements BookRepository {
   }
 
   @Override
+  public Page<Book> readAll(String keyword, Pageable pageable) {
+    return qDslRepository.findAllByKeyword(keyword, pageable).map(converter::toDomain);
+  }
+
+  @Override
   public Book update(Book book) {
     return converter.toDomain(repository.save(converter.toEntity(book)));
   }

@@ -229,7 +229,7 @@ class BookServiceTest extends DomainIntegrationTest {
 
   @Test
   @DisplayName("검수 대상인 모든 도서를 조회한다.")
-  void findAllTest() {
+  void findAll_ForInspection_Test() {
     // Given
     boolean inspectionMode = true;
     int counts = 5;
@@ -262,5 +262,48 @@ class BookServiceTest extends DomainIntegrationTest {
     assertAll(
         () -> assertThat(result.isPermitted()).isEqualTo(book.isPermitted()),
         () -> assertThat(result.title()).isEqualTo(book.title()));
+  }
+
+  @Test
+  @DisplayName("제목/작가명 키워드를 포함하는 도서를 다건 조회한다.")
+  void findAll_WithKeyword_Test() {
+    // Given
+    Page<Book> books =
+        new PageImpl<>(IntStream.range(0, 5).mapToObj(i -> BookFixture.create((long) i)).toList());
+    String keyword = books.getContent().getFirst().title();
+    Pageable pageable = PageRequest.of(0, 10);
+    List<String> keywordTokens = List.of(keyword.split(" "));
+    Page<Book> expected =
+        new PageImpl<>(
+            books.stream()
+                .filter(
+                    book ->
+                        keywordTokens.stream()
+                            .anyMatch(
+                                token ->
+                                    book.title().contains(token)
+                                        || book.authorName().contains(token)
+                                        || book.publisher().contains(token)))
+                .toList());
+
+    given(bookRepository.readAll(keyword, pageable)).willReturn(expected);
+
+    // When
+    Page<Book> results = bookService.findAll(keyword, pageable);
+
+    // Then
+    assertThat(results.getContent())
+        .allSatisfy(
+            result -> {
+              boolean contains =
+                  keywordTokens.stream()
+                      .anyMatch(
+                          token ->
+                              result.title().contains(token)
+                                  || result.authorName().contains(token)
+                                  || result.publisher().contains(token));
+
+              assertThat(contains).isTrue();
+            });
   }
 }
