@@ -2,10 +2,8 @@ package com.onetuks.libraryapi.member.dto.request;
 
 import com.onetuks.librarydomain.member.service.dto.param.MemberProfileParam;
 import com.onetuks.libraryobject.enums.Category;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.util.List;
 import org.hibernate.validator.constraints.Length;

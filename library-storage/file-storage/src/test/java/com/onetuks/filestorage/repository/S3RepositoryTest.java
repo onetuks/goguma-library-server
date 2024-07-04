@@ -30,7 +30,7 @@ class S3RepositoryTest extends FileStorageIntegrationTest {
     s3Repository.putFile(imageFile);
 
     // Then
-    File result = s3Repository.getFile(imageFile.getKey());
+    File result = s3Repository.getFile(imageFile);
 
     assertAll(
         () -> assertThat(result).isFile(),
@@ -46,22 +46,23 @@ class S3RepositoryTest extends FileStorageIntegrationTest {
     s3Repository.putFile(imageFile);
 
     // When
-    s3Repository.deleteFile(imageFile.getKey());
+    s3Repository.deleteFile(imageFile);
 
     // Then
-    assertThrows(NoSuchKeyException.class, () -> s3Repository.getFile(imageFile.getKey()));
+    assertThrows(NoSuchKeyException.class, () -> s3Repository.getFile(imageFile));
   }
 
   @Test
   @DisplayName("s3에 없는 파일을 제거하려고 할때 예외가 발생한다.")
   void S3Delete_NotExistFile_ExceptionTest() {
     // Given
-    String uri = "not-exists-file-fileName";
+    ImageFile imageFile =
+        ImageFileFixture.create(ImageType.PROFILE_IMAGE, UUID.randomUUID().toString());
 
     // When
-    s3Repository.deleteFile(uri);
+    s3Repository.deleteFile(imageFile);
 
     // Then
-    assertThrows(NoSuchKeyException.class, () -> s3Repository.getFile(uri));
+    assertThrows(NoSuchKeyException.class, () -> s3Repository.getFile(imageFile));
   }
 }

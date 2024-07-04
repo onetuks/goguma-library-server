@@ -109,7 +109,8 @@ public class ApiArchitectureTest {
                   "..model",
                   "..web..",
                   "..http..",
-                  "java..");
+                  "java..",
+                  "..validation..");
 
       rule.check(javaClasses);
     }

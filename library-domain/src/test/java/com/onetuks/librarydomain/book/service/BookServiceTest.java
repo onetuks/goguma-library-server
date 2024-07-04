@@ -205,4 +205,20 @@ class BookServiceTest extends DomainIntegrationTest {
         () -> assertThat(result.coverImageFile().file()).isEqualTo(coverImage),
         () -> assertThat(result.coverImageFile()).isEqualTo(book.coverImageFile()));
   }
+
+  @Test
+  @DisplayName("도서를 삭제하면 커버 이미지도 함께 삭제된다. 기본 이미지면 삭제되지 않는다.")
+  void removeTest() {
+    // Given
+    Book book = BookFixture.create(125L);
+
+    given(bookRepository.read(book.bookId())).willReturn(book);
+
+    // When
+    bookService.remove(book.bookId());
+
+    // Then
+    verify(fileRepository, times(1)).deleteFile(book.coverImageFile());
+    verify(bookRepository, times(1)).delete(book.bookId());
+  }
 }

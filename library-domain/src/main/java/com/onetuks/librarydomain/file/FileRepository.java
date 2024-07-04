@@ -8,5 +8,5 @@ public interface FileRepository {
 
   void putFile(ImageFile imageFile);
 
-  void deleteFile(String url);
+  void deleteFile(ImageFile imageFile);
 }

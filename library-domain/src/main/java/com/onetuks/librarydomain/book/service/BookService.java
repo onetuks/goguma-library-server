@@ -47,7 +47,7 @@ public class BookService {
   }
 
   @Transactional
-  public Book edit(Long bookId, BookPatchParam param, MultipartFile coverImage) {
+  public Book edit(long bookId, BookPatchParam param, MultipartFile coverImage) {
     return bookRepository.update(
         bookRepository
             .read(bookId)
@@ -61,5 +61,13 @@ public class BookService {
                 param.isIndie(),
                 param.isPermitted(),
                 coverImage));
+  }
+
+  @Transactional
+  public void remove(long bookId) {
+    Book book = bookRepository.read(bookId);
+
+    fileRepository.deleteFile(book.coverImageFile());
+    bookRepository.delete(bookId);
   }
 }

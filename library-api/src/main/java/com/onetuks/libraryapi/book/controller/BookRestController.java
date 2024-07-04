@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -90,5 +91,19 @@ public class BookRestController {
     BookResponse response = BookResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  /**
+   * 도서 삭제
+   *
+   * @param bookId : 도서 ID
+   * @return : 204 No Content
+   */
+  @OnlyForAdmin
+  @DeleteMapping(path = "/admin/{bookId}")
+  public ResponseEntity<Void> deleteBook(@PathVariable(name = "bookId") Long bookId) {
+    bookService.remove(bookId);
+
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 }

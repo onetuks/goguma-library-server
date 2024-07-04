@@ -185,7 +185,7 @@ class MemberServiceTest extends DomainIntegrationTest {
     memberService.remove(member.memberId());
 
     // Then
-    verify(fileRepository, times(1)).deleteFile(member.profileImageFile().getKey());
+    verify(fileRepository, times(1)).deleteFile(member.profileImageFile());
     verify(memberRepository, times(1)).delete(member.memberId());
   }
 }
