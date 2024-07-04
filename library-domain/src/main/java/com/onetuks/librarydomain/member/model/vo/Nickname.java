@@ -1,6 +1,8 @@
 package com.onetuks.librarydomain.member.model.vo;
 
+import com.onetuks.libraryobject.annotation.Generated;
 import java.util.List;
+import java.util.Objects;
 
 public record Nickname(String value) {
 
@@ -34,5 +36,24 @@ public record Nickname(String value) {
     if (FORBIDDEN_TOKENS.contains(value.toLowerCase())) {
       throw new IllegalArgumentException("사용할 수 없는 닉네임입니다.");
     }
+  }
+
+  @Override
+  @Generated
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Nickname nickname = (Nickname) o;
+    return Objects.equals(value, nickname.value);
+  }
+
+  @Override
+  @Generated
+  public int hashCode() {
+    return Objects.hashCode(value);
   }
 }

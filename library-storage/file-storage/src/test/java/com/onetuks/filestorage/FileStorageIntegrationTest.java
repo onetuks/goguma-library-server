@@ -61,7 +61,8 @@ public class FileStorageIntegrationTest {
       Map<String, String> properties = new HashMap<>();
 
       try {
-        localStack.execInContainer("awslocal", "s3api", "create-bucket", "--bucket", "goguma-bookstore-test");
+        localStack.execInContainer(
+            "awslocal", "s3api", "create-bucket", "--bucket", "goguma-bookstore-test");
 
         properties.put("aws.endpoint", String.valueOf(localStack.getEndpoint()));
         properties.put("aws.bucket-name", "goguma-bookstore-test");

@@ -8,6 +8,7 @@ import static com.onetuks.libraryobject.vo.ImageFile.DEFAULT_PROFILE_IMAGE_URI;
 import com.onetuks.librarydomain.member.model.vo.AuthInfo;
 import com.onetuks.librarydomain.member.model.vo.Nickname;
 import com.onetuks.libraryobject.enums.Category;
+import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.vo.ImageFile;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +39,24 @@ public record Member(
         Optional.ofNullable(profileBackgroundImageFile)
             .orElse(ImageFile.of(PROFILE_BACKGROUND_IMAGE, DEFAULT_PROFILE_BACKGROUND_IMAGE_URI));
     memberStatics = Optional.ofNullable(memberStatics).orElse(MemberStatics.init());
+  }
+
+  public Member changeRoles(List<RoleType> newRoles) {
+    return new Member(
+        memberId(),
+        AuthInfo.builder()
+            .socialId(authInfo.socialId())
+            .clientProvider(authInfo.clientProvider())
+            .roles(newRoles)
+            .build(),
+        nickname(),
+        introduction(),
+        interestedCategories(),
+        isAlarmAccepted(),
+        points(),
+        profileImageFile(),
+        profileBackgroundImageFile(),
+        memberStatics());
   }
 
   public Member changeProfile(

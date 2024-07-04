@@ -10,10 +10,7 @@ import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.member.model.MemberStatics;
 import com.onetuks.librarydomain.member.model.vo.AuthInfo;
 import com.onetuks.librarydomain.member.model.vo.Nickname;
-import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.vo.ImageFile;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 @Component

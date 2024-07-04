@@ -87,7 +87,7 @@ class MemberServiceTest extends DomainIntegrationTest {
 
   @Test
   @DisplayName("멤버 프로필을 수정한다. 프로필 이미지가 주어지면 저장하고, 기존 이미지를 대체한다.")
-  void editTest() {
+  void editProfileTest() {
     // Given
     Member member = MemberFixture.create(123L, RoleType.USER);
     MemberProfileParam param =
@@ -112,7 +112,7 @@ class MemberServiceTest extends DomainIntegrationTest {
 
     // When
     Member result =
-        memberService.edit(
+        memberService.editProfile(
             member.memberId(), member.memberId(), param, profileImage, profileBackgroundImage);
 
     // Then
@@ -133,14 +133,43 @@ class MemberServiceTest extends DomainIntegrationTest {
   }
 
   @Test
+  @DisplayName("멤버의 권한을 수정한다.")
+  void editAuthorities() {
+    // Given
+    Member userMember = MemberFixture.create(123L, RoleType.USER);
+    Member adminMember = MemberFixture.create(userMember.memberId(), RoleType.ADMIN);
+
+    given(memberRepository.read(userMember.memberId())).willReturn(userMember);
+    given(memberRepository.update(any(Member.class))).willReturn(adminMember);
+
+    // When
+    Member result =
+        memberService.editAuthorities(
+            userMember.memberId(), List.of(RoleType.USER, RoleType.ADMIN));
+
+    // Then
+    assertAll(
+        () -> assertThat(result.memberId()).isEqualTo(adminMember.memberId()),
+        () -> assertThat(result.nickname()).isEqualTo(adminMember.nickname()),
+        () -> assertThat(result.authInfo()).isEqualTo(adminMember.authInfo()),
+        () -> assertThat(result.authInfo().roles()).contains(RoleType.ADMIN),
+        () -> assertThat(result.points()).isEqualTo(adminMember.points()),
+        () -> assertThat(result.isAlarmAccepted()).isEqualTo(adminMember.isAlarmAccepted()),
+        () -> assertThat(result.profileImageFile()).isEqualTo(adminMember.profileImageFile()),
+        () ->
+            assertThat(result.profileBackgroundImageFile())
+                .isEqualTo(adminMember.profileBackgroundImageFile()));
+  }
+
+  @Test
   @DisplayName("권한이 없는 멤버가 프로필을 수정하려고 하면 예외를 던진다.")
-  void editTest_AccessDenied_Test() {
+  void editProfileTest_AccessDenied_Test() {
     // Given
     long loginId = 123L;
     long memberId = 124L;
 
     // When & Then
-    assertThatThrownBy(() -> memberService.edit(loginId, memberId, null, null, null))
+    assertThatThrownBy(() -> memberService.editProfile(loginId, memberId, null, null, null))
         .isInstanceOf(ApiAccessDeniedException.class);
   }
 

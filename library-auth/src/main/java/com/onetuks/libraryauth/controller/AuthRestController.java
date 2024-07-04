@@ -18,7 +18,11 @@ import com.onetuks.libraryauth.service.dto.LogoutResult;
 import com.onetuks.libraryauth.service.dto.RefreshResult;
 import com.onetuks.libraryauth.util.LoginId;
 import com.onetuks.librarydomain.member.service.MemberService;
+import com.onetuks.libraryobject.enums.RoleType;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -49,34 +53,34 @@ public class AuthRestController {
 
   @PostMapping(path = "/postman/kakao")
   public ResponseEntity<LoginResponse> kakaoLoginWithAuthToken(HttpServletRequest request) {
-    LoginResult loginResult =
+    LoginResult result =
         oAuth2ClientService.loginWithAuthToken(KAKAO, request.getHeader(HEADER_AUTHORIZATION));
 
-    return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(loginResult));
+    return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(result));
   }
 
   @PostMapping(path = "/kakao")
   public ResponseEntity<LoginResponse> kakaoLoginWithAuthCode(HttpServletRequest request) {
-    LoginResult loginResult =
+    LoginResult result =
         oAuth2ClientService.loginWithAuthCode(KAKAO, request.getHeader(HEADER_AUTHORIZATION));
 
-    return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(loginResult));
+    return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(result));
   }
 
   @PostMapping(path = "/postman/google")
   public ResponseEntity<LoginResponse> googleLoginWithAuthToken(HttpServletRequest request) {
-    LoginResult loginResult =
+    LoginResult result =
         oAuth2ClientService.loginWithAuthToken(GOOGLE, request.getHeader(HEADER_AUTHORIZATION));
 
-    return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(loginResult));
+    return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(result));
   }
 
   @PostMapping(path = "/postman/naver")
   public ResponseEntity<LoginResponse> naverLoginWithAuthToken(HttpServletRequest request) {
-    LoginResult loginResult =
+    LoginResult result =
         oAuth2ClientService.loginWithAuthToken(NAVER, request.getHeader(HEADER_AUTHORIZATION));
 
-    return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(loginResult));
+    return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(result));
   }
 
   @PutMapping(path = "/refresh")
@@ -84,19 +88,34 @@ public class AuthRestController {
       HttpServletRequest request, @LoginId Long loginId) {
     AuthToken authToken = getAuthToken(request);
 
-    RefreshResult authRefreshResult =
+    RefreshResult result =
         authService.updateAccessToken(authToken, loginId, authToken.getRoleTypes());
 
-    return ResponseEntity.status(HttpStatus.OK).body(RefreshResponse.from(authRefreshResult));
+    return ResponseEntity.status(HttpStatus.OK).body(RefreshResponse.from(result));
+  }
+
+  @PutMapping(path = "/promotion")
+  public ResponseEntity<RefreshResponse> promoteMember(
+      HttpServletRequest request, @LoginId Long loginId) {
+    AuthToken authToken = getAuthToken(request);
+
+    List<RoleType> newRoles = Collections.synchronizedList(new ArrayList<>(authToken.getRoleTypes()));
+    newRoles.add(RoleType.ADMIN);
+
+    memberService.editAuthorities(loginId, newRoles);
+
+    RefreshResult result = authService.updateAccessToken(authToken, loginId, newRoles);
+
+    return ResponseEntity.status(HttpStatus.OK).body(RefreshResponse.from(result));
   }
 
   @DeleteMapping("/logout")
   public ResponseEntity<LogoutResponse> logout(HttpServletRequest request) {
     AuthToken authToken = getAuthToken(request);
 
-    LogoutResult logoutResult = authService.logout(authToken);
+    LogoutResult result = authService.logout(authToken);
 
-    return ResponseEntity.status(HttpStatus.OK).body(LogoutResponse.from(logoutResult));
+    return ResponseEntity.status(HttpStatus.OK).body(LogoutResponse.from(result));
   }
 
   @DeleteMapping("/withdraw")

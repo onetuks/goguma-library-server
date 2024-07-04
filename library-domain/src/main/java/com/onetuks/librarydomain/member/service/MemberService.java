@@ -6,7 +6,9 @@ import com.onetuks.librarydomain.member.model.vo.AuthInfo;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
 import com.onetuks.librarydomain.member.service.dto.param.MemberProfileParam;
 import com.onetuks.librarydomain.member.service.dto.result.MemberAuthResult;
+import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +45,12 @@ public class MemberService {
   }
 
   @Transactional
-  public Member edit(
+  public Member editAuthorities(Long loginId, List<RoleType> newRoles) {
+    return memberRepository.update(memberRepository.read(loginId).changeRoles(newRoles));
+  }
+
+  @Transactional
+  public Member editProfile(
       long loginId,
       long memberId,
       MemberProfileParam param,

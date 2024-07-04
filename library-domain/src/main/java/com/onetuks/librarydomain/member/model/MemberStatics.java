@@ -14,10 +14,12 @@ public record MemberStatics(
 
   public static MemberStatics init() {
     return new MemberStatics(
-        null, 0L, 0L, 0L,
+        null,
+        0L,
+        0L,
+        0L,
         Arrays.stream(Category.values())
             .map(category -> Map.entry(category, 0L))
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
-    );
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
   }
 }

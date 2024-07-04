@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,7 +47,8 @@ public class MemberRestController {
       @RequestPart(name = "profile-background-image", required = false)
           MultipartFile profileBackgroundImage) {
     Member result =
-        memberService.edit(loginId, memberId, request.to(), profileImage, profileBackgroundImage);
+        memberService.editProfile(
+            loginId, memberId, request.to(), profileImage, profileBackgroundImage);
     MemberPatchResponse response = MemberPatchResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
