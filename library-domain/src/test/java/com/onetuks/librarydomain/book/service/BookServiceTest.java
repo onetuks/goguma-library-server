@@ -246,4 +246,21 @@ class BookServiceTest extends DomainIntegrationTest {
     // Then
     assertThat(results.getTotalElements()).isEqualTo(counts);
   }
+
+  @Test
+  @DisplayName("도서 ID로 도서를 조회한다.")
+  void findTest() {
+    // Given
+    Book book = BookFixture.create(126L);
+
+    given(bookRepository.read(book.bookId())).willReturn(book);
+
+    // When
+    Book result = bookService.find(book.bookId());
+
+    // Then
+    assertAll(
+        () -> assertThat(result.isPermitted()).isEqualTo(book.isPermitted()),
+        () -> assertThat(result.title()).isEqualTo(book.title()));
+  }
 }

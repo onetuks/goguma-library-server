@@ -77,4 +77,9 @@ public class BookService {
   public Page<Book> findAll(boolean inspectionMode, Pageable pageable) {
     return bookRepository.readAll(inspectionMode, pageable);
   }
+
+  @Transactional(readOnly = true)
+  public Book find(long bookId) {
+    return bookRepository.read(bookId);
+  }
 }

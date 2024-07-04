@@ -114,7 +114,7 @@ public class BookRestController {
   }
 
   /**
-   * 검수 대상 도서 목록 조회
+   * 검수 대상 도서 다건 조회
    *
    * @param inspectionMode : 검수 모드
    * @return : 검수 대상 도서 목록
@@ -129,5 +129,19 @@ public class BookRestController {
     BookResponses responses = BookResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);
+  }
+
+  /**
+   * 도서 단건 조회
+   *
+   * @param bookId : 도서 ID
+   * @return : 도서 정보
+   */
+  @GetMapping(path = "/{bookId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<BookResponse> getBook(@PathVariable(name = "bookId") Long bookId) {
+    Book result = bookService.find(bookId);
+    BookResponse response = BookResponse.from(result);
+
+    return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 }
