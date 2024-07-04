@@ -6,14 +6,11 @@ import com.onetuks.libraryexternal.book.handler.strategy.CollectionIsbnSearchStr
 import com.onetuks.libraryexternal.book.handler.strategy.IsbnSearchStrategy;
 import java.util.List;
 import java.util.Objects;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class IsbnSearchHandler {
 
-  private static final Logger log = LoggerFactory.getLogger(IsbnSearchHandler.class);
   private final List<IsbnSearchStrategy> strategies;
 
   public IsbnSearchHandler(

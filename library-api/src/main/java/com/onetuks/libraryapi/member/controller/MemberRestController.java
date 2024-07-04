@@ -6,6 +6,7 @@ import com.onetuks.libraryapi.member.dto.response.MemberPatchResponse;
 import com.onetuks.libraryauth.util.LoginId;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.member.service.MemberService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +43,7 @@ public class MemberRestController {
   public ResponseEntity<MemberPatchResponse> patchMemberProfile(
       @LoginId Long loginId,
       @PathVariable(name = "memberId") Long memberId,
-      @RequestPart(name = "request") MemberPatchRequest request,
+      @RequestPart(name = "request") @Valid MemberPatchRequest request,
       @RequestPart(name = "profile-image", required = false) MultipartFile profileImage,
       @RequestPart(name = "profile-background-image", required = false)
           MultipartFile profileBackgroundImage) {

@@ -42,4 +42,36 @@ public record Book(
         isIndie,
         false);
   }
+
+  public Book changeBookInfo(
+      String title,
+      String authorName,
+      String introduction,
+      String isbn,
+      String publisher,
+      List<Category> categories,
+      boolean isIndie,
+      boolean isPermitted,
+      MultipartFile coverImage) {
+    return new Book(
+        bookId,
+        title,
+        authorName,
+        introduction,
+        isbn,
+        publisher,
+        categories,
+        Optional.ofNullable(coverImage)
+            .map(
+                file ->
+                    ImageFile.of(
+                        ImageType.COVER_IMAGE,
+                        file,
+                        coverImageFile.isDefault()
+                            ? UUID.randomUUID().toString()
+                            : coverImageFile.fileName()))
+            .orElse(coverImageFile),
+        isIndie,
+        isPermitted);
+  }
 }

@@ -5,9 +5,7 @@ import java.util.List;
 public interface IsbnResultData {
 
   List<String> SPECIAL_CHARACTERS =
-      List.of(
-          "`", "~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "+", "=", "<", ">", "/", ":",
-          ";", "\\'", "\"", "|", "\\");
+      List.of("`", "~", "@", "#", "$", "^", "+", "=", "<", ">", "/", ";", "\\'", "\"", "|", "\\");
 
   String filterDataValue(String newValue);
 

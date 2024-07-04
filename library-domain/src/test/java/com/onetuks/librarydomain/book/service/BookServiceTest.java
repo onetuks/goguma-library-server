@@ -11,11 +11,17 @@ import static org.mockito.Mockito.verify;
 import com.onetuks.librarydomain.BookFixture;
 import com.onetuks.librarydomain.DomainIntegrationTest;
 import com.onetuks.librarydomain.book.model.Book;
+import com.onetuks.librarydomain.book.service.dto.param.BookPatchParam;
 import com.onetuks.librarydomain.book.service.dto.param.BookPostParam;
+import com.onetuks.libraryobject.MultipartFileFixture;
+import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.ImageType;
 import com.onetuks.libraryobject.vo.ImageFile;
+import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.multipart.MultipartFile;
 
 class BookServiceTest extends DomainIntegrationTest {
 
@@ -99,5 +105,104 @@ class BookServiceTest extends DomainIntegrationTest {
 
     verify(pointRepository, times(1)).creditPoints(loginId, BOOK_REGISTRATION_POINT);
     verify(fileRepository, times(1)).putFile(any());
+  }
+
+  @Test
+  @DisplayName("커버 이미지 없이 도서 정보를 수정하면 커버 이미지 제외한 정보만 수정된다.")
+  void edit_WithOutCoverImage_Test() {
+    // Given
+    Book book = BookFixture.create(124L);
+    BookPatchParam param =
+        new BookPatchParam(
+            "새로운 제목",
+            "새로운 작가명",
+            "새로운 소개",
+            "1110111011101",
+            "새로운 출판사",
+            List.of(Category.CARTOON, Category.NOVEL),
+            true,
+            true);
+    Book updatedBook =
+        new Book(
+            book.bookId(),
+            param.title(),
+            param.authorName(),
+            param.introduction(),
+            param.isbn(),
+            param.publisher(),
+            param.categories(),
+            book.coverImageFile(),
+            param.isIndie(),
+            param.isPermitted());
+
+    given(bookRepository.read(book.bookId())).willReturn(book);
+    given(bookRepository.update(any(Book.class))).willReturn(updatedBook);
+
+    // When
+    Book result = bookService.edit(book.bookId(), param, null);
+
+    // Then
+    assertAll(
+        () -> assertThat(result.title()).isEqualTo(param.title()),
+        () -> assertThat(result.authorName()).isEqualTo(param.authorName()),
+        () -> assertThat(result.introduction()).isEqualTo(param.introduction()),
+        () -> assertThat(result.isbn()).isEqualTo(param.isbn()),
+        () -> assertThat(result.publisher()).isEqualTo(param.publisher()),
+        () ->
+            assertThat(result.categories()).containsExactlyInAnyOrderElementsOf(param.categories()),
+        () -> assertThat(result.isIndie()).isEqualTo(param.isIndie()),
+        () -> assertThat(result.isPermitted()).isEqualTo(param.isPermitted()),
+        () -> assertThat(result.coverImageFile()).isEqualTo(book.coverImageFile()));
+  }
+
+  @Test
+  @DisplayName("커버 이미지와 함께 수정하면 커버 이미지도 변경된다.")
+  void edit_WithCoverImage_Test() {
+    // Given
+    Book book = BookFixture.create(124L);
+    BookPatchParam param =
+        new BookPatchParam(
+            "새로운 제목",
+            "새로운 작가명",
+            "새로운 소개",
+            "1110111011101",
+            "새로운 출판사",
+            List.of(Category.CARTOON, Category.NOVEL),
+            true,
+            true);
+    MultipartFile coverImage =
+        MultipartFileFixture.create(ImageType.COVER_IMAGE, UUID.randomUUID().toString());
+    Book updatedBook =
+        new Book(
+            book.bookId(),
+            param.title(),
+            param.authorName(),
+            param.introduction(),
+            param.isbn(),
+            param.publisher(),
+            param.categories(),
+            ImageFile.of(ImageType.COVER_IMAGE, coverImage, book.coverImageFile().fileName()),
+            param.isIndie(),
+            param.isPermitted());
+
+    given(bookRepository.read(book.bookId())).willReturn(book);
+    given(bookRepository.update(any(Book.class))).willReturn(updatedBook);
+
+    // When
+    Book result = bookService.edit(book.bookId(), param, coverImage);
+
+    // Then
+    assertAll(
+        () -> assertThat(result.title()).isEqualTo(param.title()),
+        () -> assertThat(result.authorName()).isEqualTo(param.authorName()),
+        () -> assertThat(result.introduction()).isEqualTo(param.introduction()),
+        () -> assertThat(result.isbn()).isEqualTo(param.isbn()),
+        () -> assertThat(result.publisher()).isEqualTo(param.publisher()),
+        () ->
+            assertThat(result.categories()).containsExactlyInAnyOrderElementsOf(param.categories()),
+        () -> assertThat(result.isIndie()).isEqualTo(param.isIndie()),
+        () -> assertThat(result.isPermitted()).isEqualTo(param.isPermitted()),
+        () -> assertThat(result.coverImageFile().file()).isEqualTo(coverImage),
+        () -> assertThat(result.coverImageFile()).isEqualTo(book.coverImageFile()));
   }
 }

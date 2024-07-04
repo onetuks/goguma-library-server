@@ -94,12 +94,14 @@ public class AuthRestController {
     return ResponseEntity.status(HttpStatus.OK).body(RefreshResponse.from(result));
   }
 
+  // TODO : 일반 유저 접근 방지 처리
   @PutMapping(path = "/promotion")
   public ResponseEntity<RefreshResponse> promoteMember(
       HttpServletRequest request, @LoginId Long loginId) {
     AuthToken authToken = getAuthToken(request);
 
-    List<RoleType> newRoles = Collections.synchronizedList(new ArrayList<>(authToken.getRoleTypes()));
+    List<RoleType> newRoles =
+        Collections.synchronizedList(new ArrayList<>(authToken.getRoleTypes()));
     newRoles.add(RoleType.ADMIN);
 
     memberService.editAuthorities(loginId, newRoles);

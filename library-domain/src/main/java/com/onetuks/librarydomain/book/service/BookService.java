@@ -4,6 +4,7 @@ import static com.onetuks.librarydomain.member.repository.PointRepository.BOOK_R
 
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.book.repository.BookRepository;
+import com.onetuks.librarydomain.book.service.dto.param.BookPatchParam;
 import com.onetuks.librarydomain.book.service.dto.param.BookPostParam;
 import com.onetuks.librarydomain.file.FileRepository;
 import com.onetuks.librarydomain.member.repository.PointRepository;
@@ -43,5 +44,22 @@ public class BookService {
     fileRepository.putFile(book.coverImageFile());
 
     return bookRepository.create(book);
+  }
+
+  @Transactional
+  public Book edit(Long bookId, BookPatchParam param, MultipartFile coverImage) {
+    return bookRepository.update(
+        bookRepository
+            .read(bookId)
+            .changeBookInfo(
+                param.title(),
+                param.authorName(),
+                param.introduction(),
+                param.isbn(),
+                param.publisher(),
+                param.categories(),
+                param.isIndie(),
+                param.isPermitted(),
+                coverImage));
   }
 }

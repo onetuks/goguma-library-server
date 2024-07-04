@@ -5,7 +5,7 @@ import com.onetuks.dbstorage.DbStorageIntegrationTest.DbStorageInitializer;
 import com.onetuks.dbstorage.book.repository.BookEntityRepository;
 import com.onetuks.dbstorage.member.repository.MemberEntityPointRepository;
 import com.onetuks.dbstorage.member.repository.MemberEntityRepository;
-import com.onetuks.libraryobject.vo.TestFileCleaner;
+import com.onetuks.libraryobject.component.TestFileCleaner;
 import java.util.HashMap;
 import java.util.Map;
 import org.flywaydb.core.Flyway;

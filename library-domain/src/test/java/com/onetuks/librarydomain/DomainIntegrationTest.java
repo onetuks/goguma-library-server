@@ -7,7 +7,7 @@ import com.onetuks.librarydomain.file.FileRepository;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
 import com.onetuks.librarydomain.member.repository.PointRepository;
 import com.onetuks.librarydomain.member.service.MemberService;
-import com.onetuks.libraryobject.vo.TestFileCleaner;
+import com.onetuks.libraryobject.component.TestFileCleaner;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

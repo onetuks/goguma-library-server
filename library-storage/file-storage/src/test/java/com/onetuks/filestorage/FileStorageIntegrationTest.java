@@ -2,7 +2,7 @@ package com.onetuks.filestorage;
 
 import com.onetuks.filestorage.FileStorageIntegrationTest.FileStorageConfig;
 import com.onetuks.filestorage.FileStorageIntegrationTest.FileStorageIntegrationTestInitializer;
-import com.onetuks.libraryobject.vo.TestFileCleaner;
+import com.onetuks.libraryobject.component.TestFileCleaner;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;

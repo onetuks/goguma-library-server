@@ -21,8 +21,7 @@ public class AuthToken {
   protected static final String AUTHORITIES_KEY = "roles";
   protected static final String LOGIN_ID_KEY = "loginId";
 
-  @Getter
-  private final String token;
+  @Getter private final String token;
   private final SecretKey secretKey;
 
   AuthToken(String token, SecretKey secretKey) {
@@ -36,8 +35,7 @@ public class AuthToken {
 
   public List<RoleType> getRoleTypes() {
     List<?> roles = getTokenClaims().get(AUTHORITIES_KEY, List.class);
-    return roles
-        .stream()
+    return roles.stream()
         .filter(object -> object instanceof String)
         .map(role -> RoleType.valueOf((String) role))
         .toList();
