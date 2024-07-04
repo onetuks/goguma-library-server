@@ -4,6 +4,7 @@ import com.onetuks.libraryapi.book.dto.request.BookPatchRequest;
 import com.onetuks.libraryapi.book.dto.request.BookPostRequest;
 import com.onetuks.libraryapi.book.dto.response.BookIsbnGetResponse;
 import com.onetuks.libraryapi.book.dto.response.BookResponse;
+import com.onetuks.libraryapi.book.dto.response.BookResponse.BookResponses;
 import com.onetuks.libraryauth.util.LoginId;
 import com.onetuks.libraryauth.util.OnlyForAdmin;
 import com.onetuks.librarydomain.book.model.Book;
@@ -11,6 +12,10 @@ import com.onetuks.librarydomain.book.service.BookService;
 import com.onetuks.libraryexternal.book.handler.dto.IsbnResult;
 import com.onetuks.libraryexternal.book.service.IsbnSearchService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +25,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -105,5 +111,23 @@ public class BookRestController {
     bookService.remove(bookId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+  }
+
+  /**
+   * 검수 대상 도서 목록 조회
+   *
+   * @param inspectionMode : 검수 모드
+   * @return : 검수 대상 도서 목록
+   */
+  @OnlyForAdmin
+  @GetMapping(path = "/admin", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<BookResponses> getBooksForInspection(
+      @RequestParam(name = "inspection-mode", required = false, defaultValue = "true")
+          Boolean inspectionMode,
+      @PageableDefault(sort = "book.bookId", direction = Direction.DESC) Pageable pageable) {
+    Page<Book> results = bookService.findAll(inspectionMode, pageable);
+    BookResponses responses = BookResponses.from(results);
+
+    return ResponseEntity.status(HttpStatus.OK).body(responses);
   }
 }

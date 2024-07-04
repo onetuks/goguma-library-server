@@ -61,6 +61,8 @@ class DbStorageArchitectureTest extends DbStorageIntegrationTest {
       ArchRule rule =
           ArchRuleDefinition.methods()
               .that()
+              .arePublic()
+              .and()
               .areDeclaredInClassesThat()
               .resideInAPackage("..repository")
               .should()

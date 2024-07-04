@@ -7,8 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.onetuks.dbstorage.DbStorageIntegrationTest;
 import com.onetuks.librarydomain.BookFixture;
 import com.onetuks.librarydomain.book.model.Book;
+import java.util.List;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 class BookEntityRepositoryTest extends DbStorageIntegrationTest {
@@ -37,6 +42,61 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
 
     // Then
     assertThat(result.bookId()).isPositive();
+  }
+
+  @Test
+  @DisplayName("inspectionMode 가 false 일때 모든 도서를 조회한다.")
+  void readAll_InspectionModeFalse_FindAllBooksTest() {
+    // Given
+    boolean inspectionMode = false;
+    Pageable pageable = PageRequest.of(0, 10);
+    List<Book> books =
+        IntStream.range(0, 10)
+            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null)))
+            .toList();
+
+    // When
+    Page<Book> results = bookEntityRepository.readAll(inspectionMode, pageable);
+
+    // Then
+    assertThat(results.getTotalElements()).isEqualTo(books.size());
+  }
+
+  @Test
+  @DisplayName("inspectionMode가 true일때 미허가 도서만 조회한다.")
+  void readAll_InspectionModeTrue_FindAllNotPermittedBooksTest() {
+    // Given
+    boolean inspectionMode = true;
+    Pageable pageable = PageRequest.of(0, 10);
+    List<Book> books =
+        IntStream.range(0, 10)
+            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null)))
+            .toList();
+    List<Book> permittedBooks =
+        IntStream.range(0, 3)
+            .mapToObj(
+                i -> {
+                  Book book = books.get(i);
+                  return bookEntityRepository.update(
+                      book.changeBookInfo(
+                          book.title(),
+                          book.authorName(),
+                          book.introduction(),
+                          book.isbn(),
+                          book.publisher(),
+                          book.categories(),
+                          book.isIndie(),
+                          true,
+                          book.coverImageFile().file()));
+                })
+            .toList();
+
+    // When
+    Page<Book> results = bookEntityRepository.readAll(inspectionMode, pageable);
+
+    // Then
+    assertThat(results.getTotalElements()).isEqualTo(books.size() - permittedBooks.size());
+    assertThat(results).allSatisfy(result -> assertThat(result.isPermitted()).isFalse());
   }
 
   @Test

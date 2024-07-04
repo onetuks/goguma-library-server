@@ -8,6 +8,8 @@ import com.onetuks.librarydomain.book.service.dto.param.BookPatchParam;
 import com.onetuks.librarydomain.book.service.dto.param.BookPostParam;
 import com.onetuks.librarydomain.file.FileRepository;
 import com.onetuks.librarydomain.member.repository.PointRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -69,5 +71,10 @@ public class BookService {
 
     fileRepository.deleteFile(book.coverImageFile());
     bookRepository.delete(bookId);
+  }
+
+  @Transactional(readOnly = true)
+  public Page<Book> findAll(boolean inspectionMode, Pageable pageable) {
+    return bookRepository.readAll(inspectionMode, pageable);
   }
 }

@@ -19,8 +19,13 @@ import com.onetuks.libraryobject.enums.ImageType;
 import com.onetuks.libraryobject.vo.ImageFile;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 class BookServiceTest extends DomainIntegrationTest {
@@ -220,5 +225,25 @@ class BookServiceTest extends DomainIntegrationTest {
     // Then
     verify(fileRepository, times(1)).deleteFile(book.coverImageFile());
     verify(bookRepository, times(1)).delete(book.bookId());
+  }
+
+  @Test
+  @DisplayName("검수 대상인 모든 도서를 조회한다.")
+  void findAllTest() {
+    // Given
+    boolean inspectionMode = true;
+    int counts = 5;
+    Pageable pageable = PageRequest.of(0, 10);
+    Page<Book> books =
+        new PageImpl<>(
+            IntStream.range(0, counts).mapToObj(i -> BookFixture.create((long) i)).toList());
+
+    given(bookRepository.readAll(inspectionMode, pageable)).willReturn(books);
+
+    // When
+    Page<Book> results = bookService.findAll(inspectionMode, pageable);
+
+    // Then
+    assertThat(results.getTotalElements()).isEqualTo(counts);
   }
 }

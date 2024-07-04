@@ -65,7 +65,9 @@ public class ApiArchitectureTest {
               .that()
               .resideInAnyPackage("..response")
               .should()
-              .haveSimpleNameEndingWith("Response");
+              .haveSimpleNameEndingWith("Response")
+              .orShould()
+              .haveSimpleNameEndingWith("Responses");
 
       rule.check(javaClasses);
     }
@@ -110,7 +112,8 @@ public class ApiArchitectureTest {
                   "..web..",
                   "..http..",
                   "java..",
-                  "..validation..");
+                  "..validation..",
+                  "..domain..");
 
       rule.check(javaClasses);
     }
