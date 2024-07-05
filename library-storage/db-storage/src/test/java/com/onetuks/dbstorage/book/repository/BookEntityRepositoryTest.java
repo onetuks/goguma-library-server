@@ -6,7 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.dbstorage.DbStorageIntegrationTest;
 import com.onetuks.librarydomain.BookFixture;
+import com.onetuks.librarydomain.MemberFixture;
 import com.onetuks.librarydomain.book.model.Book;
+import com.onetuks.libraryobject.enums.Category;
+import com.onetuks.libraryobject.enums.RoleType;
 import java.util.List;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
@@ -63,7 +66,7 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
   }
 
   @Test
-  @DisplayName("inspectionMode가 true일때 미허가 도서만 조회한다.")
+  @DisplayName("inspectionMode 가 true 일때 미허가 도서만 조회한다.")
   void readAll_InspectionModeTrue_FindAllNotPermittedBooksTest() {
     // Given
     boolean inspectionMode = true;
@@ -142,10 +145,29 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
             .toList();
 
     // When
-    Page<Book> results = bookEntityRepository.readAll(null, pageable);
+    Page<Book> results = bookEntityRepository.readAll((String) null, pageable);
 
     // Then
     assertThat(results.getTotalElements()).isEqualTo(books.size());
+  }
+
+  @Test
+  @DisplayName("멤버의 관심 카테고리를 포함하는 모든 도서를 조회한다.")
+  void readAll_WithInterestedCategories_FindAllTest() {
+    // Given
+    List<Category> interestedCategories =
+        memberEntityRepository
+            .create(MemberFixture.create(null, RoleType.USER))
+            .interestedCategories();
+    Pageable pageable = PageRequest.of(0, 10);
+
+    // When
+    Page<Book> results = bookEntityRepository.readAll(interestedCategories, pageable);
+
+    // Then
+    assertThat(results)
+        .allSatisfy(
+            result -> assertThat(result.categories()).containsAnyElementsOf(interestedCategories));
   }
 
   @Test

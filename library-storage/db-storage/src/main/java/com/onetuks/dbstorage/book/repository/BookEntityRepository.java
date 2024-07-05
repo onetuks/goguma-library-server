@@ -3,7 +3,9 @@ package com.onetuks.dbstorage.book.repository;
 import com.onetuks.dbstorage.book.converter.BookConverter;
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.book.repository.BookRepository;
+import com.onetuks.libraryobject.enums.Category;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -45,6 +47,13 @@ public class BookEntityRepository implements BookRepository {
   @Override
   public Page<Book> readAll(String keyword, Pageable pageable) {
     return qDslRepository.findAllByKeyword(keyword, pageable).map(converter::toDomain);
+  }
+
+  @Override
+  public Page<Book> readAll(List<Category> interestedCategories, Pageable pageable) {
+    return repository
+        .findAllByCategoriesIn(interestedCategories, pageable)
+        .map(converter::toDomain);
   }
 
   @Override

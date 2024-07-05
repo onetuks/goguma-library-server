@@ -7,6 +7,7 @@ import com.onetuks.librarydomain.book.repository.BookRepository;
 import com.onetuks.librarydomain.book.service.dto.param.BookPatchParam;
 import com.onetuks.librarydomain.book.service.dto.param.BookPostParam;
 import com.onetuks.librarydomain.file.FileRepository;
+import com.onetuks.librarydomain.member.repository.MemberRepository;
 import com.onetuks.librarydomain.member.repository.PointRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,14 +19,17 @@ import org.springframework.web.multipart.MultipartFile;
 public class BookService {
 
   private final BookRepository bookRepository;
+  private final MemberRepository memberRepository;
   private final FileRepository fileRepository;
   private final PointRepository pointRepository;
 
   public BookService(
       BookRepository bookRepository,
+      MemberRepository memberRepository,
       FileRepository fileRepository,
       PointRepository pointRepository) {
     this.bookRepository = bookRepository;
+    this.memberRepository = memberRepository;
     this.fileRepository = fileRepository;
     this.pointRepository = pointRepository;
   }
@@ -86,5 +90,10 @@ public class BookService {
   @Transactional(readOnly = true)
   public Page<Book> findAll(String keyword, Pageable pageable) {
     return bookRepository.readAll(keyword, pageable);
+  }
+
+  @Transactional(readOnly = true)
+  public Page<Book> findAll(long loginId, Pageable pageable) {
+    return bookRepository.readAll(memberRepository.read(loginId).interestedCategories(), pageable);
   }
 }

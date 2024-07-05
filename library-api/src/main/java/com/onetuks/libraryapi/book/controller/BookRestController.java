@@ -152,10 +152,28 @@ public class BookRestController {
    * @return : 검색 결과 도서 목록
    */
   @GetMapping(path = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<BookResponses> getBooks(
+  public ResponseEntity<BookResponses> getBooksWithKeyword(
       @RequestParam(name = "keyword", required = false) String keyword,
       @PageableDefault Pageable pageable) {
     Page<Book> results = bookService.findAll(keyword, pageable);
+    BookResponses responses = BookResponses.from(results);
+
+    return ResponseEntity.status(HttpStatus.OK).body(responses);
+  }
+
+  /**
+   * 관심 카테고리 포함 도서 다건 조회
+   *
+   * @param loginId : 로그인 ID
+   * @param pageable : 페이지 정보
+   * @return : 관심 카테고리 포함 도서 목록
+   */
+  @GetMapping(
+      path = "/recommend/interested-categories",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<BookResponses> getBooksWithInterestedCategories(
+      @LoginId Long loginId, @PageableDefault Pageable pageable) {
+    Page<Book> results = bookService.findAll(loginId, pageable);
     BookResponses responses = BookResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);

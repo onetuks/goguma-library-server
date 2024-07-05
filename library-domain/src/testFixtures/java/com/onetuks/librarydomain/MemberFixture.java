@@ -8,10 +8,10 @@ import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.ClientProvider;
 import com.onetuks.libraryobject.enums.ImageType;
 import com.onetuks.libraryobject.enums.RoleType;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 public class MemberFixture {
 
@@ -50,8 +50,9 @@ public class MemberFixture {
   }
 
   private static List<Category> createCategories() {
-    int count = random.nextInt(Category.values().length);
-    return Arrays.stream(Category.values(), 0, count).toList();
+    return IntStream.range(1, random.nextInt(1, 3))
+        .mapToObj(i -> Category.values()[random.nextInt(Category.values().length)])
+        .toList();
   }
 
   private static long createPoints() {
