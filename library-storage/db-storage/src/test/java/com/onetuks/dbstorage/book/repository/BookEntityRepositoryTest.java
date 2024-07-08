@@ -156,36 +156,35 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("멤버의 관심 카테고리를 포함하는 모든 도서를 조회한다.")
   void readAll_WithInterestedCategories_FindAllTest() {
     // Given
-    Pageable pageable = PageRequest.of(0, 10);
+    int count = 3;
+    Pageable pageable = PageRequest.of(0, count);
     Set<Category> interestedCategories =
         memberEntityRepository
             .create(MemberFixture.create(null, RoleType.USER))
             .interestedCategories();
-    List<Book> books =
-        IntStream.range(0, 5)
-            .mapToObj(
-                i -> {
-                  Book book = BookFixture.create(null);
-                  return bookEntityRepository.create(
-                      book.changeBookInfo(
-                          book.title(),
-                          book.authorName(),
-                          book.introduction(),
-                          book.isbn(),
-                          book.publisher(),
-                          interestedCategories,
-                          book.isIndie(),
-                          book.isPermitted(),
-                          book.coverImageFile().file()));
-                })
-            .toList();
+    IntStream.range(0, 5)
+        .forEach(
+            i -> {
+              Book book = BookFixture.create(null);
+              bookEntityRepository.create(
+                  book.changeBookInfo(
+                      book.title(),
+                      book.authorName(),
+                      book.introduction(),
+                      book.isbn(),
+                      book.publisher(),
+                      interestedCategories,
+                      book.isIndie(),
+                      book.isPermitted(),
+                      book.coverImageFile().file()));
+            });
 
     // When
     Page<Book> results = bookEntityRepository.readAll(interestedCategories, pageable);
 
     // Then
     assertThat(results)
-        .hasSize(books.size())
+        .hasSize(count)
         .allSatisfy(
             result -> assertThat(result.categories()).containsAnyElementsOf(interestedCategories));
   }

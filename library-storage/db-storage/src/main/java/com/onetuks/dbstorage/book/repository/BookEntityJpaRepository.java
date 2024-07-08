@@ -10,7 +10,8 @@ import org.springframework.data.repository.query.Param;
 public interface BookEntityJpaRepository extends JpaRepository<BookEntity, Long> {
 
   @Query(
-      value = "SELECT * FROM books WHERE JSON_CONTAINS(books.categories, :interestedCategories)",
+      value =
+          "SELECT * FROM books WHERE JSON_CONTAINS(books.categories, :interestedCategories) ORDER BY RAND()",
       nativeQuery = true)
   Page<BookEntity> findAllCategoriesInInterestedCategories(
       @Param("interestedCategories") String interestedCategories, Pageable pageable);
