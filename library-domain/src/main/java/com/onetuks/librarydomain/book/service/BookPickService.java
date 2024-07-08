@@ -44,12 +44,12 @@ public class BookPickService {
   }
 
   @Transactional(readOnly = true)
-  public Page<BookPick> searchMyBookPicks(long loginId, Pageable pageable) {
+  public Page<BookPick> searchAll(long loginId, Pageable pageable) {
     return bookPickRepository.readAll(loginId, pageable);
   }
 
   @Transactional(readOnly = true)
-  public boolean searchIsMyBookPick(long loginId, long bookPickId) {
+  public boolean searchExistence(long loginId, long bookPickId) {
     return bookPickRepository.read(loginId, bookPickId);
   }
 }

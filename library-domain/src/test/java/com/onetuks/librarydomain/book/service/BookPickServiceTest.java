@@ -1,6 +1,5 @@
 package com.onetuks.librarydomain.book.service;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -66,7 +65,7 @@ class BookPickServiceTest extends DomainIntegrationTest {
 
   @Test
   @DisplayName("해당 멤버의 모든 북픽을 조회한다.")
-  void searchMyBookPicks() {
+  void searchExistenceAll() {
     // Given
     Pageable pageable = PageRequest.of(0, 3);
     Member member = MemberFixture.create(100L, RoleType.USER);
@@ -85,7 +84,7 @@ class BookPickServiceTest extends DomainIntegrationTest {
     given(bookPickRepository.readAll(member.memberId(), pageable)).willReturn(expected);
 
     // When
-    Page<BookPick> results = bookPickService.searchMyBookPicks(member.memberId(), pageable);
+    Page<BookPick> results = bookPickService.searchAll(member.memberId(), pageable);
 
     // Then
     assertThat(results).hasSize(pageable.getPageSize());
@@ -93,7 +92,7 @@ class BookPickServiceTest extends DomainIntegrationTest {
 
   @Test
   @DisplayName("해당 멤버가 북픽한 도서라면 true를 반환한다.")
-  void searchIsMyBookPickTest() {
+  void searchExistenceTest() {
     // Given
     BookPick bookPick =
         BookPickFixture.create(
@@ -104,7 +103,7 @@ class BookPickServiceTest extends DomainIntegrationTest {
 
     // When
     boolean result =
-        bookPickService.searchIsMyBookPick(bookPick.member().memberId(), bookPick.book().bookId());
+        bookPickService.searchExistence(bookPick.member().memberId(), bookPick.book().bookId());
 
     // Then
     assertThat(result).isTrue();

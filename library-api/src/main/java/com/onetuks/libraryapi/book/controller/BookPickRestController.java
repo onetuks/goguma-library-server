@@ -57,7 +57,7 @@ public class BookPickRestController {
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookResponses> getMyBookPicks(
       @LoginId Long loginId, @PageableDefault(size = 3) Pageable pageable) {
-    Page<BookPick> results = bookPickService.searchMyBookPicks(loginId, pageable);
+    Page<BookPick> results = bookPickService.searchAll(loginId, pageable);
     BookResponses responses = BookResponses.fromPicks(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);
@@ -73,7 +73,7 @@ public class BookPickRestController {
   @GetMapping(path = "/{bookPickId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Boolean> getMyBookPick(
       @LoginId Long loginId, @PathVariable Long bookPickId) {
-    boolean result = bookPickService.searchIsMyBookPick(loginId, bookPickId);
+    boolean result = bookPickService.searchExistence(loginId, bookPickId);
 
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }
