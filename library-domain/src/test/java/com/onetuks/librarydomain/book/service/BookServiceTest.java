@@ -4,18 +4,22 @@ import static com.onetuks.librarydomain.member.repository.PointRepository.BOOK_R
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.onetuks.librarydomain.BookFixture;
 import com.onetuks.librarydomain.DomainIntegrationTest;
+import com.onetuks.librarydomain.MemberFixture;
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.book.service.dto.param.BookPatchParam;
 import com.onetuks.librarydomain.book.service.dto.param.BookPostParam;
+import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.libraryobject.MultipartFileFixture;
 import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.ImageType;
+import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.vo.ImageFile;
 import java.util.List;
 import java.util.Set;
@@ -242,7 +246,7 @@ class BookServiceTest extends DomainIntegrationTest {
     given(bookRepository.readAll(inspectionMode, pageable)).willReturn(books);
 
     // When
-    Page<Book> results = bookService.findAll(inspectionMode, pageable);
+    Page<Book> results = bookService.searchForInspection(inspectionMode, pageable);
 
     // Then
     assertThat(results.getTotalElements()).isEqualTo(counts);
@@ -257,7 +261,7 @@ class BookServiceTest extends DomainIntegrationTest {
     given(bookRepository.read(book.bookId())).willReturn(book);
 
     // When
-    Book result = bookService.find(book.bookId());
+    Book result = bookService.search(book.bookId());
 
     // Then
     assertAll(
@@ -290,7 +294,7 @@ class BookServiceTest extends DomainIntegrationTest {
     given(bookRepository.readAll(keyword, pageable)).willReturn(expected);
 
     // When
-    Page<Book> results = bookService.findAll(keyword, pageable);
+    Page<Book> results = bookService.searchWithKeyword(keyword, pageable);
 
     // Then
     assertThat(results.getContent())
@@ -306,5 +310,38 @@ class BookServiceTest extends DomainIntegrationTest {
 
               assertThat(contains).isTrue();
             });
+  }
+
+  @Test
+  @DisplayName("관심 카테고리에 해당하는 도서를 랜덤하게 조회한다.")
+  void searchWithInterestedCategoriesTest() {
+    // Given
+    int count = 3;
+    Pageable pageable = PageRequest.of(0, count);
+    Member member = MemberFixture.create(127L, RoleType.ADMIN);
+    List<Book> allBooks =
+        IntStream.range(0, 5).mapToObj(i -> BookFixture.create((long) i)).toList();
+    Page<Book> expected =
+        new PageImpl<>(
+            allBooks.stream()
+                .filter(
+                    book ->
+                        member.interestedCategories().stream()
+                            .anyMatch(category -> book.categories().contains(category)))
+                .toList());
+
+    given(memberRepository.read(member.memberId())).willReturn(member);
+    given(bookRepository.readAll(anySet(), any(Pageable.class))).willReturn(expected);
+
+    // When
+    Page<Book> results = bookService.searchWithInterestedCategories(member.memberId(), pageable);
+
+    // Then
+    assertThat(results)
+        .hasSize((int) Math.min(count, expected.getTotalElements()))
+        .allSatisfy(
+            result ->
+                assertThat(result.categories())
+                    .containsAnyElementsOf(member.interestedCategories()));
   }
 }

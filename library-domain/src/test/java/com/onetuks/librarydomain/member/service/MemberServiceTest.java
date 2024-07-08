@@ -73,14 +73,14 @@ class MemberServiceTest extends DomainIntegrationTest {
 
   @Test
   @DisplayName("멤버 프로필을 조회한다.")
-  void findTest() {
+  void searchTest() {
     // Given
     Member member = MemberFixture.create(123L, RoleType.USER);
 
     given(memberRepository.read(member.memberId())).willReturn(member);
 
     // When
-    Member result = memberService.find(member.memberId());
+    Member result = memberService.search(member.memberId());
 
     // Then
     assertThat(result.memberId()).isEqualTo(member.memberId());

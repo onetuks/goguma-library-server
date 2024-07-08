@@ -125,7 +125,7 @@ public class BookRestController {
       @RequestParam(name = "inspection-mode", required = false, defaultValue = "true")
           Boolean inspectionMode,
       @PageableDefault(sort = "book.bookId", direction = Direction.DESC) Pageable pageable) {
-    Page<Book> results = bookService.findAll(inspectionMode, pageable);
+    Page<Book> results = bookService.searchForInspection(inspectionMode, pageable);
     BookResponses responses = BookResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);
@@ -139,7 +139,7 @@ public class BookRestController {
    */
   @GetMapping(path = "/{bookId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookResponse> getBook(@PathVariable(name = "bookId") Long bookId) {
-    Book result = bookService.find(bookId);
+    Book result = bookService.search(bookId);
     BookResponse response = BookResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -155,7 +155,7 @@ public class BookRestController {
   public ResponseEntity<BookResponses> getBooksWithKeyword(
       @RequestParam(name = "keyword", required = false) String keyword,
       @PageableDefault Pageable pageable) {
-    Page<Book> results = bookService.findAll(keyword, pageable);
+    Page<Book> results = bookService.searchWithKeyword(keyword, pageable);
     BookResponses responses = BookResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);
@@ -173,9 +173,19 @@ public class BookRestController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookResponses> getBooksWithInterestedCategories(
       @LoginId Long loginId, @PageableDefault(size = 3) Pageable pageable) {
-    Page<Book> results = bookService.findAll(loginId, pageable);
+    Page<Book> results = bookService.searchWithInterestedCategories(loginId, pageable);
     BookResponses responses = BookResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);
   }
+
+  //  @GetMapping(path = "/picks", produces = MediaType.APPLICATION_JSON_VALUE)
+  //  public ResponseEntity<BookResponses> getMyBookPicks(
+  //      @LoginId Long loginId, @PageableDefault(size = 3) Pageable pageable) {
+  //    Page<Book> results = bookService.findMyPicks(loginId, pageable);
+  //    BookResponses responses = BookResponses.from(results);
+  //
+  //    return ResponseEntity.status(HttpStatus.OK).body(responses);
+  //  }
+  //  )
 }

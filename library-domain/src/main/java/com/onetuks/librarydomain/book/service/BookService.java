@@ -78,22 +78,22 @@ public class BookService {
   }
 
   @Transactional(readOnly = true)
-  public Page<Book> findAll(boolean inspectionMode, Pageable pageable) {
+  public Page<Book> searchForInspection(boolean inspectionMode, Pageable pageable) {
     return bookRepository.readAll(inspectionMode, pageable);
   }
 
   @Transactional(readOnly = true)
-  public Book find(long bookId) {
+  public Book search(long bookId) {
     return bookRepository.read(bookId);
   }
 
   @Transactional(readOnly = true)
-  public Page<Book> findAll(String keyword, Pageable pageable) {
+  public Page<Book> searchWithKeyword(String keyword, Pageable pageable) {
     return bookRepository.readAll(keyword, pageable);
   }
 
   @Transactional(readOnly = true)
-  public Page<Book> findAll(long loginId, Pageable pageable) {
+  public Page<Book> searchWithInterestedCategories(long loginId, Pageable pageable) {
     return bookRepository.readAll(memberRepository.read(loginId).interestedCategories(), pageable);
   }
 }

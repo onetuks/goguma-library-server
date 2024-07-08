@@ -83,7 +83,7 @@ public class DomainArchitectureTest extends DomainIntegrationTest {
   class MethodNameTest {
 
     @Test
-    @DisplayName("Service 에서는 register, find, edit, remove 로 시작하는 메서드 이름을 사용한다.")
+    @DisplayName("Service 에서는 register, search, edit, remove 로 시작하는 메서드 이름을 사용한다.")
     void controller_MethodNamePrefix_Test() {
       ArchRule rule =
           ArchRuleDefinition.methods()
@@ -91,7 +91,7 @@ public class DomainArchitectureTest extends DomainIntegrationTest {
               .areDeclaredInClassesThat()
               .resideInAPackage("..service")
               .should()
-              .haveNameMatching("^(register|find|edit|remove).*");
+              .haveNameMatching("^(register|search|edit|remove).*");
 
       rule.check(javaClasses);
     }

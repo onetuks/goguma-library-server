@@ -64,7 +64,7 @@ public class MemberRestController {
   @GetMapping(path = "/{memberId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<MemberGetResponse> getMemberProfile(
       @PathVariable(name = "memberId") Long memberId) {
-    Member result = memberService.find(memberId);
+    Member result = memberService.search(memberId);
     MemberGetResponse response = MemberGetResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);

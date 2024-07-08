@@ -40,7 +40,7 @@ public class MemberService {
   }
 
   @Transactional(readOnly = true)
-  public Member find(Long memberId) {
+  public Member search(Long memberId) {
     return memberRepository.read(memberId);
   }
 
