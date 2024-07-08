@@ -46,4 +46,23 @@ class BookPickServiceTest extends DomainIntegrationTest {
     // Then
     assertThat(results).hasSize(pageable.getPageSize());
   }
+
+  @Test
+  @DisplayName("해당 멤버가 북픽한 도서라면 true를 반환한다.")
+  void searchIsMyBookPickTest() {
+    // Given
+    BookPick bookPick = BookPickFixture.create(101L,
+        MemberFixture.create(101L, RoleType.USER),
+        BookFixture.create(101L));
+
+    given(bookPickRepository.read(bookPick.member().memberId(), bookPick.book().bookId()))
+        .willReturn(true);
+
+    // When
+    boolean result =
+        bookPickService.searchIsMyBookPick(bookPick.member().memberId(), bookPick.book().bookId());
+
+    // Then
+    assertThat(result).isTrue();
+  }
 }
