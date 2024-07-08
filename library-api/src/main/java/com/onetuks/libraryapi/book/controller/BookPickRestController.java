@@ -11,6 +11,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,11 +31,14 @@ public class BookPickRestController {
 
   /**
    * 북픽 등록
+   *
    * @param loginId : 로그인 ID
    * @param bookId : 도서 ID
    * @return : 북픽 정보
    */
-  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookPickResponse> postNewBookPick(
       @LoginId Long loginId, @RequestParam(name = "book-id") Long bookId) {
     BookPick result = bookPickService.register(loginId, bookId);
@@ -72,5 +76,13 @@ public class BookPickRestController {
     boolean result = bookPickService.searchIsMyBookPick(loginId, bookPickId);
 
     return ResponseEntity.status(HttpStatus.OK).body(result);
+  }
+
+  @DeleteMapping(path = "/{bookPickId}")
+  public ResponseEntity<Void> deleteMyBookPick(
+      @LoginId Long loginId, @PathVariable(name = "bookPickId") Long bookPickId) {
+    bookPickService.remove(loginId, bookPickId);
+
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 }

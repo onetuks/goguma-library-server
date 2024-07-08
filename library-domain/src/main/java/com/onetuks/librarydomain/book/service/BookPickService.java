@@ -4,6 +4,7 @@ import com.onetuks.librarydomain.book.model.BookPick;
 import com.onetuks.librarydomain.book.repository.BookPickRepository;
 import com.onetuks.librarydomain.book.repository.BookRepository;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
+import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,9 +29,18 @@ public class BookPickService {
   @Transactional
   public BookPick register(long loginId, long bookId) {
     return bookPickRepository.create(
-        new BookPick(null,
-            memberRepository.read(loginId),
-            bookRepository.read(bookId)));
+        new BookPick(null, memberRepository.read(loginId), bookRepository.read(bookId)));
+  }
+
+  @Transactional
+  public void remove(long loginId, long bookPickId) {
+    Long actualMemberId = bookPickRepository.read(bookPickId).member().memberId();
+
+    if (actualMemberId != loginId) {
+      throw new ApiAccessDeniedException("해당 유저에게 권한이 없는 요청입니다.");
+    }
+
+    bookPickRepository.delete(bookPickId);
   }
 
   @Transactional(readOnly = true)

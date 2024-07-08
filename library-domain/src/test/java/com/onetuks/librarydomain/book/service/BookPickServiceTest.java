@@ -1,10 +1,10 @@
 package com.onetuks.librarydomain.book.service;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 import com.onetuks.librarydomain.BookFixture;
@@ -28,8 +28,9 @@ class BookPickServiceTest extends DomainIntegrationTest {
   @DisplayName("북픽을 등록한다.")
   void registerTest() {
     // Given
-    BookPick bookPick = BookPickFixture.create(102L,
-        MemberFixture.create(102L, RoleType.USER), BookFixture.create(102L));
+    BookPick bookPick =
+        BookPickFixture.create(
+            102L, MemberFixture.create(102L, RoleType.USER), BookFixture.create(102L));
 
     given(memberRepository.read(bookPick.member().memberId())).willReturn(bookPick.member());
     given(bookRepository.read(bookPick.book().bookId())).willReturn(bookPick.book());
@@ -43,8 +44,24 @@ class BookPickServiceTest extends DomainIntegrationTest {
     assertAll(
         () -> assertThat(result.bookPickId()).isPositive(),
         () -> assertThat(result.member()).isEqualTo(bookPick.member()),
-        () -> assertThat(result.book()).isEqualTo(bookPick.book())
-    );
+        () -> assertThat(result.book()).isEqualTo(bookPick.book()));
+  }
+
+  @Test
+  @DisplayName("북픽을 삭제한다.")
+  void removeTest() {
+    // Given
+    BookPick bookPick =
+        BookPickFixture.create(
+            103L, MemberFixture.create(103L, RoleType.USER), BookFixture.create(103L));
+
+    given(bookPickRepository.read(bookPick.bookPickId())).willReturn(bookPick);
+
+    // When
+    bookPickService.remove(bookPick.member().memberId(), bookPick.bookPickId());
+
+    // Then
+    verify(bookPickRepository, times(1)).delete(bookPick.bookPickId());
   }
 
   @Test
@@ -78,9 +95,9 @@ class BookPickServiceTest extends DomainIntegrationTest {
   @DisplayName("해당 멤버가 북픽한 도서라면 true를 반환한다.")
   void searchIsMyBookPickTest() {
     // Given
-    BookPick bookPick = BookPickFixture.create(101L,
-        MemberFixture.create(101L, RoleType.USER),
-        BookFixture.create(101L));
+    BookPick bookPick =
+        BookPickFixture.create(
+            101L, MemberFixture.create(101L, RoleType.USER), BookFixture.create(101L));
 
     given(bookPickRepository.read(bookPick.member().memberId(), bookPick.book().bookId()))
         .willReturn(true);

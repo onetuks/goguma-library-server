@@ -10,9 +10,11 @@ public interface BookPickRepository {
 
   BookPick create(BookPick bookPick);
 
+  BookPick read(long bookPickId);
+
   boolean read(long memberId, long bookId);
 
-  Page<BookPick> readAll(long loginId, Pageable pageable);
+  Page<BookPick> readAll(long memberId, Pageable pageable);
 
   void delete(long bookPickId);
 }

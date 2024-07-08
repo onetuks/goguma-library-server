@@ -40,6 +40,24 @@ class BookPickEntityRepositoryTest extends DbStorageIntegrationTest {
   }
 
   @Test
+  @DisplayName("북픽 아이디로 조회한다.")
+  void readTest() {
+    // Given
+    BookPick bookPick =
+        bookPickEntityRepository.create(
+            BookPickFixture.create(
+                null,
+                memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
+                bookEntityRepository.create(BookFixture.create(null))));
+
+    // When
+    BookPick result = bookPickEntityRepository.read(bookPick.bookPickId());
+
+    // Then
+    assertThat(result).isEqualTo(bookPick);
+  }
+
+  @Test
   @DisplayName("멤버가 도서를 북픽했는지 여부를 조회한다.")
   void read() {
     // Given
