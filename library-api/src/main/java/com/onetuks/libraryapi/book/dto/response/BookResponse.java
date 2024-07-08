@@ -1,6 +1,7 @@
 package com.onetuks.libraryapi.book.dto.response;
 
 import com.onetuks.librarydomain.book.model.Book;
+import com.onetuks.librarydomain.book.model.BookPick;
 import com.onetuks.libraryobject.enums.Category;
 import java.util.Set;
 import org.springframework.data.domain.Page;
@@ -35,6 +36,10 @@ public record BookResponse(
 
     public static BookResponses from(Page<Book> books) {
       return new BookResponses(books.map(BookResponse::from));
+    }
+
+    public static BookResponses fromPicks(Page<BookPick> bookPicks) {
+      return new BookResponses(bookPicks.map(bookPick -> BookResponse.from(bookPick.book())));
     }
   }
 }

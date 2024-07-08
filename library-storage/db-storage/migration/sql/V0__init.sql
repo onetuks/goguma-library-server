@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS members
     client_provider              VARCHAR(50)  NOT NULL COMMENT '클라이언트 제공자',
     roles                        JSON         NOT NULL COMMENT '멤버 권한',
     nickname                     VARCHAR(50)  NOT NULL COMMENT '멤버 닉네임', -- 10자
-    introduction                 VARCHAR(200) COMMENT '멤버 소개', -- 50자
+    introduction                 VARCHAR(200) COMMENT '멤버 소개',           -- 50자
     interested_categories        JSON         NOT NULL COMMENT '멤버 관심 카테고리',
     is_alarm_accepted            BOOLEAN      NOT NULL DEFAULT TRUE COMMENT '알림 수신 여부',
     points                       BIGINT       NOT NULL DEFAULT 0 COMMENT '멤버 포인트',
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS books
 (
     book_id         BIGINT       NOT NULL AUTO_INCREMENT COMMENT '책 식별자',
     title           VARCHAR(255) NOT NULL COMMENT '책 제목',
-    author_name     VARCHAR(100)  NOT NULL COMMENT '저자 이름',
+    author_name     VARCHAR(100) NOT NULL COMMENT '저자 이름',
     introduction    VARCHAR(5000) COMMENT '책 소개',
     isbn            VARCHAR(50) COMMENT '국제 표준 도서 번호', -- 13자
     publisher       VARCHAR(255) COMMENT '출판사',
@@ -93,13 +93,24 @@ CREATE TABLE IF NOT EXISTS reviews
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='서평 테이블';
 
-CREATE TABLE IF NOT EXISTS favorites
+CREATE TABLE IF NOT EXISTS review_picks
 (
-    favorite_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '즐겨찾기 식별자',
-    member_id   BIGINT NOT NULL COMMENT '멤버 식별자',
-    review_id   BIGINT NOT NULL COMMENT '서평 식별자',
-    PRIMARY KEY (favorite_id),
+    review_pick_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '서평픽 식별자',
+    member_id       BIGINT NOT NULL COMMENT '멤버 식별자',
+    review_id       BIGINT NOT NULL COMMENT '서평 식별자',
+    PRIMARY KEY (review_pick_id),
     FOREIGN KEY (member_id) REFERENCES members (member_id),
     FOREIGN KEY (review_id) REFERENCES reviews (review_id)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='즐겨찾기 테이블';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='서평픽 테이블';
+
+CREATE TABLE IF NOT EXISTS book_picks
+(
+    book_pick_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '북픽 식별자',
+    member_id     BIGINT NOT NULL COMMENT '멤버 식별자',
+    book_id       BIGINT NOT NULL COMMENT '책 식별자',
+    PRIMARY KEY (book_pick_id),
+    FOREIGN KEY (member_id) REFERENCES members (member_id),
+    FOREIGN KEY (book_id) REFERENCES books (book_id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='북픽 테이블';

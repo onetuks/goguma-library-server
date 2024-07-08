@@ -1,7 +1,9 @@
 package com.onetuks.librarydomain;
 
 import com.onetuks.librarydomain.DomainIntegrationTest.DomainConfig;
+import com.onetuks.librarydomain.book.repository.BookPickRepository;
 import com.onetuks.librarydomain.book.repository.BookRepository;
+import com.onetuks.librarydomain.book.service.BookPickService;
 import com.onetuks.librarydomain.book.service.BookService;
 import com.onetuks.librarydomain.file.FileRepository;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
@@ -22,11 +24,13 @@ public class DomainIntegrationTest {
 
   @Autowired public MemberService memberService;
   @Autowired public BookService bookService;
+  @Autowired public BookPickService bookPickService;
 
   @MockBean public FileRepository fileRepository;
   @MockBean public PointRepository pointRepository;
   @MockBean public MemberRepository memberRepository;
   @MockBean public BookRepository bookRepository;
+  @MockBean public BookPickRepository bookPickRepository;
 
   @Autowired private TestFileCleaner testFileCleaner;
 

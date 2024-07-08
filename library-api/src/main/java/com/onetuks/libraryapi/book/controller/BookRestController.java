@@ -79,8 +79,8 @@ public class BookRestController {
   /**
    * 도서 정보 수정
    *
-   * @param bookId     : 도서 ID
-   * @param request    : 도서 수정 요청
+   * @param bookId : 도서 ID
+   * @param request : 도서 수정 요청
    * @param coverImage : 표지 이미지
    * @return : 수정된 도서 정보
    */
@@ -123,7 +123,7 @@ public class BookRestController {
   @GetMapping(path = "/admin", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookResponses> getBooksForInspection(
       @RequestParam(name = "inspection-mode", required = false, defaultValue = "true")
-      Boolean inspectionMode,
+          Boolean inspectionMode,
       @PageableDefault(sort = "book.bookId", direction = Direction.DESC) Pageable pageable) {
     Page<Book> results = bookService.searchForInspection(inspectionMode, pageable);
     BookResponses responses = BookResponses.from(results);
@@ -164,7 +164,7 @@ public class BookRestController {
   /**
    * 관심 카테고리 포함 도서 다건 조회
    *
-   * @param loginId  : 로그인 ID
+   * @param loginId : 로그인 ID
    * @param pageable : 페이지 정보
    * @return : 관심 카테고리 포함 도서 목록
    */
