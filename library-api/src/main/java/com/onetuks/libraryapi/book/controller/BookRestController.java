@@ -73,7 +73,7 @@ public class BookRestController {
     Book result = bookService.register(loginId, request.to(), coverImage);
     BookResponse response = BookResponse.from(result);
 
-    return ResponseEntity.status(HttpStatus.OK).body(response);
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
   /**

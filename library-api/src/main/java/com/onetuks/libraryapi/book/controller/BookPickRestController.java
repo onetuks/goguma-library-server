@@ -1,5 +1,6 @@
 package com.onetuks.libraryapi.book.controller;
 
+import com.onetuks.libraryapi.book.dto.response.BookPickResponse;
 import com.onetuks.libraryapi.book.dto.response.BookResponse.BookResponses;
 import com.onetuks.libraryauth.util.LoginId;
 import com.onetuks.librarydomain.book.model.BookPick;
@@ -12,7 +13,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,6 +26,21 @@ public class BookPickRestController {
 
   public BookPickRestController(BookPickService bookPickService) {
     this.bookPickService = bookPickService;
+  }
+
+  /**
+   * 북픽 등록
+   * @param loginId : 로그인 ID
+   * @param bookId : 도서 ID
+   * @return : 북픽 정보
+   */
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<BookPickResponse> postNewBookPick(
+      @LoginId Long loginId, @RequestParam(name = "book-id") Long bookId) {
+    BookPick result = bookPickService.register(loginId, bookId);
+    BookPickResponse response = BookPickResponse.from(result);
+
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
   /**

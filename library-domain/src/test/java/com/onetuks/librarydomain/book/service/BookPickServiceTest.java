@@ -1,5 +1,9 @@
 package com.onetuks.librarydomain.book.service;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
@@ -19,6 +23,29 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 class BookPickServiceTest extends DomainIntegrationTest {
+
+  @Test
+  @DisplayName("북픽을 등록한다.")
+  void registerTest() {
+    // Given
+    BookPick bookPick = BookPickFixture.create(102L,
+        MemberFixture.create(102L, RoleType.USER), BookFixture.create(102L));
+
+    given(memberRepository.read(bookPick.member().memberId())).willReturn(bookPick.member());
+    given(bookRepository.read(bookPick.book().bookId())).willReturn(bookPick.book());
+    given(bookPickRepository.create(any(BookPick.class))).willReturn(bookPick);
+
+    // When
+    BookPick result =
+        bookPickService.register(bookPick.member().memberId(), bookPick.book().bookId());
+
+    // Then
+    assertAll(
+        () -> assertThat(result.bookPickId()).isPositive(),
+        () -> assertThat(result.member()).isEqualTo(bookPick.member()),
+        () -> assertThat(result.book()).isEqualTo(bookPick.book())
+    );
+  }
 
   @Test
   @DisplayName("해당 멤버의 모든 북픽을 조회한다.")
