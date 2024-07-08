@@ -43,7 +43,7 @@ public class AuthService {
     authTokenRepository.delete(accessToken.getToken());
     AuthToken newAccessToken = saveAccessToken(socialId, loginId, roleTypes);
 
-    return RefreshResult.of(newAccessToken.getToken(), loginId);
+    return RefreshResult.of(newAccessToken.getToken(), loginId, roleTypes);
   }
 
   @Transactional

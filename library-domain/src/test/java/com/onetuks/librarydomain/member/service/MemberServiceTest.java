@@ -20,6 +20,7 @@ import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ class MemberServiceTest extends DomainIntegrationTest {
 
   @Test
   @DisplayName("존재하지 않는 멤버이면 새로 생성해서 멤버 인증 객체로 반환한다.")
-  void createMemberIfNotExistsTest_NotExistMember_Test() {
+  void registerMemberIfNotExistsTest_NotExist_Test() {
     // Given
     Member member = MemberFixture.create(121L, RoleType.USER);
 
@@ -38,7 +39,7 @@ class MemberServiceTest extends DomainIntegrationTest {
     given(memberRepository.create(any())).willReturn(member);
 
     // When
-    MemberAuthResult result = memberService.createMemberIfNotExists(member.authInfo());
+    MemberAuthResult result = memberService.registerIfNotExists(member.authInfo());
 
     // Then
     assertAll(
@@ -51,7 +52,7 @@ class MemberServiceTest extends DomainIntegrationTest {
 
   @Test
   @DisplayName("존재하는 멤버이면 멤버 인증 객체로 반환한다.")
-  void createMemberIfNotExistsTest_ExistMember_Test() {
+  void registerMemberIfNotExistsTest_Exist_Test() {
     // Given
     Member member = MemberFixture.create(122L, RoleType.USER);
 
@@ -59,7 +60,7 @@ class MemberServiceTest extends DomainIntegrationTest {
         .willReturn(Optional.of(member));
 
     // When
-    MemberAuthResult result = memberService.createMemberIfNotExists(member.authInfo());
+    MemberAuthResult result = memberService.registerIfNotExists(member.authInfo());
 
     // Then
     assertAll(
@@ -72,14 +73,14 @@ class MemberServiceTest extends DomainIntegrationTest {
 
   @Test
   @DisplayName("멤버 프로필을 조회한다.")
-  void readMemberTest() {
+  void searchTest() {
     // Given
     Member member = MemberFixture.create(123L, RoleType.USER);
 
     given(memberRepository.read(member.memberId())).willReturn(member);
 
     // When
-    Member result = memberService.readMember(member.memberId());
+    Member result = memberService.search(member.memberId());
 
     // Then
     assertThat(result.memberId()).isEqualTo(member.memberId());
@@ -87,25 +88,32 @@ class MemberServiceTest extends DomainIntegrationTest {
 
   @Test
   @DisplayName("멤버 프로필을 수정한다. 프로필 이미지가 주어지면 저장하고, 기존 이미지를 대체한다.")
-  void updateMemberTest() {
+  void editProfileTest() {
     // Given
     Member member = MemberFixture.create(123L, RoleType.USER);
     MemberProfileParam param =
         new MemberProfileParam(
-            "nickname", "introduction", List.of(Category.CARTOON, Category.NOVEL), true);
+            "nickname", "introduction", Set.of(Category.CARTOON, Category.NOVEL), true);
     MultipartFile profileImage =
         MultipartFileFixture.create(ImageType.PROFILE_IMAGE, UUID.randomUUID().toString());
     MultipartFile profileBackgroundImage =
         MultipartFileFixture.create(
             ImageType.PROFILE_BACKGROUND_IMAGE, UUID.randomUUID().toString());
-    Member updatedMember = member.changeProfile(param, profileImage, profileBackgroundImage);
+    Member updatedMember =
+        member.changeProfile(
+            param.nickname(),
+            param.introduction(),
+            param.interestedCategories(),
+            param.isAlarmAccepted(),
+            profileImage,
+            profileBackgroundImage);
 
     given(memberRepository.read(member.memberId())).willReturn(member);
     given(memberRepository.update(any())).willReturn(updatedMember);
 
     // When
     Member result =
-        memberService.updateMember(
+        memberService.editProfile(
             member.memberId(), member.memberId(), param, profileImage, profileBackgroundImage);
 
     // Then
@@ -116,42 +124,69 @@ class MemberServiceTest extends DomainIntegrationTest {
             assertThat(result.interestedCategories())
                 .containsExactlyInAnyOrderElementsOf(param.interestedCategories()),
         () -> assertThat(result.isAlarmAccepted()).isEqualTo(param.isAlarmAccepted()),
+        () -> assertThat(result.profileImageFile()).isEqualTo(updatedMember.profileImageFile()),
         () ->
-            assertThat(result.profileImageFile().getUri())
-                .isEqualTo(updatedMember.profileImageFile().getUri()),
-        () ->
-            assertThat(result.profileBackgroundImageFile().getUri())
-                .isEqualTo(updatedMember.profileBackgroundImageFile().getUri()));
+            assertThat(result.profileBackgroundImageFile())
+                .isEqualTo(updatedMember.profileBackgroundImageFile()));
 
     verify(fileRepository, times(1)).putFile(updatedMember.profileImageFile());
     verify(fileRepository, times(1)).putFile(updatedMember.profileBackgroundImageFile());
   }
 
   @Test
+  @DisplayName("멤버의 권한을 수정한다.")
+  void editAuthorities() {
+    // Given
+    Member userMember = MemberFixture.create(123L, RoleType.USER);
+    Member adminMember = MemberFixture.create(userMember.memberId(), RoleType.ADMIN);
+
+    given(memberRepository.read(userMember.memberId())).willReturn(userMember);
+    given(memberRepository.update(any(Member.class))).willReturn(adminMember);
+
+    // When
+    Member result =
+        memberService.editAuthorities(
+            userMember.memberId(), List.of(RoleType.USER, RoleType.ADMIN));
+
+    // Then
+    assertAll(
+        () -> assertThat(result.memberId()).isEqualTo(adminMember.memberId()),
+        () -> assertThat(result.nickname()).isEqualTo(adminMember.nickname()),
+        () -> assertThat(result.authInfo()).isEqualTo(adminMember.authInfo()),
+        () -> assertThat(result.authInfo().roles()).contains(RoleType.ADMIN),
+        () -> assertThat(result.points()).isEqualTo(adminMember.points()),
+        () -> assertThat(result.isAlarmAccepted()).isEqualTo(adminMember.isAlarmAccepted()),
+        () -> assertThat(result.profileImageFile()).isEqualTo(adminMember.profileImageFile()),
+        () ->
+            assertThat(result.profileBackgroundImageFile())
+                .isEqualTo(adminMember.profileBackgroundImageFile()));
+  }
+
+  @Test
   @DisplayName("권한이 없는 멤버가 프로필을 수정하려고 하면 예외를 던진다.")
-  void updateMemberTest_AccessDenied_Test() {
+  void editProfileTest_AccessDenied_Test() {
     // Given
     long loginId = 123L;
     long memberId = 124L;
 
     // When & Then
-    assertThatThrownBy(() -> memberService.updateMember(loginId, memberId, null, null, null))
+    assertThatThrownBy(() -> memberService.editProfile(loginId, memberId, null, null, null))
         .isInstanceOf(ApiAccessDeniedException.class);
   }
 
   @Test
   @DisplayName("멤버를 제거하고, 프로필 이미지 파일을 삭제한다.")
-  void deleteMemberTest() {
+  void removeTest() {
     // Given
     Member member = MemberFixture.create(123L, RoleType.USER);
 
     given(memberRepository.read(member.memberId())).willReturn(member);
 
     // When
-    memberService.deleteMember(member.memberId());
+    memberService.remove(member.memberId());
 
     // Then
-    verify(fileRepository, times(1)).deleteFile(member.profileImageFile().getUri());
+    verify(fileRepository, times(1)).deleteFile(member.profileImageFile());
     verify(memberRepository, times(1)).delete(member.memberId());
   }
 }

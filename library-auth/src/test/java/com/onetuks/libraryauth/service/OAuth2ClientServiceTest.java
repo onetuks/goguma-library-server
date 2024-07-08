@@ -26,7 +26,7 @@ class OAuth2ClientServiceTest extends CoreAuthIntegrationTest {
     MemberAuthResult memberAuthResult = new MemberAuthResult(true, 1L, authInfo.roles());
 
     given(googleClientProviderStrategy.getAuthInfo(anyString())).willReturn(authInfo);
-    given(memberService.createMemberIfNotExists(authInfo)).willReturn(memberAuthResult);
+    given(memberService.registerIfNotExists(authInfo)).willReturn(memberAuthResult);
 
     // When
     LoginResult result =

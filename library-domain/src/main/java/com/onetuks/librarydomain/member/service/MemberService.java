@@ -6,7 +6,9 @@ import com.onetuks.librarydomain.member.model.vo.AuthInfo;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
 import com.onetuks.librarydomain.member.service.dto.param.MemberProfileParam;
 import com.onetuks.librarydomain.member.service.dto.result.MemberAuthResult;
+import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +26,7 @@ public class MemberService {
   }
 
   @Transactional
-  public MemberAuthResult createMemberIfNotExists(AuthInfo authInfo) {
+  public MemberAuthResult registerIfNotExists(AuthInfo authInfo) {
     Optional<Member> optionalMember =
         memberRepository.read(authInfo.socialId(), authInfo.clientProvider());
 
@@ -38,12 +40,17 @@ public class MemberService {
   }
 
   @Transactional(readOnly = true)
-  public Member readMember(Long memberId) {
+  public Member search(Long memberId) {
     return memberRepository.read(memberId);
   }
 
   @Transactional
-  public Member updateMember(
+  public Member editAuthorities(Long loginId, List<RoleType> newRoles) {
+    return memberRepository.update(memberRepository.read(loginId).changeRoles(newRoles));
+  }
+
+  @Transactional
+  public Member editProfile(
       long loginId,
       long memberId,
       MemberProfileParam param,
@@ -54,7 +61,15 @@ public class MemberService {
     }
 
     Member member =
-        memberRepository.read(memberId).changeProfile(param, profileImage, profileBackgroundImage);
+        memberRepository
+            .read(memberId)
+            .changeProfile(
+                param.nickname(),
+                param.introduction(),
+                param.interestedCategories(),
+                param.isAlarmAccepted(),
+                profileImage,
+                profileBackgroundImage);
 
     fileRepository.putFile(member.profileImageFile());
     fileRepository.putFile(member.profileBackgroundImageFile());
@@ -63,10 +78,10 @@ public class MemberService {
   }
 
   @Transactional
-  public void deleteMember(long memberId) {
+  public void remove(long memberId) {
     Member member = memberRepository.read(memberId);
 
-    fileRepository.deleteFile(member.profileImageFile().getUri());
+    fileRepository.deleteFile(member.profileImageFile());
     memberRepository.delete(memberId);
   }
 }

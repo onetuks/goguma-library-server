@@ -53,11 +53,31 @@ class DbStorageArchitectureTest extends DbStorageIntegrationTest {
   }
 
   @Nested
+  class MethodNameTest {
+
+    @Test
+    @DisplayName("Repository 에서는 create|read|update|delete|find|credit|exists 로 시작하는 메서드 이름을 사용한다.")
+    void controller_MethodNamePrefix_Test() {
+      ArchRule rule =
+          ArchRuleDefinition.methods()
+              .that()
+              .arePublic()
+              .and()
+              .areDeclaredInClassesThat()
+              .resideInAPackage("..repository")
+              .should()
+              .haveNameMatching("^(create|read|update|delete|find|credit|exists).*");
+
+      rule.check(javaClasses);
+    }
+  }
+
+  @Nested
   class DependancyTest {
 
     @Test
     @DisplayName("Entity는 오직 Repository와 Converter에 의해서만 의존한다")
-    void model_HaveDependancy_Test() {
+    void model_HaveDependency_Test() {
       ArchRule rule =
           ArchRuleDefinition.classes()
               .that()

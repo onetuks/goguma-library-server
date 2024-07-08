@@ -1,8 +1,11 @@
 package com.onetuks.libraryauth.service.dto;
 
-public record RefreshResult(String accessToken, Long loginId) {
+import com.onetuks.libraryobject.enums.RoleType;
+import java.util.List;
 
-  public static RefreshResult of(String accessToken, Long loginId) {
-    return new RefreshResult(accessToken, loginId);
+public record RefreshResult(String accessToken, Long loginId, List<RoleType> roles) {
+
+  public static RefreshResult of(String accessToken, Long loginId, List<RoleType> roles) {
+    return new RefreshResult(accessToken, loginId, roles);
   }
 }

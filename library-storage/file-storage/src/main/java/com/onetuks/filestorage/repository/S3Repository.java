@@ -34,7 +34,7 @@ public class S3Repository implements FileRepository {
       s3Client.putObject(
           PutObjectRequest.builder()
               .bucket(s3Config.getBucketName())
-              .key(imageFile.getUri())
+              .key(imageFile.getKey())
               .build(),
           RequestBody.fromInputStream(
               imageFile.file().getInputStream(), imageFile.file().getSize()));
@@ -45,29 +45,39 @@ public class S3Repository implements FileRepository {
     }
   }
 
-  public File getFile(String uri) {
-    File file = new File("src/test/resources/static" + uri);
+  @Override
+  public void deleteFile(ImageFile imageFile) {
+    if (imageFile.isDefault()) {
+      return;
+    }
+
+    try {
+      s3Client.deleteObject(
+          DeleteObjectRequest.builder()
+              .bucket(s3Config.getBucketName())
+              .key(imageFile.getKey())
+              .build());
+    } catch (NoSuchKeyException e) {
+      // 이미 삭제된 파일이므로 무시
+    }
+  }
+
+  public File getFile(ImageFile imageFile) {
+    File file = new File("src/test/resources/static" + imageFile.getKey());
 
     try {
       ResponseInputStream<GetObjectResponse> res =
           s3Client.getObject(
-              GetObjectRequest.builder().bucket(s3Config.getBucketName()).key(uri).build());
+              GetObjectRequest.builder()
+                  .bucket(s3Config.getBucketName())
+                  .key(imageFile.getKey())
+                  .build());
 
       FileUtils.writeByteArrayToFile(file, res.readAllBytes());
 
       return file;
     } catch (IOException e) {
       throw new UncheckedIOException(e);
-    }
-  }
-
-  @Override
-  public void deleteFile(String uri) {
-    try {
-      s3Client.deleteObject(
-          DeleteObjectRequest.builder().bucket(s3Config.getBucketName()).key(uri).build());
-    } catch (NoSuchKeyException e) {
-      // 이미 삭제된 파일이므로 무시
     }
   }
 }

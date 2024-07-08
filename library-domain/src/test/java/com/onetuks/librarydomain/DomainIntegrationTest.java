@@ -1,10 +1,15 @@
 package com.onetuks.librarydomain;
 
 import com.onetuks.librarydomain.DomainIntegrationTest.DomainConfig;
+import com.onetuks.librarydomain.book.repository.BookPickRepository;
+import com.onetuks.librarydomain.book.repository.BookRepository;
+import com.onetuks.librarydomain.book.service.BookPickService;
+import com.onetuks.librarydomain.book.service.BookService;
 import com.onetuks.librarydomain.file.FileRepository;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
+import com.onetuks.librarydomain.member.repository.PointRepository;
 import com.onetuks.librarydomain.member.service.MemberService;
-import com.onetuks.libraryobject.vo.TestFileCleaner;
+import com.onetuks.libraryobject.component.TestFileCleaner;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,9 +23,15 @@ import org.springframework.test.context.ActiveProfiles;
 public class DomainIntegrationTest {
 
   @Autowired public MemberService memberService;
+  @Autowired public BookService bookService;
+  @Autowired public BookPickService bookPickService;
 
   @MockBean public FileRepository fileRepository;
+  @MockBean public PointRepository pointRepository;
   @MockBean public MemberRepository memberRepository;
+  @MockBean public BookRepository bookRepository;
+  @MockBean public BookPickRepository bookPickRepository;
+
   @Autowired private TestFileCleaner testFileCleaner;
 
   @Configuration

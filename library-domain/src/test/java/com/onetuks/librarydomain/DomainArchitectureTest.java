@@ -6,11 +6,9 @@ import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -79,21 +77,21 @@ public class DomainArchitectureTest extends DomainIntegrationTest {
 
       rule.check(javaClasses);
     }
+  }
+
+  @Nested
+  class MethodNameTest {
 
     @Test
-    @Disabled
-    @DisplayName("config 패키지 안에 있는 클래스는 Config 로 끝난다.")
-    void config_ClassNamePostfix_Test() {
+    @DisplayName("Service 에서는 register, search, edit, remove 로 시작하는 메서드 이름을 사용한다.")
+    void controller_MethodNamePrefix_Test() {
       ArchRule rule =
-          ArchRuleDefinition.classes()
+          ArchRuleDefinition.methods()
               .that()
-              .resideInAnyPackage("..config..")
-              .and()
-              .doNotHaveSimpleName("AuthPermittedEndpoint")
+              .areDeclaredInClassesThat()
+              .resideInAPackage("..service")
               .should()
-              .haveSimpleNameEndingWith("Config")
-              .andShould()
-              .beAnnotatedWith(Configuration.class);
+              .haveNameMatching("^(register|search|edit|remove).*");
 
       rule.check(javaClasses);
     }

@@ -4,6 +4,7 @@ import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.CascadeType.REMOVE;
 
 import com.onetuks.dbstorage.member.entity.embed.AuthInfoEmbeddable;
+import com.onetuks.libraryobject.annotation.Generated;
 import com.onetuks.libraryobject.enums.Category;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
@@ -17,8 +18,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,8 +50,8 @@ public class MemberEntity {
   private String introduction;
 
   @Type(JsonType.class)
-  @Column(name = "interested_categories")
-  private List<Category> interestedCategories;
+  @Column(name = "interested_categories", nullable = false)
+  private Set<Category> interestedCategories;
 
   @Column(name = "is_alarm_accepted", nullable = false)
   private Boolean isAlarmAccepted;
@@ -75,7 +76,7 @@ public class MemberEntity {
       AuthInfoEmbeddable authInfoEmbeddable,
       String nickname,
       String introduction,
-      List<Category> interestedCategories,
+      Set<Category> interestedCategories,
       Boolean isAlarmAccepted,
       Long points,
       String profileImageUri,
@@ -85,12 +86,34 @@ public class MemberEntity {
     this.authInfoEmbeddable = authInfoEmbeddable;
     this.nickname = nickname;
     this.introduction = introduction;
-    this.interestedCategories = Objects.requireNonNullElse(interestedCategories, List.of());
-    this.isAlarmAccepted = Objects.requireNonNullElse(isAlarmAccepted, true);
-    this.points = Objects.requireNonNullElse(points, 0L);
+    this.interestedCategories = interestedCategories;
+    this.isAlarmAccepted = isAlarmAccepted;
+    this.points = points;
     this.profileImageUri = profileImageUri;
     this.profileBackgroundImageUri = profileBackgroundImageUri;
-    this.memberStaticsEntity =
-        Objects.requireNonNullElse(memberStaticsEntity, MemberStaticsEntity.init());
+    this.memberStaticsEntity = memberStaticsEntity;
+  }
+
+  public void addPoints(long point) {
+    this.points += point;
+  }
+
+  @Override
+  @Generated
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    MemberEntity that = (MemberEntity) o;
+    return Objects.equals(memberId, that.memberId);
+  }
+
+  @Override
+  @Generated
+  public int hashCode() {
+    return Objects.hashCode(memberId);
   }
 }

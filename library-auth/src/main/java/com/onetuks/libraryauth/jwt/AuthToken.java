@@ -6,7 +6,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import javax.crypto.SecretKey;
@@ -35,8 +34,10 @@ public class AuthToken {
   }
 
   public List<RoleType> getRoleTypes() {
-    return Arrays.stream(getTokenClaims().get(AUTHORITIES_KEY, String[].class))
-        .map(RoleType::valueOf)
+    List<?> roles = getTokenClaims().get(AUTHORITIES_KEY, List.class);
+    return roles.stream()
+        .filter(object -> object instanceof String)
+        .map(role -> RoleType.valueOf((String) role))
         .toList();
   }
 
@@ -45,10 +46,10 @@ public class AuthToken {
 
     String socialId = claims.getSubject();
     Long loginId = claims.get(LOGIN_ID_KEY, Long.class);
-    List<String> roles = Arrays.asList(claims.get(AUTHORITIES_KEY, String[].class));
+    List<RoleType> roles = getRoleTypes();
 
     List<SimpleGrantedAuthority> authorities =
-        roles.stream().map(SimpleGrantedAuthority::new).toList();
+        roles.stream().map(RoleType::name).map(SimpleGrantedAuthority::new).toList();
 
     CustomUserDetails customUserDetails =
         CustomUserDetails.builder()

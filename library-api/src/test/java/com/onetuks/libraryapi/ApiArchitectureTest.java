@@ -65,7 +65,27 @@ public class ApiArchitectureTest {
               .that()
               .resideInAnyPackage("..response")
               .should()
-              .haveSimpleNameEndingWith("Response");
+              .haveSimpleNameEndingWith("Response")
+              .orShould()
+              .haveSimpleNameEndingWith("Responses");
+
+      rule.check(javaClasses);
+    }
+  }
+
+  @Nested
+  class MethodNameTest {
+
+    @Test
+    @DisplayName("Controller 에서는 get, post, patch, put, delete 로 시작하는 메서드 이름을 사용한다.")
+    void controller_MethodNamePrefix_Test() {
+      ArchRule rule =
+          ArchRuleDefinition.methods()
+              .that()
+              .areDeclaredInClassesThat()
+              .resideInAPackage("..controller")
+              .should()
+              .haveNameMatching("^(get|post|patch|put|delete).+");
 
       rule.check(javaClasses);
     }
@@ -91,7 +111,9 @@ public class ApiArchitectureTest {
                   "..model",
                   "..web..",
                   "..http..",
-                  "java..");
+                  "java..",
+                  "..validation..",
+                  "..domain..");
 
       rule.check(javaClasses);
     }

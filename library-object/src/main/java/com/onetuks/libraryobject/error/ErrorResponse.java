@@ -1,6 +1,7 @@
 package com.onetuks.libraryobject.error;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -32,7 +33,7 @@ public class ErrorResponse {
   private ErrorResponse(final ErrorCode errorCode) {
     this.code = errorCode.getCode();
     this.message = errorCode.getMessage();
-    this.fieldDetailErrors = new ArrayList<>();
+    this.fieldDetailErrors = Collections.synchronizedList(new ArrayList<>());
   }
 
   private ErrorResponse(final ErrorCode errorCode, final String reason) {
