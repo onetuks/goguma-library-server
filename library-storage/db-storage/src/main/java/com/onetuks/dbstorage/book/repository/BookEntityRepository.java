@@ -1,5 +1,7 @@
 package com.onetuks.dbstorage.book.repository;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onetuks.dbstorage.book.converter.BookConverter;
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.book.repository.BookRepository;
@@ -51,9 +53,14 @@ public class BookEntityRepository implements BookRepository {
 
   @Override
   public Page<Book> readAll(List<Category> interestedCategories, Pageable pageable) {
-    return repository
-        .findAllByCategoriesIn(interestedCategories, pageable)
-        .map(converter::toDomain);
+    try {
+      return repository
+          .findAllCategoriesInInterestedCategories(
+              new ObjectMapper().writeValueAsString(interestedCategories), pageable)
+          .map(converter::toDomain);
+    } catch (JsonProcessingException e) {
+      throw new IllegalStateException("카테고리 조회 중 오류가 발생했습니다.");
+    }
   }
 
   @Override

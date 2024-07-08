@@ -48,10 +48,9 @@ public class BookFixture {
   }
 
   private static List<Category> createCategory() {
-    return List.of(
-        IntStream.range(1, random.nextInt(1, 4))
-            .mapToObj(i -> Category.values()[random.nextInt(Category.values().length)])
-            .toArray(Category[]::new));
+    return IntStream.range(0, random.nextInt(1, 4))
+        .mapToObj(i -> Category.values()[random.nextInt(Category.values().length)])
+        .toList();
   }
 
   private static boolean createIsIndie() {

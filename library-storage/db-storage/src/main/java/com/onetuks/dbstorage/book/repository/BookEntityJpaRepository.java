@@ -1,13 +1,17 @@
 package com.onetuks.dbstorage.book.repository;
 
 import com.onetuks.dbstorage.book.entity.BookEntity;
-import com.onetuks.libraryobject.enums.Category;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface BookEntityJpaRepository extends JpaRepository<BookEntity, Long> {
 
-  Page<BookEntity> findAllByCategoriesIn(List<Category> categories, Pageable pageable);
+  @Query(
+      value = "SELECT * FROM books WHERE JSON_CONTAINS(books.categories, :interestedCategories)",
+      nativeQuery = true)
+  Page<BookEntity> findAllCategoriesInInterestedCategories(
+      @Param("interestedCategories") String interestedCategories, Pageable pageable);
 }
