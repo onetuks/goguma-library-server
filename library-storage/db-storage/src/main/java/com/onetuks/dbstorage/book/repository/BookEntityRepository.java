@@ -7,7 +7,7 @@ import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.book.repository.BookRepository;
 import com.onetuks.libraryobject.enums.Category;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
+import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -52,7 +52,7 @@ public class BookEntityRepository implements BookRepository {
   }
 
   @Override
-  public Page<Book> readAll(List<Category> interestedCategories, Pageable pageable) {
+  public Page<Book> readAll(Set<Category> interestedCategories, Pageable pageable) {
     try {
       return repository
           .findAllCategoriesInInterestedCategories(

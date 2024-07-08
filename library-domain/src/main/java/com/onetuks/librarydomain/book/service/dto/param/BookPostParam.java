@@ -1,12 +1,12 @@
 package com.onetuks.librarydomain.book.service.dto.param;
 
 import com.onetuks.libraryobject.enums.Category;
-import java.util.List;
+import java.util.Set;
 
 public record BookPostParam(
     String title,
     String authorName,
     String isbn,
     String publisher,
-    List<Category> categories,
+    Set<Category> categories,
     boolean isIndie) {}

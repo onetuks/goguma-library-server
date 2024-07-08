@@ -2,7 +2,7 @@ package com.onetuks.libraryapi.book.dto.response;
 
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.libraryobject.enums.Category;
-import java.util.List;
+import java.util.Set;
 import org.springframework.data.domain.Page;
 
 public record BookResponse(
@@ -12,7 +12,7 @@ public record BookResponse(
     String introduction,
     String isbn,
     String publisher,
-    List<Category> categories,
+    Set<Category> categories,
     String coverImageUrl,
     boolean isIndie,
     boolean isPermitted) {

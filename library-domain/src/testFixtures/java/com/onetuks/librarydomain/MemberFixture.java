@@ -10,7 +10,9 @@ import com.onetuks.libraryobject.enums.ImageType;
 import com.onetuks.libraryobject.enums.RoleType;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class MemberFixture {
@@ -49,10 +51,10 @@ public class MemberFixture {
     return NICKNAMES.get(random.nextInt(NICKNAMES.size())) + postFix;
   }
 
-  private static List<Category> createInterestedCategories() {
+  private static Set<Category> createInterestedCategories() {
     return IntStream.range(0, random.nextInt(1, 3))
         .mapToObj(i -> Category.values()[random.nextInt(Category.values().length)])
-        .toList();
+        .collect(Collectors.toSet());
   }
 
   private static long createPoints() {

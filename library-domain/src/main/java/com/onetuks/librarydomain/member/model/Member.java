@@ -12,6 +12,7 @@ import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.vo.ImageFile;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import lombok.Builder;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +23,7 @@ public record Member(
     AuthInfo authInfo,
     Nickname nickname,
     String introduction,
-    List<Category> interestedCategories,
+    Set<Category> interestedCategories,
     boolean isAlarmAccepted,
     long points,
     ImageFile profileImageFile,
@@ -31,7 +32,7 @@ public record Member(
 
   public Member {
     nickname = Optional.ofNullable(nickname).orElse(Nickname.init());
-    interestedCategories = Optional.ofNullable(interestedCategories).orElse(List.of(Category.ALL));
+    interestedCategories = Optional.ofNullable(interestedCategories).orElse(Set.of(Category.ALL));
     profileImageFile =
         Optional.ofNullable(profileImageFile)
             .orElse(ImageFile.of(PROFILE_IMAGE, DEFAULT_PROFILE_IMAGE_URI));
@@ -62,7 +63,7 @@ public record Member(
   public Member changeProfile(
       String nickname,
       String introduction,
-      List<Category> interestedCategories,
+      Set<Category> interestedCategories,
       boolean isAlarmAccepted,
       MultipartFile profileImage,
       MultipartFile profileBackgroundImage) {

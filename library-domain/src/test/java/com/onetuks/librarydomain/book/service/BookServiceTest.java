@@ -18,6 +18,7 @@ import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.ImageType;
 import com.onetuks.libraryobject.vo.ImageFile;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
@@ -124,7 +125,7 @@ class BookServiceTest extends DomainIntegrationTest {
             "새로운 소개",
             "1110111011101",
             "새로운 출판사",
-            List.of(Category.CARTOON, Category.NOVEL),
+            Set.of(Category.CARTOON, Category.NOVEL),
             true,
             true);
     Book updatedBook =
@@ -172,7 +173,7 @@ class BookServiceTest extends DomainIntegrationTest {
             "새로운 소개",
             "1110111011101",
             "새로운 출판사",
-            List.of(Category.CARTOON, Category.NOVEL),
+            Set.of(Category.CARTOON, Category.NOVEL),
             true,
             true);
     MultipartFile coverImage =

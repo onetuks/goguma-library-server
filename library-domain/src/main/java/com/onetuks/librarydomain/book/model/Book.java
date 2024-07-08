@@ -3,8 +3,8 @@ package com.onetuks.librarydomain.book.model;
 import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.ImageType;
 import com.onetuks.libraryobject.vo.ImageFile;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,7 +15,7 @@ public record Book(
     String introduction,
     String isbn,
     String publisher,
-    List<Category> categories,
+    Set<Category> categories,
     ImageFile coverImageFile,
     boolean isIndie,
     boolean isPermitted) {
@@ -25,7 +25,7 @@ public record Book(
       String authorName,
       String isbn,
       String publisher,
-      List<Category> categories,
+      Set<Category> categories,
       boolean isIndie,
       MultipartFile coverImage) {
     return new Book(
@@ -49,7 +49,7 @@ public record Book(
       String introduction,
       String isbn,
       String publisher,
-      List<Category> categories,
+      Set<Category> categories,
       boolean isIndie,
       boolean isPermitted,
       MultipartFile coverImage) {

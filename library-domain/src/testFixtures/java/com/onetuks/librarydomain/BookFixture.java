@@ -6,7 +6,9 @@ import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.ImageType;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class BookFixture {
@@ -25,7 +27,7 @@ public class BookFixture {
         "소개글입니다.",
         createIsbn(),
         createPublisher(),
-        createCategory(),
+        createCategories(),
         ImageFileFixture.create(ImageType.COVER_IMAGE, UUID.randomUUID().toString()),
         createIsIndie(),
         false);
@@ -47,10 +49,10 @@ public class BookFixture {
     return "출판사" + random.nextLong(10_000L);
   }
 
-  private static List<Category> createCategory() {
+  private static Set<Category> createCategories() {
     return IntStream.range(0, random.nextInt(1, 4))
         .mapToObj(i -> Category.values()[random.nextInt(Category.values().length)])
-        .toList();
+        .collect(Collectors.toSet());
   }
 
   private static boolean createIsIndie() {

@@ -2,13 +2,13 @@ package com.onetuks.libraryapi.member.dto.response;
 
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.libraryobject.enums.Category;
-import java.util.List;
+import java.util.Set;
 
 public record MemberPatchResponse(
     long memberId,
     String nickname,
     String introduction,
-    List<Category> interestedCategories,
+    Set<Category> interestedCategories,
     boolean isAlarmAccepted,
     String profileImageFileUrl,
     String profileBackgroundImageFileUrl) {

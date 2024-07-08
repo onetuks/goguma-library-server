@@ -11,6 +11,7 @@ import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.RoleType;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -156,26 +157,28 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
   void readAll_WithInterestedCategories_FindAllTest() {
     // Given
     Pageable pageable = PageRequest.of(0, 10);
-    List<Category> interestedCategories =
+    Set<Category> interestedCategories =
         memberEntityRepository
             .create(MemberFixture.create(null, RoleType.USER))
             .interestedCategories();
-    List<Book> books = IntStream.range(0, 5)
-        .mapToObj(
-            i -> {
-              Book book = BookFixture.create(null);
-              return bookEntityRepository.create(
-                  book.changeBookInfo(
-                      book.title(),
-                      book.authorName(),
-                      book.introduction(),
-                      book.isbn(),
-                      book.publisher(),
-                      interestedCategories,
-                      book.isIndie(),
-                      book.isPermitted(),
-                      book.coverImageFile().file()));
-            }).toList();
+    List<Book> books =
+        IntStream.range(0, 5)
+            .mapToObj(
+                i -> {
+                  Book book = BookFixture.create(null);
+                  return bookEntityRepository.create(
+                      book.changeBookInfo(
+                          book.title(),
+                          book.authorName(),
+                          book.introduction(),
+                          book.isbn(),
+                          book.publisher(),
+                          interestedCategories,
+                          book.isIndie(),
+                          book.isPermitted(),
+                          book.coverImageFile().file()));
+                })
+            .toList();
 
     // When
     Page<Book> results = bookEntityRepository.readAll(interestedCategories, pageable);

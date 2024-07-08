@@ -20,6 +20,7 @@ import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -92,7 +93,7 @@ class MemberServiceTest extends DomainIntegrationTest {
     Member member = MemberFixture.create(123L, RoleType.USER);
     MemberProfileParam param =
         new MemberProfileParam(
-            "nickname", "introduction", List.of(Category.CARTOON, Category.NOVEL), true);
+            "nickname", "introduction", Set.of(Category.CARTOON, Category.NOVEL), true);
     MultipartFile profileImage =
         MultipartFileFixture.create(ImageType.PROFILE_IMAGE, UUID.randomUUID().toString());
     MultipartFile profileBackgroundImage =

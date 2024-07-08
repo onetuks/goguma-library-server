@@ -9,8 +9,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,7 +44,7 @@ public class BookEntity {
 
   @Type(JsonType.class)
   @Column(name = "categories", nullable = false)
-  private List<Category> categories;
+  private Set<Category> categories;
 
   @Column(name = "cover_image_uri")
   private String coverImageUri;
@@ -62,7 +62,7 @@ public class BookEntity {
       String introduction,
       String isbn,
       String publisher,
-      List<Category> categories,
+      Set<Category> categories,
       String coverImageUri,
       Boolean isIndie,
       Boolean isPermitted) {

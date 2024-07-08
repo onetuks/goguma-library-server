@@ -18,8 +18,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,7 +51,7 @@ public class MemberEntity {
 
   @Type(JsonType.class)
   @Column(name = "interested_categories", nullable = false)
-  private List<Category> interestedCategories;
+  private Set<Category> interestedCategories;
 
   @Column(name = "is_alarm_accepted", nullable = false)
   private Boolean isAlarmAccepted;
@@ -76,7 +76,7 @@ public class MemberEntity {
       AuthInfoEmbeddable authInfoEmbeddable,
       String nickname,
       String introduction,
-      List<Category> interestedCategories,
+      Set<Category> interestedCategories,
       Boolean isAlarmAccepted,
       Long points,
       String profileImageUri,

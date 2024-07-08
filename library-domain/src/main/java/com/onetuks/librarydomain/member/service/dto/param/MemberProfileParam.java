@@ -1,10 +1,10 @@
 package com.onetuks.librarydomain.member.service.dto.param;
 
 import com.onetuks.libraryobject.enums.Category;
-import java.util.List;
+import java.util.Set;
 
 public record MemberProfileParam(
     String nickname,
     String introduction,
-    List<Category> interestedCategories,
+    Set<Category> interestedCategories,
     boolean isAlarmAccepted) {}
