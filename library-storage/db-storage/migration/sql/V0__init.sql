@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS books
 (
     book_id         BIGINT       NOT NULL AUTO_INCREMENT COMMENT '책 식별자',
     title           VARCHAR(255) NOT NULL COMMENT '책 제목',
-    author_name     VARCHAR(50)  NOT NULL COMMENT '저자 이름', -- 10자
+    author_name     VARCHAR(100)  NOT NULL COMMENT '저자 이름',
     introduction    VARCHAR(5000) COMMENT '책 소개',
     isbn            VARCHAR(50) COMMENT '국제 표준 도서 번호', -- 13자
     publisher       VARCHAR(255) COMMENT '출판사',

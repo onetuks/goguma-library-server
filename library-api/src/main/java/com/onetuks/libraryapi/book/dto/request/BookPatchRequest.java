@@ -10,10 +10,10 @@ import org.hibernate.validator.constraints.Length;
 
 public record BookPatchRequest(
     @NotBlank @Length(min = 1) String title,
-    @NotBlank @Length(min = 2, max = 10) String authorName,
-    @Length(max = 50) String introduction,
+    @NotBlank @Length(min = 1, max = 20) String authorName,
+    @Length(max = 500) String introduction,
     @Length(min = 13, max = 13) String isbn,
-    @Length(min = 1) String publisher,
+    @Length(min = 1, max = 30) String publisher,
     @Size(min = 1, max = 3) List<Category> categories,
     @NotNull boolean isIndie,
     @NotNull boolean isPermitted) {

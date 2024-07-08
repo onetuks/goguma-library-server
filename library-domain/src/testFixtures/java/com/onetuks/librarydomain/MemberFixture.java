@@ -25,7 +25,7 @@ public class MemberFixture {
         createAuthInfo(roleType),
         new Nickname(createNickname()),
         "소개글입니다.",
-        createCategories(),
+        createInterestedCategories(),
         createIsAlarmAccepted(),
         createPoints(),
         ImageFileFixture.create(ImageType.PROFILE_IMAGE, UUID.randomUUID().toString()),
@@ -49,8 +49,8 @@ public class MemberFixture {
     return NICKNAMES.get(random.nextInt(NICKNAMES.size())) + postFix;
   }
 
-  private static List<Category> createCategories() {
-    return IntStream.range(1, random.nextInt(1, 3))
+  private static List<Category> createInterestedCategories() {
+    return IntStream.range(0, random.nextInt(1, 3))
         .mapToObj(i -> Category.values()[random.nextInt(Category.values().length)])
         .toList();
   }

@@ -172,7 +172,8 @@ public class BookRestController {
       path = "/recommend/interested-categories",
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookResponses> getBooksWithInterestedCategories(
-      @LoginId Long loginId, @PageableDefault Pageable pageable) {
+      @LoginId Long loginId,
+      @PageableDefault(size = 3) Pageable pageable) {
     Page<Book> results = bookService.findAll(loginId, pageable);
     BookResponses responses = BookResponses.from(results);
 

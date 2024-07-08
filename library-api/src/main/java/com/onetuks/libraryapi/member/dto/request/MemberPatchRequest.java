@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.Length;
 
 public record MemberPatchRequest(
     @NotBlank @Length(min = 2, max = 10) String nickname,
-    @Length(max = 50) String introduction,
+    @Length(max = 30) String introduction,
     @Size(min = 1, max = 3) List<Category> interestedCategories,
     @NotNull boolean isAlarmAccepted) {
 
