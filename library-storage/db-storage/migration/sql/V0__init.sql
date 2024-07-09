@@ -79,14 +79,14 @@ CREATE TABLE IF NOT EXISTS books
 
 CREATE TABLE IF NOT EXISTS reviews
 (
-    review_id       BIGINT        NOT NULL AUTO_INCREMENT COMMENT '서평 식별자',
-    member_id       BIGINT        NOT NULL COMMENT '멤버 식별자',
-    book_id         BIGINT        NOT NULL COMMENT '책 식별자',
-    review_title    VARCHAR(255)  NOT NULL COMMENT '서평 제목',
-    review_content  VARCHAR(5000) NOT NULL COMMENT '서평 내용',
-    favorite_counts BIGINT        NOT NULL DEFAULT 0 COMMENT '서평 좋아요 수',
-    created_at      DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '서평 생성일',
-    updated_at      DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '서평 수정일',
+    review_id      BIGINT        NOT NULL AUTO_INCREMENT COMMENT '서평 식별자',
+    member_id      BIGINT        NOT NULL COMMENT '멤버 식별자',
+    book_id        BIGINT        NOT NULL COMMENT '책 식별자',
+    review_title   VARCHAR(255)  NOT NULL COMMENT '서평 제목',
+    review_content VARCHAR(5000) NOT NULL COMMENT '서평 내용',
+    pick_counts    BIGINT        NOT NULL DEFAULT 0 COMMENT '서평 좋아요 수',
+    created_at     DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '서평 생성일',
+    updated_at     DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '서평 수정일',
     PRIMARY KEY (review_id),
     FOREIGN KEY (member_id) REFERENCES members (member_id),
     FOREIGN KEY (book_id) REFERENCES books (book_id)
@@ -96,8 +96,8 @@ CREATE TABLE IF NOT EXISTS reviews
 CREATE TABLE IF NOT EXISTS review_picks
 (
     review_pick_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '서평픽 식별자',
-    member_id       BIGINT NOT NULL COMMENT '멤버 식별자',
-    review_id       BIGINT NOT NULL COMMENT '서평 식별자',
+    member_id      BIGINT NOT NULL COMMENT '멤버 식별자',
+    review_id      BIGINT NOT NULL COMMENT '서평 식별자',
     PRIMARY KEY (review_pick_id),
     FOREIGN KEY (member_id) REFERENCES members (member_id),
     FOREIGN KEY (review_id) REFERENCES reviews (review_id)
@@ -107,8 +107,8 @@ CREATE TABLE IF NOT EXISTS review_picks
 CREATE TABLE IF NOT EXISTS book_picks
 (
     book_pick_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '북픽 식별자',
-    member_id     BIGINT NOT NULL COMMENT '멤버 식별자',
-    book_id       BIGINT NOT NULL COMMENT '책 식별자',
+    member_id    BIGINT NOT NULL COMMENT '멤버 식별자',
+    book_id      BIGINT NOT NULL COMMENT '책 식별자',
     PRIMARY KEY (book_pick_id),
     FOREIGN KEY (member_id) REFERENCES members (member_id),
     FOREIGN KEY (book_id) REFERENCES books (book_id)

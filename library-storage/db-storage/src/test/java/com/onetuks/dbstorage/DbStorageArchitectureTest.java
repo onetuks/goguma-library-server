@@ -109,6 +109,7 @@ class DbStorageArchitectureTest extends DbStorageIntegrationTest {
                   "..entity..",
                   "..vo..",
                   "..enums..",
+                  "..common..",
                   "..annotation..");
 
       rule.check(javaClasses);

@@ -9,6 +9,8 @@ import com.onetuks.librarydomain.file.FileRepository;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
 import com.onetuks.librarydomain.member.repository.PointRepository;
 import com.onetuks.librarydomain.member.service.MemberService;
+import com.onetuks.librarydomain.review.repository.ReviewRepository;
+import com.onetuks.librarydomain.review.service.ReviewService;
 import com.onetuks.libraryobject.component.TestFileCleaner;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +27,14 @@ public class DomainIntegrationTest {
   @Autowired public MemberService memberService;
   @Autowired public BookService bookService;
   @Autowired public BookPickService bookPickService;
+  @Autowired public ReviewService reviewService;
 
   @MockBean public FileRepository fileRepository;
   @MockBean public PointRepository pointRepository;
   @MockBean public MemberRepository memberRepository;
   @MockBean public BookRepository bookRepository;
   @MockBean public BookPickRepository bookPickRepository;
+  @MockBean public ReviewRepository reviewRepository;
 
   @Autowired private TestFileCleaner testFileCleaner;
 
