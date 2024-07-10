@@ -66,7 +66,7 @@ class DbStorageArchitectureTest extends DbStorageIntegrationTest {
               .areDeclaredInClassesThat()
               .resideInAPackage("..repository")
               .should()
-              .haveNameMatching("^(create|read|update|delete|find|credit|exists).*");
+              .haveNameMatching("^(create|read|update|delete|find|exists|credit|debit).*");
 
       rule.check(javaClasses);
     }

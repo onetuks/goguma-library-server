@@ -90,6 +90,8 @@ public class DomainArchitectureTest extends DomainIntegrationTest {
               .that()
               .areDeclaredInClassesThat()
               .resideInAPackage("..service")
+              .and()
+              .arePublic()
               .should()
               .haveNameMatching("^(register|search|edit|remove).*");
 

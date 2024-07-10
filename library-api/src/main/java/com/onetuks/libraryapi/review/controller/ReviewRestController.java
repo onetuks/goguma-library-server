@@ -8,6 +8,7 @@ import com.onetuks.librarydomain.review.service.ReviewService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,6 +49,7 @@ public class ReviewRestController {
 
   /**
    * 서평 수정
+   *
    * @param loginId : 로그인 ID
    * @param reviewId : 서평 ID
    * @param request : 서평 수정 요청
@@ -65,5 +67,19 @@ public class ReviewRestController {
     ReviewResponse response = ReviewResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  /**
+   * 서평 삭제
+   *
+   * @param loginId : 로그인 ID
+   * @param reviewId : 서평 ID
+   * @return : 204 No Content
+   */
+  @DeleteMapping(path = "{review-id}")
+  public ResponseEntity<Void> deleteReview(
+      @LoginId Long loginId, @PathVariable(name = "review-id") Long reviewId) {
+    reviewService.remove(loginId, reviewId);
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 }

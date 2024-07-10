@@ -1,7 +1,10 @@
 package com.onetuks.librarydomain.review.service;
 
+import static com.onetuks.librarydomain.member.repository.PointRepository.REVIEW_BASE_REGISTRATION_POINT;
+
 import com.onetuks.librarydomain.book.repository.BookRepository;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
+import com.onetuks.librarydomain.member.repository.PointRepository;
 import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.librarydomain.review.repository.ReviewRepository;
 import com.onetuks.librarydomain.review.service.dto.param.ReviewParam;
@@ -16,14 +19,17 @@ public class ReviewService {
   private final ReviewRepository reviewRepository;
   private final MemberRepository memberRepository;
   private final BookRepository bookRepository;
+  private final PointRepository pointRepository;
 
   public ReviewService(
       ReviewRepository reviewRepository,
       MemberRepository memberRepository,
-      BookRepository bookRepository) {
+      BookRepository bookRepository,
+      PointRepository pointRepository) {
     this.reviewRepository = reviewRepository;
     this.memberRepository = memberRepository;
     this.bookRepository = bookRepository;
+    this.pointRepository = pointRepository;
   }
 
   @Transactional
@@ -41,9 +47,7 @@ public class ReviewService {
   public Review edit(long loginId, long reviewId, ReviewParam param) {
     Review review = reviewRepository.read(reviewId);
 
-    if (review.member().memberId() != loginId) {
-      throw new ApiAccessDeniedException("해당 서평에 대한 권한이 없는 멤버입니다.");
-    }
+    checkAuthentication(loginId, review);
 
     return reviewRepository.update(
         new Review(
@@ -55,5 +59,21 @@ public class ReviewService {
             review.pickCount(),
             review.createdAt(),
             LocalDateTime.now()));
+  }
+
+  @Transactional
+  public void remove(long loginId, long reviewId) {
+    Review review = reviewRepository.read(reviewId);
+
+    checkAuthentication(loginId, review);
+
+    pointRepository.debitPoints(loginId, REVIEW_BASE_REGISTRATION_POINT);
+    reviewRepository.delete(reviewId);
+  }
+
+  private void checkAuthentication(long loginId, Review review) {
+    if (review.member().memberId() != loginId) {
+      throw new ApiAccessDeniedException("해당 서평에 대한 권한이 없는 멤버입니다.");
+    }
   }
 }

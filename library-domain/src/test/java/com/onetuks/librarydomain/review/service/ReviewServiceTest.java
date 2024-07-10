@@ -101,4 +101,22 @@ class ReviewServiceTest extends DomainIntegrationTest {
     assertThatThrownBy(() -> reviewService.edit(notAuthLoginId, review.reviewId(), param))
         .isInstanceOf(ApiAccessDeniedException.class);
   }
+
+  @Test
+  @DisplayName("서평을 삭제하면 포인트가 15P 차감된다.")
+  void remove_DebitPoint_Test() {
+    // Given
+    Review review =
+        ReviewFixture.create(
+            102L, MemberFixture.create(102L, RoleType.USER), BookFixture.create(102L));
+
+    given(reviewRepository.read(review.reviewId())).willReturn(review);
+
+    // When
+    reviewService.remove(review.member().memberId(), review.reviewId());
+
+    // Then
+    verify(pointRepository, times(1)).debitPoints(review.member().memberId(), 15);
+    verify(reviewRepository, times(1)).delete(review.reviewId());
+  }
 }

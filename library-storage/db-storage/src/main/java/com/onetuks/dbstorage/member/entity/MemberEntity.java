@@ -98,6 +98,10 @@ public class MemberEntity {
     this.points += point;
   }
 
+  public void minusPoints(long point) {
+    this.points = Math.max(0, this.points - point);
+  }
+
   @Override
   @Generated
   public boolean equals(Object o) {
