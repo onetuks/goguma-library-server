@@ -1,6 +1,6 @@
 package com.onetuks.libraryapi.review.controller;
 
-import com.onetuks.libraryapi.review.dto.request.ReviewPostRequest;
+import com.onetuks.libraryapi.review.dto.request.ReviewRequest;
 import com.onetuks.libraryapi.review.dto.response.ReviewResponse;
 import com.onetuks.libraryauth.util.LoginId;
 import com.onetuks.librarydomain.review.model.Review;
@@ -8,6 +8,8 @@ import com.onetuks.librarydomain.review.service.ReviewService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,10 +39,24 @@ public class ReviewRestController {
   public ResponseEntity<ReviewResponse> postNewReview(
       @LoginId Long loginId,
       @RequestParam(name = "book-id") Long bookId,
-      @RequestBody ReviewPostRequest request) {
+      @RequestBody ReviewRequest request) {
     Review result = reviewService.register(loginId, bookId, request.to());
     ReviewResponse response = ReviewResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
+  }
+
+  @PatchMapping(
+      path = "/{review-id}",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<ReviewResponse> patchReview(
+      @LoginId Long loginId,
+      @PathVariable(name = "review-id") Long reviewId,
+      @RequestBody ReviewRequest request) {
+    Review result = reviewService.edit(loginId, reviewId, request.to());
+    ReviewResponse response = ReviewResponse.from(result);
+
+    return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 }
