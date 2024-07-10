@@ -86,11 +86,11 @@ public class BookRestController {
    */
   @OnlyForAdmin
   @PatchMapping(
-      path = "/admin/{bookId}",
+      path = "/admin/{book-id}",
       consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookResponse> patchBook(
-      @PathVariable(name = "bookId") Long bookId,
+      @PathVariable(name = "book-id") Long bookId,
       @RequestPart(name = "request") @Valid BookPatchRequest request,
       @RequestPart(name = "cover-image", required = false) MultipartFile coverImage) {
     Book result = bookService.edit(bookId, request.to(), coverImage);
@@ -106,8 +106,8 @@ public class BookRestController {
    * @return : 204 No Content
    */
   @OnlyForAdmin
-  @DeleteMapping(path = "/admin/{bookId}")
-  public ResponseEntity<Void> deleteBook(@PathVariable(name = "bookId") Long bookId) {
+  @DeleteMapping(path = "/admin/{book-id}")
+  public ResponseEntity<Void> deleteBook(@PathVariable(name = "book-id") Long bookId) {
     bookService.remove(bookId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -137,8 +137,8 @@ public class BookRestController {
    * @param bookId : 도서 ID
    * @return : 도서 정보
    */
-  @GetMapping(path = "/{bookId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<BookResponse> getBook(@PathVariable(name = "bookId") Long bookId) {
+  @GetMapping(path = "/{book-id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<BookResponse> getBook(@PathVariable(name = "book-id") Long bookId) {
     Book result = bookService.search(bookId);
     BookResponse response = BookResponse.from(result);
 

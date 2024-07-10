@@ -70,17 +70,17 @@ public class BookPickRestController {
    * @param bookPickId : 북픽 ID
    * @return : 북픽 여부
    */
-  @GetMapping(path = "/{bookPickId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/{book-pick-id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Boolean> getMyBookPick(
-      @LoginId Long loginId, @PathVariable Long bookPickId) {
+      @LoginId Long loginId, @PathVariable(name = "book-pick-id") Long bookPickId) {
     boolean result = bookPickService.searchExistence(loginId, bookPickId);
 
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 
-  @DeleteMapping(path = "/{bookPickId}")
+  @DeleteMapping(path = "/{book-pick-id}")
   public ResponseEntity<Void> deleteMyBookPick(
-      @LoginId Long loginId, @PathVariable(name = "bookPickId") Long bookPickId) {
+      @LoginId Long loginId, @PathVariable(name = "book-pick-id") Long bookPickId) {
     bookPickService.remove(loginId, bookPickId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
