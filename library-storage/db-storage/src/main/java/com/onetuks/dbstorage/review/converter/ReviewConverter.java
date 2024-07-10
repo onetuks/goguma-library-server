@@ -34,6 +34,8 @@ public class ReviewConverter {
         bookConverter.toDomain(reviewEntity.getBookEntity()),
         reviewEntity.getReviewTitle(),
         reviewEntity.getReviewContent(),
-        reviewEntity.getPickCount());
+        reviewEntity.getPickCount(),
+        reviewEntity.getCreatedAt(),
+        reviewEntity.getUpdatedAt());
   }
 }
