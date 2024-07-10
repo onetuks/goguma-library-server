@@ -46,6 +46,13 @@ public class ReviewRestController {
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
+  /**
+   * 서평 수정
+   * @param loginId : 로그인 ID
+   * @param reviewId : 서평 ID
+   * @param request : 서평 수정 요청
+   * @return : 서평 정보
+   */
   @PatchMapping(
       path = "/{review-id}",
       consumes = MediaType.APPLICATION_JSON_VALUE,
