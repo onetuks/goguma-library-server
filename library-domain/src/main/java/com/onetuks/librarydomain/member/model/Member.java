@@ -80,6 +80,20 @@ public record Member(
         memberStatics);
   }
 
+  public Member updateStatics(Set<Category> categories) {
+    return new Member(
+        memberId,
+        authInfo,
+        nickname,
+        introduction,
+        interestedCategories,
+        isAlarmAccepted,
+        points,
+        profileImageFile,
+        profileBackgroundImageFile,
+        memberStatics.update(categories));
+  }
+
   private ImageFile getProfileImageFile(MultipartFile profileImage) {
     return Optional.ofNullable(profileImage)
         .map(

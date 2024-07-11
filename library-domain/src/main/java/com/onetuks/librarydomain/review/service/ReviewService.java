@@ -2,7 +2,9 @@ package com.onetuks.librarydomain.review.service;
 
 import static com.onetuks.librarydomain.member.repository.PointRepository.REVIEW_BASE_REGISTRATION_POINT;
 
+import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.book.repository.BookRepository;
+import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
 import com.onetuks.librarydomain.member.repository.PointRepository;
 import com.onetuks.librarydomain.review.model.Review;
@@ -35,12 +37,13 @@ public class ReviewService {
   @Transactional
   public Review register(long loginId, long bookId, ReviewParam param) {
     // todo 서평 등록 시 포인트 지급
+    Member member = memberRepository.read(loginId);
+    Book book = bookRepository.read(bookId);
+
+    Member updateMember = memberRepository.update(member.updateStatics(book.categories()));
+
     return reviewRepository.create(
-        new Review(
-            memberRepository.read(loginId),
-            bookRepository.read(bookId),
-            param.reviewTitle(),
-            param.reviewContent()));
+        new Review(updateMember, book, param.reviewTitle(), param.reviewContent()));
   }
 
   @Transactional

@@ -1,51 +1,82 @@
 package com.onetuks.librarydomain.review.service;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.times;
+import static org.mockito.BDDMockito.verify;
 
 import com.onetuks.librarydomain.BookFixture;
 import com.onetuks.librarydomain.DomainIntegrationTest;
 import com.onetuks.librarydomain.MemberFixture;
 import com.onetuks.librarydomain.ReviewFixture;
+import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.librarydomain.review.service.dto.param.ReviewParam;
+import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
 import java.time.LocalDateTime;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class ReviewServiceTest extends DomainIntegrationTest {
 
   @Test
-  @DisplayName("서평을 등록하면 금주도서인 경우 30P, 그 외 15P가 지급된다.")
+  @DisplayName("서평을 등록하면 금주도서인 경우 30P, 그 외 15P가 지급된다. 또한 해당 멤버의 서평 카테고리가 업데이트된다.")
   void register_CreditPointByBook_Test() {
     // Given
     Review review =
         ReviewFixture.create(
             101L, MemberFixture.create(101L, RoleType.USER), BookFixture.create(101L));
     ReviewParam param = new ReviewParam("서평제목", "서평본문");
+    Member updatedMember = review.member().updateStatics(review.book().categories());
+    Review updatedReview =
+        new Review(
+            review.reviewId(),
+            updatedMember,
+            review.book(),
+            review.reviewTitle(),
+            review.reviewContent(),
+            review.pickCount(),
+            review.createdAt(),
+            review.updatedAt());
 
     given(memberRepository.read(review.member().memberId())).willReturn(review.member());
     given(bookRepository.read(review.book().bookId())).willReturn(review.book());
-    given(reviewRepository.create(any(Review.class))).willReturn(review);
+    given(memberRepository.update(any(Member.class))).willReturn(updatedMember);
+    given(reviewRepository.create(any(Review.class))).willReturn(updatedReview);
 
     // When
     Review result =
         reviewService.register(review.member().memberId(), review.book().bookId(), param);
 
     // Then
+    Map<Category, Long> afterMemberStatics = result.member().memberStatics().reviewCategoryCounts();
+    Map<Category, Long> beforeMemberStatics =
+        review.member().memberStatics().reviewCategoryCounts();
+
     assertAll(
         () -> assertThat(result.reviewId()).isPositive(),
-        () -> assertThat(result.member()).isEqualTo(review.member()),
+        () -> assertThat(result.member()).isEqualTo(updatedMember),
         () -> assertThat(result.book()).isEqualTo(review.book()),
         () -> assertThat(result.reviewTitle()).isEqualTo(review.reviewTitle()),
         () -> assertThat(result.reviewContent()).isEqualTo(review.reviewContent()),
         () -> assertThat(result.pickCount()).isZero(),
         () -> assertThat(result.createdAt()).isNotNull(),
         () -> assertThat(result.updatedAt()).isNotNull());
+
+    afterMemberStatics.forEach(
+        (category, count) -> {
+          if (review.book().categories().contains(category)) {
+            assertThat(count).isEqualTo(beforeMemberStatics.get(category) + 1);
+          } else {
+            assertThat(count).isEqualTo(beforeMemberStatics.get(category));
+          }
+        });
   }
 
   @Test

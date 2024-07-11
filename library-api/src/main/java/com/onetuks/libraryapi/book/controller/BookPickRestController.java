@@ -36,9 +36,7 @@ public class BookPickRestController {
    * @param bookId : 도서 ID
    * @return : 북픽 정보
    */
-  @PostMapping(
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookPickResponse> postNewBookPick(
       @LoginId Long loginId, @RequestParam(name = "book-id") Long bookId) {
     BookPick result = bookPickService.register(loginId, bookId);
@@ -80,7 +78,7 @@ public class BookPickRestController {
 
   /**
    * 북픽 취소
-   * 
+   *
    * @param loginId : 로그인 ID
    * @param bookPickId : 북픽 ID
    * @return : 204 No Content
