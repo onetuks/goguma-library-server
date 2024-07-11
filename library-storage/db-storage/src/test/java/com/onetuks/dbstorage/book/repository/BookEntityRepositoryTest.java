@@ -190,6 +190,36 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
   }
 
   @Test
+  @DisplayName("멤버의 관심 카테고리가 ALL이면 모든 도서를 조회한다.")
+  void readAll_WithInterestedCategoriesAll_FindAllTest() {
+    // Given
+    Pageable pageable = PageRequest.of(0, 3);
+    Set<Category> interestedCategories = Set.of(Category.ALL);
+    IntStream.range(0, 5)
+        .forEach(
+            i -> {
+              Book book = BookFixture.create(null);
+              bookEntityRepository.create(
+                  book.changeBookInfo(
+                      book.title(),
+                      book.authorName(),
+                      book.introduction(),
+                      book.isbn(),
+                      book.publisher(),
+                      interestedCategories,
+                      book.isIndie(),
+                      book.isPermitted(),
+                      book.coverImageFile().file()));
+            });
+
+    // When
+    Page<Book> results = bookEntityRepository.readAll(interestedCategories, pageable);
+
+    // Then
+    assertThat(results).hasSize(pageable.getPageSize());
+  }
+
+  @Test
   @DisplayName("도서 엔티티를 수정한다.")
   void update() {
     // Given

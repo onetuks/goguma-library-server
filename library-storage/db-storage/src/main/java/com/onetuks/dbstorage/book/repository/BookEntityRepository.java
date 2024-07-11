@@ -3,6 +3,7 @@ package com.onetuks.dbstorage.book.repository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onetuks.dbstorage.book.converter.BookConverter;
+import com.onetuks.dbstorage.book.entity.BookEntity;
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.book.repository.BookRepository;
 import com.onetuks.libraryobject.enums.Category;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class BookEntityRepository implements BookRepository {
+
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
   private final BookEntityJpaRepository repository;
   private final BookEntityJpaQueryDslRepository qDslRepository;
@@ -54,10 +57,13 @@ public class BookEntityRepository implements BookRepository {
   @Override
   public Page<Book> readAll(Set<Category> interestedCategories, Pageable pageable) {
     try {
-      return repository
-          .findAllCategoriesInInterestedCategories(
-              new ObjectMapper().writeValueAsString(interestedCategories), pageable)
-          .map(converter::toDomain);
+      Page<BookEntity> results =
+          interestedCategories.contains(Category.ALL)
+              ? repository.findAll(pageable)
+              : repository.findAllCategoriesInInterestedCategories(
+                  objectMapper.writeValueAsString(interestedCategories), pageable);
+
+      return results.map(converter::toDomain);
     } catch (JsonProcessingException e) {
       throw new IllegalStateException("카테고리 조회 중 오류가 발생했습니다.");
     }
