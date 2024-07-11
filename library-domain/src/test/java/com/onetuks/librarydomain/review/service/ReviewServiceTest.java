@@ -119,4 +119,21 @@ class ReviewServiceTest extends DomainIntegrationTest {
     verify(pointRepository, times(1)).debitPoints(review.member().memberId(), 15);
     verify(reviewRepository, times(1)).delete(review.reviewId());
   }
+
+  @Test
+  @DisplayName("서평을 조회한다.")
+  void search_Test() {
+    // Given
+    Review review =
+        ReviewFixture.create(
+            103L, MemberFixture.create(103L, RoleType.USER), BookFixture.create(103L));
+
+    given(reviewRepository.read(review.reviewId())).willReturn(review);
+
+    // When
+    Review result = reviewService.search(review.reviewId());
+
+    // Then
+    assertThat(result).isEqualTo(review);
+  }
 }

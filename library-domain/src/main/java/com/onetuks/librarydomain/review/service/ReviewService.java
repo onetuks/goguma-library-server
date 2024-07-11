@@ -71,6 +71,11 @@ public class ReviewService {
     reviewRepository.delete(reviewId);
   }
 
+  @Transactional(readOnly = true)
+  public Review search(long reviewId) {
+    return reviewRepository.read(reviewId);
+  }
+
   private void checkAuthentication(long loginId, Review review) {
     if (review.member().memberId() != loginId) {
       throw new ApiAccessDeniedException("해당 서평에 대한 권한이 없는 멤버입니다.");
