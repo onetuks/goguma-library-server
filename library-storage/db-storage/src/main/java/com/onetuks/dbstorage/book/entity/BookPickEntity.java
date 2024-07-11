@@ -16,6 +16,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+// TODO : memberId, bookId -> 인덱스 설정
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity

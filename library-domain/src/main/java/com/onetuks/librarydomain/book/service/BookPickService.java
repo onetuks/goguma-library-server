@@ -49,7 +49,7 @@ public class BookPickService {
   }
 
   @Transactional(readOnly = true)
-  public boolean searchExistence(long loginId, long bookPickId) {
-    return bookPickRepository.read(loginId, bookPickId);
+  public boolean searchExistence(long loginId, long bookId) {
+    return bookPickRepository.read(loginId, bookId);
   }
 }

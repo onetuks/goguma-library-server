@@ -48,13 +48,13 @@ public class BookPickRestController {
   }
 
   /**
-   * 북픽 도서 조회
+   * 나의 북픽 도서 다건 조회
    *
    * @param loginId : 로그인 ID
    * @param pageable : 페이지 정보
    * @return : 북픽 도서 목록
    */
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/my-picks", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookResponses> getMyBookPicks(
       @LoginId Long loginId, @PageableDefault(size = 3) Pageable pageable) {
     Page<BookPick> results = bookPickService.searchAll(loginId, pageable);
@@ -67,13 +67,13 @@ public class BookPickRestController {
    * 북픽 여부 조회
    *
    * @param loginId : 로그인 ID
-   * @param bookPickId : 북픽 ID
+   * @param bookId : 북픽 ID
    * @return : 북픽 여부
    */
-  @GetMapping(path = "/{book-pick-id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Boolean> getMyBookPick(
-      @LoginId Long loginId, @PathVariable(name = "book-pick-id") Long bookPickId) {
-    boolean result = bookPickService.searchExistence(loginId, bookPickId);
+      @LoginId Long loginId, @RequestParam(name = "book-id") Long bookId) {
+    boolean result = bookPickService.searchExistence(loginId, bookId);
 
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }
