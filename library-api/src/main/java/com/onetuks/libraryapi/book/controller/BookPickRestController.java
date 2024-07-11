@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(produces = "/books/picks")
+@RequestMapping(path = "/books/picks")
 public class BookPickRestController {
 
   private final BookPickService bookPickService;

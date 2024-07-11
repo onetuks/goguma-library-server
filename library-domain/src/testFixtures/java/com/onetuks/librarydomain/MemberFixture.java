@@ -36,7 +36,10 @@ public class MemberFixture {
   }
 
   private static AuthInfo createAuthInfo(RoleType roleType) {
-    return new AuthInfo("socialId", ClientProvider.GOOGLE, createRoles(roleType));
+    return new AuthInfo(
+        UUID.randomUUID().toString(),
+        ClientProvider.values()[random.nextInt(ClientProvider.values().length)],
+        createRoles(roleType));
   }
 
   private static List<RoleType> createRoles(RoleType roleType) {

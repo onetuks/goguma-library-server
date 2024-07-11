@@ -92,7 +92,7 @@ public class ApiArchitectureTest {
   }
 
   @Nested
-  class DependancyTest {
+  class DependencyTest {
 
     @Test
     @DisplayName("Controller 는 Service 만 의존한다.")
@@ -104,16 +104,17 @@ public class ApiArchitectureTest {
               .should()
               .onlyDependOnClassesThat()
               .resideInAnyPackage(
+                  "..service",
                   "..request",
                   "..response",
                   "..util..",
-                  "..service",
+                  "..enums..",
                   "..model",
+                  "..domain..",
+                  "..validation..",
                   "..web..",
                   "..http..",
-                  "java..",
-                  "..validation..",
-                  "..domain..");
+                  "java..");
 
       rule.check(javaClasses);
     }
