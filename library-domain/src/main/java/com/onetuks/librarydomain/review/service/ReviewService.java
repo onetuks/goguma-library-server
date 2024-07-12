@@ -36,7 +36,7 @@ public class ReviewService {
 
   @Transactional
   public Review register(long loginId, long bookId, ReviewParam param) {
-    // todo 서평 등록 시 포인트 지급
+    // todo 서평 등록 시 포인트 지급 (하루 5건 이하로 포인트 수령 가능)
     Member member = memberRepository.read(loginId);
     Book book = bookRepository.read(bookId);
 

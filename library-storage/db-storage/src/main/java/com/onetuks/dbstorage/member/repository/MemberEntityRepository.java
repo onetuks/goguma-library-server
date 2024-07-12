@@ -39,6 +39,7 @@ public class MemberEntityRepository implements MemberRepository {
         .map(converter::toDomain);
   }
 
+  // todo 멤버 통계 정보가 업데이트 되지 않는 현상 수정 (프로필 수정 시 멤버 통계 정보 수정되지 않도록 해야함)
   @Override
   public Member update(Member member) {
     return converter.toDomain(
