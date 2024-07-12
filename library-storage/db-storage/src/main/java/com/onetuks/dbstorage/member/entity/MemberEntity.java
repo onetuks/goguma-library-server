@@ -67,7 +67,8 @@ public class MemberEntity {
 
   @OneToOne(
       fetch = FetchType.LAZY,
-      cascade = {PERSIST, REMOVE})
+      cascade = {PERSIST, REMOVE},
+      orphanRemoval = true)
   @JoinColumn(name = "member_statics_id", unique = true, nullable = false)
   private MemberStaticsEntity memberStaticsEntity;
 

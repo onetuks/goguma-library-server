@@ -30,20 +30,6 @@ public class MemberConverter {
         toStaticsEntity(member.memberStatics()));
   }
 
-  public MemberEntity toEntity(Member member, MemberStaticsEntity memberStaticsEntity) {
-    return new MemberEntity(
-        member.memberId(),
-        toEmbeddable(member.authInfo()),
-        member.nickname().value(),
-        member.introduction(),
-        member.interestedCategories(),
-        member.isAlarmAccepted(),
-        member.points(),
-        member.profileImageFile().fileName(),
-        member.profileBackgroundImageFile().fileName(),
-        memberStaticsEntity);
-  }
-
   public Member toDomain(MemberEntity memberEntity) {
     return new Member(
         memberEntity.getMemberId(),

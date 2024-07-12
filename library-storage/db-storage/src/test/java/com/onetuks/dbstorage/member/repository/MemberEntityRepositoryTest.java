@@ -7,9 +7,11 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import com.onetuks.dbstorage.DbStorageIntegrationTest;
 import com.onetuks.librarydomain.MemberFixture;
 import com.onetuks.librarydomain.member.model.Member;
+import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.ClientProvider;
 import com.onetuks.libraryobject.enums.RoleType;
 import java.util.Optional;
+import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
@@ -83,7 +85,13 @@ class MemberEntityRepositoryTest extends DbStorageIntegrationTest {
   void update() {
     // Given
     Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
-    Member expected = MemberFixture.create(member.memberId(), RoleType.ADMIN);
+    Member expected = member.changeProfile(
+        "수정된 닉네임",
+        "수정된 소개글",
+        Set.of(Category.MAGAZINE),
+        false,
+        null,
+        null);
 
     // When
     Member result = memberEntityRepository.update(expected);
@@ -91,8 +99,17 @@ class MemberEntityRepositoryTest extends DbStorageIntegrationTest {
     // Then
     assertAll(
         () -> assertThat(result.memberId()).isEqualTo(expected.memberId()),
-        () -> assertThat(result.authInfo().roles()).contains(RoleType.ADMIN),
-        () -> assertThat(result.nickname().value()).isEqualTo(expected.nickname().value()));
+        () -> assertThat(result.authInfo()).isEqualTo(expected.authInfo()),
+        () -> assertThat(result.nickname()).isEqualTo(expected.nickname()),
+        () -> assertThat(result.introduction()).isEqualTo(expected.introduction()),
+        () -> assertThat(result.interestedCategories())
+            .containsExactlyInAnyOrderElementsOf(expected.interestedCategories()),
+        () -> assertThat(result.isAlarmAccepted()).isEqualTo(expected.isAlarmAccepted()),
+        () -> assertThat(result.points()).isEqualTo(expected.points()),
+        () -> assertThat(result.profileImageFile()).isEqualTo(expected.profileImageFile()),
+        () -> assertThat(result.profileBackgroundImageFile())
+            .isEqualTo(expected.profileBackgroundImageFile()),
+        () -> assertThat(result.memberStatics()).isEqualTo(expected.memberStatics()));
   }
 
   @Test
