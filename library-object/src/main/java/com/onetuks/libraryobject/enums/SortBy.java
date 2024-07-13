@@ -1,6 +1,6 @@
 package com.onetuks.libraryobject.enums;
 
-public enum ReviewSortBy {
+public enum SortBy {
   LATEST,
   PICK;
 }

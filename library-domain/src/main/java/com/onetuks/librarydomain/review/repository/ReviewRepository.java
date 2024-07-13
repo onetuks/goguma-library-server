@@ -1,7 +1,7 @@
 package com.onetuks.librarydomain.review.repository;
 
 import com.onetuks.librarydomain.review.model.Review;
-import com.onetuks.libraryobject.enums.ReviewSortBy;
+import com.onetuks.libraryobject.enums.SortBy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -13,7 +13,9 @@ public interface ReviewRepository {
 
   Review read(long reviewId);
 
-  Page<Review> readAll(ReviewSortBy reviewSortBy, Pageable pageable);
+  Page<Review> readAll(SortBy sortBy, Pageable pageable);
+
+  Page<Review> readAll(long bookId, SortBy sortBy, Pageable pageable);
 
   Review update(Review review);
 

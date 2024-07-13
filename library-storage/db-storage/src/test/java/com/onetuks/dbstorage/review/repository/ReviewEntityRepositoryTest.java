@@ -8,9 +8,10 @@ import com.onetuks.dbstorage.DbStorageIntegrationTest;
 import com.onetuks.librarydomain.BookFixture;
 import com.onetuks.librarydomain.MemberFixture;
 import com.onetuks.librarydomain.ReviewFixture;
+import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.review.model.Review;
-import com.onetuks.libraryobject.enums.ReviewSortBy;
 import com.onetuks.libraryobject.enums.RoleType;
+import com.onetuks.libraryobject.enums.SortBy;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -81,7 +82,7 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
                         bookEntityRepository.create(BookFixture.create(null)))));
 
     // When
-    Page<Review> results = reviewEntityRepository.readAll(ReviewSortBy.LATEST, pageable);
+    Page<Review> results = reviewEntityRepository.readAll(SortBy.LATEST, pageable);
 
     // Then
     List<Review> targets =
@@ -106,13 +107,38 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
                         bookEntityRepository.create(BookFixture.create(null)))));
 
     // When
-    Page<Review> results = reviewEntityRepository.readAll(ReviewSortBy.PICK, pageable);
+    Page<Review> results = reviewEntityRepository.readAll(SortBy.PICK, pageable);
 
     // Then
     List<Review> content = results.getContent();
 
     assertThat(content.getFirst().pickCount())
         .isGreaterThanOrEqualTo(content.getLast().pickCount());
+  }
+
+  @Test
+  @DisplayName("도서에 대한 서평을 조회한다.")
+  void readAll_OfBook_Test() {
+    // Given
+    int count = 10;
+    Pageable pageable = PageRequest.of(0, 10);
+    Book book = bookEntityRepository.create(BookFixture.create(null));
+    IntStream.range(0, count)
+        .forEach(
+            i ->
+                reviewEntityRepository.create(
+                    ReviewFixture.create(
+                        null,
+                        memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
+                        book)));
+
+    // When
+    Page<Review> results = reviewEntityRepository.readAll(book.bookId(), SortBy.PICK, pageable);
+
+    // Then
+    assertThat(results)
+        .hasSize(count)
+        .allSatisfy(result -> assertThat(result.book()).isEqualTo(book));
   }
 
   @Test

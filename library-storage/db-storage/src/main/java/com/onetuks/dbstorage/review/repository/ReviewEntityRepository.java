@@ -3,7 +3,7 @@ package com.onetuks.dbstorage.review.repository;
 import com.onetuks.dbstorage.review.converter.ReviewConverter;
 import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.librarydomain.review.repository.ReviewRepository;
-import com.onetuks.libraryobject.enums.ReviewSortBy;
+import com.onetuks.libraryobject.enums.SortBy;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,8 +39,13 @@ public class ReviewEntityRepository implements ReviewRepository {
   }
 
   @Override
-  public Page<Review> readAll(ReviewSortBy reviewSortBy, Pageable pageable) {
-    return qDslRepository.findAll(reviewSortBy, pageable).map(converter::toDomain);
+  public Page<Review> readAll(SortBy sortBy, Pageable pageable) {
+    return qDslRepository.findAll(sortBy, pageable).map(converter::toDomain);
+  }
+
+  @Override
+  public Page<Review> readAll(long bookId, SortBy sortBy, Pageable pageable) {
+    return qDslRepository.findAll(bookId, sortBy, pageable).map(converter::toDomain);
   }
 
   @Override

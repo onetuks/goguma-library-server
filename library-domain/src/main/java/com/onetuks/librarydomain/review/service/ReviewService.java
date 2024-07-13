@@ -10,7 +10,7 @@ import com.onetuks.librarydomain.member.repository.PointRepository;
 import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.librarydomain.review.repository.ReviewRepository;
 import com.onetuks.librarydomain.review.service.dto.param.ReviewParam;
-import com.onetuks.libraryobject.enums.ReviewSortBy;
+import com.onetuks.libraryobject.enums.SortBy;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
 import java.time.LocalDateTime;
 import org.springframework.data.domain.Page;
@@ -87,8 +87,13 @@ public class ReviewService {
   }
 
   @Transactional(readOnly = true)
-  public Page<Review> searchAll(ReviewSortBy reviewSortBy, Pageable pageable) {
-    return reviewRepository.readAll(reviewSortBy, pageable);
+  public Page<Review> searchAll(SortBy sortBy, Pageable pageable) {
+    return reviewRepository.readAll(sortBy, pageable);
+  }
+
+  @Transactional(readOnly = true)
+  public Page<Review> searchAll(long bookId, SortBy sortBy, Pageable pageable) {
+    return reviewRepository.readAll(bookId, sortBy, pageable);
   }
 
   private void checkAuthentication(long loginId, Review review) {

@@ -6,7 +6,7 @@ import com.onetuks.libraryapi.review.dto.response.ReviewResponse.ReviewResponses
 import com.onetuks.libraryauth.util.LoginId;
 import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.librarydomain.review.service.ReviewService;
-import com.onetuks.libraryobject.enums.ReviewSortBy;
+import com.onetuks.libraryobject.enums.SortBy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -107,16 +107,34 @@ public class ReviewRestController {
   /**
    * 서평 다건 조회
    *
-   * @param reviewSortBy : 정렬 기준
+   * @param sortBy : 정렬 기준
    * @param pageable : 페이징 정보
    * @return : 서평 목록
    */
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ReviewResponses> getReviews(
-      @RequestParam(name = "sort", required = false, defaultValue = "LATEST")
-          ReviewSortBy reviewSortBy,
+      @RequestParam(name = "sortBy", required = false, defaultValue = "LATEST") SortBy sortBy,
       @PageableDefault(sort = "reviewId", direction = Direction.DESC) Pageable pageable) {
-    Page<Review> results = reviewService.searchAll(reviewSortBy, pageable);
+    Page<Review> results = reviewService.searchAll(sortBy, pageable);
+    ReviewResponses responses = ReviewResponses.from(results);
+
+    return ResponseEntity.status(HttpStatus.OK).body(responses);
+  }
+
+  /**
+   * 도서 서평 다건 조회
+   *
+   * @param bookId : 도서 ID
+   * @param sortBy : 정렬 기준
+   * @param pageable : 페이징 정보
+   * @return : 서평 목록
+   */
+  @GetMapping(path = "/book/{book-id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<ReviewResponses> getReviewsOfBook(
+      @PathVariable(name = "book-id") Long bookId,
+      @RequestParam(name = "sortBy", required = false, defaultValue = "LATEST") SortBy sortBy,
+      @PageableDefault(sort = "reviewId", direction = Direction.DESC) Pageable pageable) {
+    Page<Review> results = reviewService.searchAll(bookId, sortBy, pageable);
     ReviewResponses responses = ReviewResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);
