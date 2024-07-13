@@ -10,8 +10,11 @@ import com.onetuks.librarydomain.member.repository.PointRepository;
 import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.librarydomain.review.repository.ReviewRepository;
 import com.onetuks.librarydomain.review.service.dto.param.ReviewParam;
+import com.onetuks.libraryobject.enums.ReviewSortBy;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
 import java.time.LocalDateTime;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +43,8 @@ public class ReviewService {
     Member member = memberRepository.read(loginId);
     Book book = bookRepository.read(bookId);
 
-    Member updateMember = memberRepository.update(member.increaseReviewCategoryStatics(book.categories()));
+    Member updateMember =
+        memberRepository.update(member.increaseReviewCategoryStatics(book.categories()));
 
     return reviewRepository.create(
         new Review(updateMember, book, param.reviewTitle(), param.reviewContent()));
@@ -70,7 +74,8 @@ public class ReviewService {
 
     checkAuthentication(loginId, review);
 
-    memberRepository.update(review.member().decreaseReviewCategoryStatics(review.book().categories()));
+    memberRepository.update(
+        review.member().decreaseReviewCategoryStatics(review.book().categories()));
     pointRepository.debitPoints(loginId, REVIEW_BASE_REGISTRATION_POINT);
 
     reviewRepository.delete(reviewId);
@@ -79,6 +84,11 @@ public class ReviewService {
   @Transactional(readOnly = true)
   public Review search(long reviewId) {
     return reviewRepository.read(reviewId);
+  }
+
+  @Transactional(readOnly = true)
+  public Page<Review> searchAll(ReviewSortBy reviewSortBy, Pageable pageable) {
+    return reviewRepository.readAll(reviewSortBy, pageable);
   }
 
   private void checkAuthentication(long loginId, Review review) {

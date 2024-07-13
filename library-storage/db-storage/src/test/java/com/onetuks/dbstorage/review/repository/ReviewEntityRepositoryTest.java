@@ -9,9 +9,18 @@ import com.onetuks.librarydomain.BookFixture;
 import com.onetuks.librarydomain.MemberFixture;
 import com.onetuks.librarydomain.ReviewFixture;
 import com.onetuks.librarydomain.review.model.Review;
+import com.onetuks.libraryobject.enums.ReviewSortBy;
 import com.onetuks.libraryobject.enums.RoleType;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
@@ -55,6 +64,55 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
 
     // Then
     assertThat(result).isEqualTo(review);
+  }
+
+  @Test
+  @DisplayName("서평을 최신순으로 조회한다.")
+  void readAll_SortByLatest_Test() {
+    // Given
+    Pageable pageable = PageRequest.of(0, 10, Direction.DESC, "reviewId");
+    IntStream.range(0, 10)
+        .forEach(
+            i ->
+                reviewEntityRepository.create(
+                    ReviewFixture.create(
+                        null,
+                        memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
+                        bookEntityRepository.create(BookFixture.create(null)))));
+
+    // When
+    Page<Review> results = reviewEntityRepository.readAll(ReviewSortBy.LATEST, pageable);
+
+    // Then
+    List<Review> targets =
+        new ArrayList<>(List.of(results.getContent().getFirst(), results.getContent().getLast()));
+    targets.sort(Comparator.comparing(Review::updatedAt));
+
+    assertThat(targets.getLast().updatedAt()).isAfterOrEqualTo(targets.getFirst().updatedAt());
+  }
+
+  @Test
+  @DisplayName("서평을 최다픽순으로 조회한다.")
+  void readAll_SortByPickCount_Test() {
+    // Given
+    Pageable pageable = PageRequest.of(0, 10);
+    IntStream.range(0, 10)
+        .forEach(
+            i ->
+                reviewEntityRepository.create(
+                    ReviewFixture.create(
+                        null,
+                        memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
+                        bookEntityRepository.create(BookFixture.create(null)))));
+
+    // When
+    Page<Review> results = reviewEntityRepository.readAll(ReviewSortBy.PICK, pageable);
+
+    // Then
+    List<Review> content = results.getContent();
+
+    assertThat(content.getFirst().pickCount())
+        .isGreaterThanOrEqualTo(content.getLast().pickCount());
   }
 
   @Test

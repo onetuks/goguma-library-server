@@ -2,6 +2,7 @@ package com.onetuks.libraryapi.review.dto.response;
 
 import com.onetuks.librarydomain.review.model.Review;
 import java.time.LocalDateTime;
+import org.springframework.data.domain.Page;
 
 public record ReviewResponse(
     long reviewId,
@@ -23,5 +24,12 @@ public record ReviewResponse(
         review.pickCount(),
         review.createdAt(),
         review.updatedAt());
+  }
+
+  public record ReviewResponses(Page<ReviewResponse> responses) {
+
+    public static ReviewResponses from(Page<Review> results) {
+      return new ReviewResponses(results.map(ReviewResponse::from));
+    }
   }
 }

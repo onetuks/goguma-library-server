@@ -9,6 +9,7 @@ import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.libraryobject.enums.RoleType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 
 class MemberEntityPointRepositoryTest extends DbStorageIntegrationTest {
 
@@ -51,11 +52,11 @@ class MemberEntityPointRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("포인트 변동값을 음수로 설정한 경우 예외를 던진다.")
   void minusPoint_Exception() {
     // Given
-    long invalidPointValue = -1 * 20L;
+    long invalidPointValue = -20L;
     Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
 
     // When & Then
     assertThatThrownBy(() -> pointRepository.creditPoints(member.memberId(), invalidPointValue))
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(InvalidDataAccessApiUsageException.class);
   }
 }

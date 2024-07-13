@@ -16,12 +16,18 @@ import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.librarydomain.review.service.dto.param.ReviewParam;
 import com.onetuks.libraryobject.enums.Category;
+import com.onetuks.libraryobject.enums.ReviewSortBy;
 import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 class ReviewServiceTest extends DomainIntegrationTest {
 
@@ -33,7 +39,8 @@ class ReviewServiceTest extends DomainIntegrationTest {
         ReviewFixture.create(
             101L, MemberFixture.create(101L, RoleType.USER), BookFixture.create(101L));
     ReviewParam param = new ReviewParam("서평제목", "서평본문");
-    Member updatedMember = review.member().increaseReviewCategoryStatics(review.book().categories());
+    Member updatedMember =
+        review.member().increaseReviewCategoryStatics(review.book().categories());
     Review updatedReview =
         new Review(
             review.reviewId(),
@@ -166,5 +173,31 @@ class ReviewServiceTest extends DomainIntegrationTest {
 
     // Then
     assertThat(result).isEqualTo(review);
+  }
+
+  @Test
+  @DisplayName("정렬 기준에 따라 서평 목록을 조회한다.")
+  void searchAll_Test() {
+    // Given
+    Pageable pageable = PageRequest.of(0, 10);
+    ReviewSortBy reviewSortBy = ReviewSortBy.PICK;
+    Page<Review> reviews =
+        new PageImpl<>(
+            IntStream.range(0, 10)
+                .mapToObj(
+                    i ->
+                        ReviewFixture.create(
+                            (long) i,
+                            MemberFixture.create((long) i, RoleType.USER),
+                            BookFixture.create((long) i)))
+                .toList());
+
+    given(reviewRepository.readAll(reviewSortBy, pageable)).willReturn(reviews);
+
+    // When
+    Page<Review> results = reviewService.searchAll(reviewSortBy, pageable);
+
+    // Then
+    assertThat(results).hasSize((int) reviews.getTotalElements());
   }
 }
