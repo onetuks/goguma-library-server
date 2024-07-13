@@ -11,7 +11,6 @@ import com.onetuks.librarydomain.member.model.vo.AuthInfo;
 import com.onetuks.librarydomain.member.service.dto.result.MemberAuthResult;
 import com.onetuks.libraryobject.enums.ClientProvider;
 import com.onetuks.libraryobject.enums.RoleType;
-import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -10,7 +10,6 @@ import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.error.ErrorCode;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentHashMap.KeySetView;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,10 +59,10 @@ public class AuthService {
   }
 
   public Set<RoleType> grantAdminRole(AuthToken authToken) {
-     Set<RoleType> roles = ConcurrentHashMap.newKeySet();
-     roles.addAll(authToken.getRoleTypes());
-     roles.add(RoleType.ADMIN);
-     return roles;
+    Set<RoleType> roles = ConcurrentHashMap.newKeySet();
+    roles.addAll(authToken.getRoleTypes());
+    roles.add(RoleType.ADMIN);
+    return roles;
   }
 
   private void validateRefreshToken(String accessToken) {

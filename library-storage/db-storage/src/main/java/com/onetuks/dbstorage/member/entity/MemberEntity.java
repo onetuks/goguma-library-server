@@ -9,7 +9,6 @@ import com.onetuks.dbstorage.member.entity.embed.AuthInfoEmbeddable;
 import com.onetuks.libraryobject.annotation.Generated;
 import com.onetuks.libraryobject.enums.Category;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;

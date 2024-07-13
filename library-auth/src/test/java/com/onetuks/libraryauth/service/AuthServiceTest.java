@@ -10,7 +10,6 @@ import com.onetuks.libraryauth.jwt.AuthToken;
 import com.onetuks.libraryauth.service.dto.LogoutResult;
 import com.onetuks.libraryauth.service.dto.RefreshResult;
 import com.onetuks.libraryobject.enums.RoleType;
-import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

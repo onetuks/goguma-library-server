@@ -85,13 +85,8 @@ class MemberEntityRepositoryTest extends DbStorageIntegrationTest {
   void update() {
     // Given
     Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
-    Member expected = member.changeProfile(
-        "수정된 닉네임",
-        "수정된 소개글",
-        Set.of(Category.MAGAZINE),
-        false,
-        null,
-        null);
+    Member expected =
+        member.changeProfile("수정된 닉네임", "수정된 소개글", Set.of(Category.MAGAZINE), false, null, null);
 
     // When
     Member result = memberEntityRepository.update(expected);
@@ -102,13 +97,15 @@ class MemberEntityRepositoryTest extends DbStorageIntegrationTest {
         () -> assertThat(result.authInfo()).isEqualTo(expected.authInfo()),
         () -> assertThat(result.nickname()).isEqualTo(expected.nickname()),
         () -> assertThat(result.introduction()).isEqualTo(expected.introduction()),
-        () -> assertThat(result.interestedCategories())
-            .containsExactlyInAnyOrderElementsOf(expected.interestedCategories()),
+        () ->
+            assertThat(result.interestedCategories())
+                .containsExactlyInAnyOrderElementsOf(expected.interestedCategories()),
         () -> assertThat(result.isAlarmAccepted()).isEqualTo(expected.isAlarmAccepted()),
         () -> assertThat(result.points()).isEqualTo(expected.points()),
         () -> assertThat(result.profileImageFile()).isEqualTo(expected.profileImageFile()),
-        () -> assertThat(result.profileBackgroundImageFile())
-            .isEqualTo(expected.profileBackgroundImageFile()),
+        () ->
+            assertThat(result.profileBackgroundImageFile())
+                .isEqualTo(expected.profileBackgroundImageFile()),
         () -> assertThat(result.memberStatics()).isEqualTo(expected.memberStatics()));
   }
 
