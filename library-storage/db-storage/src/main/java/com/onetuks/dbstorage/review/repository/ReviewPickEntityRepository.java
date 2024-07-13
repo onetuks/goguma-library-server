@@ -13,8 +13,7 @@ public class ReviewPickEntityRepository implements ReviewPickRepository {
   private final ReviewPickConverter converter;
 
   public ReviewPickEntityRepository(
-      ReviewPickEntityJpaRepository repository,
-      ReviewPickConverter converter) {
+      ReviewPickEntityJpaRepository repository, ReviewPickConverter converter) {
     this.repository = repository;
     this.converter = converter;
   }

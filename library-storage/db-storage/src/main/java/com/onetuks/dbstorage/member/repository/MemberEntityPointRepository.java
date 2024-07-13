@@ -4,6 +4,7 @@ import com.onetuks.dbstorage.member.entity.MemberEntity;
 import com.onetuks.librarydomain.member.repository.PointRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class MemberEntityPointRepository implements PointRepository {
@@ -15,6 +16,7 @@ public class MemberEntityPointRepository implements PointRepository {
   }
 
   @Override
+  @Transactional
   public void creditPoints(long memberId, long point) {
     validatePointValue(point);
 
@@ -22,6 +24,7 @@ public class MemberEntityPointRepository implements PointRepository {
   }
 
   @Override
+  @Transactional
   public void debitPoints(long memberId, long point) {
     validatePointValue(point);
 
