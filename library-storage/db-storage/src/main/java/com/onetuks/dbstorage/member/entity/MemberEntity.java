@@ -69,7 +69,7 @@ public class MemberEntity {
   private String profileBackgroundImageUri;
 
   @OneToOne(
-      fetch = FetchType.EAGER,
+      fetch = FetchType.LAZY,
       cascade = {PERSIST, REMOVE, MERGE, REFRESH},
       orphanRemoval = true)
   @JoinColumn(name = "member_statics_id", unique = true, nullable = false)
