@@ -1,6 +1,7 @@
 package com.onetuks.dbstorage.member.repository;
 
 import com.onetuks.dbstorage.member.converter.MemberConverter;
+import com.onetuks.dbstorage.member.entity.MemberEntity;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
 import com.onetuks.libraryobject.enums.ClientProvider;

@@ -1,12 +1,15 @@
 package com.onetuks.dbstorage.member.entity;
 
+import static jakarta.persistence.CascadeType.MERGE;
 import static jakarta.persistence.CascadeType.PERSIST;
+import static jakarta.persistence.CascadeType.REFRESH;
 import static jakarta.persistence.CascadeType.REMOVE;
 
 import com.onetuks.dbstorage.member.entity.embed.AuthInfoEmbeddable;
 import com.onetuks.libraryobject.annotation.Generated;
 import com.onetuks.libraryobject.enums.Category;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -66,8 +69,8 @@ public class MemberEntity {
   private String profileBackgroundImageUri;
 
   @OneToOne(
-      fetch = FetchType.LAZY,
-      cascade = {PERSIST, REMOVE},
+      fetch = FetchType.EAGER,
+      cascade = {PERSIST, REMOVE, MERGE, REFRESH},
       orphanRemoval = true)
   @JoinColumn(name = "member_statics_id", unique = true, nullable = false)
   private MemberStaticsEntity memberStaticsEntity;
