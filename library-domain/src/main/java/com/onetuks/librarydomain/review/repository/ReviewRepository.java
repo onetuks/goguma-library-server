@@ -17,6 +17,8 @@ public interface ReviewRepository {
 
   Page<Review> readAll(long bookId, SortBy sortBy, Pageable pageable);
 
+  Page<Review> readAll(long memberId, Pageable pageable);
+
   Review update(Review review);
 
   void delete(long reviewId);

@@ -9,6 +9,7 @@ import com.onetuks.librarydomain.BookFixture;
 import com.onetuks.librarydomain.MemberFixture;
 import com.onetuks.librarydomain.ReviewFixture;
 import com.onetuks.librarydomain.book.model.Book;
+import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.enums.SortBy;
@@ -139,6 +140,28 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
     assertThat(results)
         .hasSize(count)
         .allSatisfy(result -> assertThat(result.book()).isEqualTo(book));
+  }
+
+  @Test
+  @DisplayName("멤버의 서평을 조회한다.")
+  void readAll_OfMember_Test() {
+    // Given
+    Pageable pageable = PageRequest.of(0, 3);
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
+    IntStream.range(0, 5)
+        .forEach(
+            i ->
+                reviewEntityRepository.create(
+                    ReviewFixture.create(
+                        null, member, bookEntityRepository.create(BookFixture.create(null)))));
+
+    // When
+    Page<Review> results = reviewEntityRepository.readAll(member.memberId(), pageable);
+
+    // Then
+    assertThat(results)
+        .hasSize(pageable.getPageSize())
+        .allSatisfy(result -> assertThat(result.member()).isEqualTo(member));
   }
 
   @Test

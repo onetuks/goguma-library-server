@@ -228,4 +228,27 @@ class ReviewServiceTest extends DomainIntegrationTest {
         .hasSize((int) reviews.getTotalElements())
         .allSatisfy(result -> assertThat(result.book()).isEqualTo(book));
   }
+
+  @Test
+  @DisplayName("멤버의 모든 서평을 조회한다.")
+  void searchAll_OfMember_Test() {
+    // Given
+    Pageable pageable = PageRequest.of(0, 10);
+    Member member = MemberFixture.create(125L, RoleType.USER);
+    Page<Review> reviews =
+        new PageImpl<>(
+            IntStream.range(0, 10)
+                .mapToObj(i -> ReviewFixture.create((long) i, member, BookFixture.create((long) i)))
+                .toList());
+
+    given(reviewRepository.readAll(member.memberId(), pageable)).willReturn(reviews);
+
+    // When
+    Page<Review> results = reviewService.searchAll(member.memberId(), pageable);
+
+    // Then
+    assertThat(results)
+        .hasSize((int) reviews.getTotalElements())
+        .allSatisfy(result -> assertThat(result.member()).isEqualTo(member));
+  }
 }

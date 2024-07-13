@@ -49,6 +49,11 @@ public class ReviewEntityRepository implements ReviewRepository {
   }
 
   @Override
+  public Page<Review> readAll(long memberId, Pageable pageable) {
+    return repository.findAllByMemberEntityMemberId(memberId, pageable).map(converter::toDomain);
+  }
+
+  @Override
   public Review update(Review review) {
     return converter.toDomain(repository.save(converter.toEntity(review)));
   }

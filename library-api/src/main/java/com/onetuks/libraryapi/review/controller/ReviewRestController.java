@@ -139,4 +139,21 @@ public class ReviewRestController {
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);
   }
+
+  /**
+   * 멤버 서평 다건 조회
+   *
+   * @param memberId : 멤버 ID
+   * @param pageable : 페이징 정보
+   * @return : 서평 목록
+   */
+  @GetMapping(path = "/member/{member-id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<ReviewResponses> getReviewsOfMember(
+      @PathVariable(name = "member-id") Long memberId,
+      @PageableDefault(size = 3, sort = "reviewId", direction = Direction.DESC) Pageable pageable) {
+    Page<Review> results = reviewService.searchAll(memberId, pageable);
+    ReviewResponses responses = ReviewResponses.from(results);
+
+    return ResponseEntity.status(HttpStatus.OK).body(responses);
+  }
 }

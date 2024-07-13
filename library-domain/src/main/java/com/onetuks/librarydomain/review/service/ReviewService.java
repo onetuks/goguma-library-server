@@ -96,6 +96,11 @@ public class ReviewService {
     return reviewRepository.readAll(bookId, sortBy, pageable);
   }
 
+  @Transactional(readOnly = true)
+  public Page<Review> searchAll(long memberId, Pageable pageable) {
+    return reviewRepository.readAll(memberId, pageable);
+  }
+
   private void checkAuthentication(long loginId, Review review) {
     if (review.member().memberId() != loginId) {
       throw new ApiAccessDeniedException("해당 서평에 대한 권한이 없는 멤버입니다.");
