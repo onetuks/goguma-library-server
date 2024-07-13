@@ -8,8 +8,8 @@ import com.onetuks.librarydomain.member.service.dto.param.MemberProfileParam;
 import com.onetuks.librarydomain.member.service.dto.result.MemberAuthResult;
 import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,7 +45,7 @@ public class MemberService {
   }
 
   @Transactional
-  public Member editAuthorities(Long loginId, List<RoleType> newRoles) {
+  public Member editAuthorities(Long loginId, Set<RoleType> newRoles) {
     return memberRepository.update(memberRepository.read(loginId).changeRoles(newRoles));
   }
 

@@ -11,6 +11,7 @@ import com.onetuks.libraryauth.service.dto.LogoutResult;
 import com.onetuks.libraryauth.service.dto.RefreshResult;
 import com.onetuks.libraryobject.enums.RoleType;
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +23,7 @@ class AuthServiceTest extends CoreAuthIntegrationTest {
     // Given
     String socialId = "socialId";
     Long loginId = 1L;
-    List<RoleType> roleTypes = List.of(ADMIN, USER);
+    Set<RoleType> roleTypes = Set.of(ADMIN, USER);
 
     // When
     AuthToken authToken = authService.saveAccessToken(socialId, loginId, roleTypes);
@@ -35,9 +36,9 @@ class AuthServiceTest extends CoreAuthIntegrationTest {
   @DisplayName("JWT 토큰을 갱신한다.")
   void updateAccessTokenTest() {
     // Given
-    AuthToken authToken = authService.saveAccessToken("socialId", 1L, List.of(ADMIN, USER));
     Long loginId = 1L;
-    List<RoleType> roleTypes = List.of(ADMIN, USER);
+    Set<RoleType> roleTypes = Set.of(ADMIN, USER);
+    AuthToken authToken = authService.saveAccessToken("socialId", loginId, roleTypes);
 
     // When
     RefreshResult result = authService.updateAccessToken(authToken, loginId, roleTypes);

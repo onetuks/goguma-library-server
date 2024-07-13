@@ -1,7 +1,7 @@
 package com.onetuks.libraryexternal.book.service;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.libraryexternal.ExternalIntegrationTest;
 import com.onetuks.libraryexternal.book.handler.dto.IsbnResult;

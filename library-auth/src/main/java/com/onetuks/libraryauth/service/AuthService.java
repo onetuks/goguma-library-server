@@ -8,7 +8,9 @@ import com.onetuks.libraryauth.service.dto.LogoutResult;
 import com.onetuks.libraryauth.service.dto.RefreshResult;
 import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.error.ErrorCode;
-import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentHashMap.KeySetView;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +26,7 @@ public class AuthService {
   }
 
   @Transactional
-  public AuthToken saveAccessToken(String socialId, Long loginId, List<RoleType> roleTypes) {
+  public AuthToken saveAccessToken(String socialId, Long loginId, Set<RoleType> roleTypes) {
     AuthToken accessToken = authTokenProvider.provideAccessToken(socialId, loginId, roleTypes);
     AuthToken refreshToken = authTokenProvider.provideRefreshToken(socialId, loginId, roleTypes);
 
@@ -35,7 +37,7 @@ public class AuthService {
 
   @Transactional
   public RefreshResult updateAccessToken(
-      AuthToken accessToken, Long loginId, List<RoleType> roleTypes) {
+      AuthToken accessToken, Long loginId, Set<RoleType> roleTypes) {
     String socialId = accessToken.getSocialId();
 
     validateRefreshToken(accessToken.getToken());
@@ -55,6 +57,13 @@ public class AuthService {
   @Transactional(readOnly = true)
   public boolean isLogout(String accessToken) {
     return authTokenRepository.findRefreshToken(accessToken).isEmpty();
+  }
+
+  public Set<RoleType> grantAdminRole(AuthToken authToken) {
+     Set<RoleType> roles = ConcurrentHashMap.newKeySet();
+     roles.addAll(authToken.getRoleTypes());
+     roles.add(RoleType.ADMIN);
+     return roles;
   }
 
   private void validateRefreshToken(String accessToken) {

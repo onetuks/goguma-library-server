@@ -42,11 +42,11 @@ public class MemberFixture {
         createRoles(roleType));
   }
 
-  private static List<RoleType> createRoles(RoleType roleType) {
+  private static Set<RoleType> createRoles(RoleType roleType) {
     if (roleType == RoleType.ADMIN) {
-      return List.of(RoleType.ADMIN, RoleType.USER);
+      return Set.of(RoleType.ADMIN, RoleType.USER);
     }
-    return List.of(RoleType.USER);
+    return Set.of(RoleType.USER);
   }
 
   private static String createNickname() {

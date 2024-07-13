@@ -7,7 +7,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import java.util.List;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,9 +27,9 @@ public class AuthInfoEmbeddable {
 
   @Type(JsonType.class)
   @Column(name = "roles", nullable = false)
-  private List<RoleType> roles;
+  private Set<RoleType> roles;
 
-  public AuthInfoEmbeddable(String socialId, ClientProvider clientProvider, List<RoleType> roles) {
+  public AuthInfoEmbeddable(String socialId, ClientProvider clientProvider, Set<RoleType> roles) {
     this.socialId = socialId;
     this.clientProvider = clientProvider;
     this.roles = roles;
