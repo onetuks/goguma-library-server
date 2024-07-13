@@ -7,6 +7,8 @@ import com.onetuks.dbstorage.book.repository.BookPickEntityRepository;
 import com.onetuks.dbstorage.member.repository.MemberEntityPointRepository;
 import com.onetuks.dbstorage.member.repository.MemberEntityRepository;
 import com.onetuks.dbstorage.review.repository.ReviewEntityRepository;
+import com.onetuks.dbstorage.review.repository.ReviewPickEntityJpaRepository;
+import com.onetuks.dbstorage.review.repository.ReviewPickEntityRepository;
 import com.onetuks.libraryobject.component.TestFileCleaner;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +38,7 @@ public class DbStorageIntegrationTest {
   @Autowired public MemberEntityPointRepository pointRepository;
   @Autowired public BookPickEntityRepository bookPickEntityRepository;
   @Autowired public ReviewEntityRepository reviewEntityRepository;
+  @Autowired public ReviewPickEntityRepository reviewPickEntityRepository;
 
   @Configuration
   @ComponentScan(basePackages = "com.onetuks.dbstorage", basePackageClasses = TestFileCleaner.class)
