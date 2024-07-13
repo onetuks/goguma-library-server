@@ -33,7 +33,7 @@ class ReviewServiceTest extends DomainIntegrationTest {
         ReviewFixture.create(
             101L, MemberFixture.create(101L, RoleType.USER), BookFixture.create(101L));
     ReviewParam param = new ReviewParam("서평제목", "서평본문");
-    Member updatedMember = review.member().updateStatics(review.book().categories());
+    Member updatedMember = review.member().increaseReviewCategoryStatics(review.book().categories());
     Review updatedReview =
         new Review(
             review.reviewId(),
@@ -134,7 +134,7 @@ class ReviewServiceTest extends DomainIntegrationTest {
   }
 
   @Test
-  @DisplayName("서평을 삭제하면 포인트가 15P 차감된다.")
+  @DisplayName("서평을 삭제하면 포인트가 15P 차감되고, 멤버 통계 정보가 업데이트된다.")
   void remove_DebitPoint_Test() {
     // Given
     Review review =

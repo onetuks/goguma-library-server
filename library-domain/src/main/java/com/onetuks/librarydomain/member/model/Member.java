@@ -79,7 +79,7 @@ public record Member(
         memberStatics);
   }
 
-  public Member updateStatics(Set<Category> categories) {
+  public Member increaseReviewCategoryStatics(Set<Category> categories) {
     return new Member(
         memberId,
         authInfo,
@@ -90,7 +90,21 @@ public record Member(
         points,
         profileImageFile,
         profileBackgroundImageFile,
-        memberStatics.update(categories));
+        memberStatics.increaseReviewCategoryCounts(categories));
+  }
+
+  public Member decreaseReviewCategoryStatics(Set<Category> categories) {
+    return new Member(
+        memberId,
+        authInfo,
+        nickname,
+        introduction,
+        interestedCategories,
+        isAlarmAccepted,
+        points,
+        profileImageFile,
+        profileBackgroundImageFile,
+        memberStatics.decreaseReviewCategoryCounts(categories));
   }
 
   private ImageFile getProfileImageFile(MultipartFile profileImage) {

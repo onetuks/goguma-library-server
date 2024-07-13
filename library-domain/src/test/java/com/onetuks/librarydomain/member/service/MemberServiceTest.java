@@ -1,5 +1,7 @@
 package com.onetuks.librarydomain.member.service;
 
+import static com.onetuks.libraryobject.enums.RoleType.ADMIN;
+import static com.onetuks.libraryobject.enums.RoleType.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -32,7 +34,7 @@ class MemberServiceTest extends DomainIntegrationTest {
   @DisplayName("존재하지 않는 멤버이면 새로 생성해서 멤버 인증 객체로 반환한다.")
   void registerMemberIfNotExistsTest_NotExist_Test() {
     // Given
-    Member member = MemberFixture.create(121L, RoleType.USER);
+    Member member = MemberFixture.create(121L, USER);
 
     given(memberRepository.read(member.authInfo().socialId(), member.authInfo().clientProvider()))
         .willReturn(Optional.empty());
@@ -54,7 +56,7 @@ class MemberServiceTest extends DomainIntegrationTest {
   @DisplayName("존재하는 멤버이면 멤버 인증 객체로 반환한다.")
   void registerMemberIfNotExistsTest_Exist_Test() {
     // Given
-    Member member = MemberFixture.create(122L, RoleType.USER);
+    Member member = MemberFixture.create(122L, USER);
 
     given(memberRepository.read(member.authInfo().socialId(), member.authInfo().clientProvider()))
         .willReturn(Optional.of(member));
@@ -75,7 +77,7 @@ class MemberServiceTest extends DomainIntegrationTest {
   @DisplayName("멤버 프로필을 조회한다.")
   void searchTest() {
     // Given
-    Member member = MemberFixture.create(123L, RoleType.USER);
+    Member member = MemberFixture.create(123L, USER);
 
     given(memberRepository.read(member.memberId())).willReturn(member);
 
@@ -90,7 +92,7 @@ class MemberServiceTest extends DomainIntegrationTest {
   @DisplayName("멤버 프로필을 수정한다. 프로필 이미지가 주어지면 저장하고, 기존 이미지를 대체한다.")
   void editProfileTest() {
     // Given
-    Member member = MemberFixture.create(123L, RoleType.USER);
+    Member member = MemberFixture.create(123L, USER);
     MemberProfileParam param =
         new MemberProfileParam(
             "nickname", "introduction", Set.of(Category.CARTOON, Category.NOVEL), true);
@@ -137,23 +139,21 @@ class MemberServiceTest extends DomainIntegrationTest {
   @DisplayName("멤버의 권한을 수정한다.")
   void editAuthorities() {
     // Given
-    Member userMember = MemberFixture.create(123L, RoleType.USER);
-    Member adminMember = MemberFixture.create(userMember.memberId(), RoleType.ADMIN);
+    Member userMember = MemberFixture.create(123L, USER);
+    Member adminMember = MemberFixture.create(userMember.memberId(), ADMIN);
 
     given(memberRepository.read(userMember.memberId())).willReturn(userMember);
     given(memberRepository.update(any(Member.class))).willReturn(adminMember);
 
     // When
-    Member result =
-        memberService.editAuthorities(
-            userMember.memberId(), List.of(RoleType.USER, RoleType.ADMIN));
+    Member result = memberService.editAuthorities(userMember.memberId(), Set.of(USER, ADMIN));
 
     // Then
     assertAll(
         () -> assertThat(result.memberId()).isEqualTo(adminMember.memberId()),
         () -> assertThat(result.nickname()).isEqualTo(adminMember.nickname()),
         () -> assertThat(result.authInfo()).isEqualTo(adminMember.authInfo()),
-        () -> assertThat(result.authInfo().roles()).contains(RoleType.ADMIN),
+        () -> assertThat(result.authInfo().roles()).contains(ADMIN),
         () -> assertThat(result.points()).isEqualTo(adminMember.points()),
         () -> assertThat(result.isAlarmAccepted()).isEqualTo(adminMember.isAlarmAccepted()),
         () -> assertThat(result.profileImageFile()).isEqualTo(adminMember.profileImageFile()),
@@ -178,7 +178,7 @@ class MemberServiceTest extends DomainIntegrationTest {
   @DisplayName("멤버를 제거하고, 프로필 이미지 파일을 삭제한다.")
   void removeTest() {
     // Given
-    Member member = MemberFixture.create(123L, RoleType.USER);
+    Member member = MemberFixture.create(123L, USER);
 
     given(memberRepository.read(member.memberId())).willReturn(member);
 

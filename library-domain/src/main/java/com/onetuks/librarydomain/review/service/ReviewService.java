@@ -40,7 +40,7 @@ public class ReviewService {
     Member member = memberRepository.read(loginId);
     Book book = bookRepository.read(bookId);
 
-    Member updateMember = memberRepository.update(member.updateStatics(book.categories()));
+    Member updateMember = memberRepository.update(member.increaseReviewCategoryStatics(book.categories()));
 
     return reviewRepository.create(
         new Review(updateMember, book, param.reviewTitle(), param.reviewContent()));
@@ -70,7 +70,9 @@ public class ReviewService {
 
     checkAuthentication(loginId, review);
 
+    memberRepository.update(review.member().decreaseReviewCategoryStatics(review.book().categories()));
     pointRepository.debitPoints(loginId, REVIEW_BASE_REGISTRATION_POINT);
+
     reviewRepository.delete(reviewId);
   }
 

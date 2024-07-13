@@ -12,6 +12,7 @@ import com.onetuks.librarydomain.member.service.dto.result.MemberAuthResult;
 import com.onetuks.libraryobject.enums.ClientProvider;
 import com.onetuks.libraryobject.enums.RoleType;
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +23,7 @@ class OAuth2ClientServiceTest extends CoreAuthIntegrationTest {
   void login_WithAuthToken_GoogleClient_Test() {
     // Given
     ClientProvider clientProvider = ClientProvider.GOOGLE;
-    AuthInfo authInfo = new AuthInfo("socialId", clientProvider, List.of(RoleType.USER));
+    AuthInfo authInfo = new AuthInfo("socialId", clientProvider, Set.of(RoleType.USER));
     MemberAuthResult memberAuthResult = new MemberAuthResult(true, 1L, authInfo.roles());
 
     given(googleClientProviderStrategy.getAuthInfo(anyString())).willReturn(authInfo);

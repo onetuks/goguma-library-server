@@ -53,7 +53,7 @@ class AuthServiceTest extends CoreAuthIntegrationTest {
   @DisplayName("JWT 토큰을 삭제한다.")
   void logoutTest() {
     // Given
-    AuthToken authToken = authService.saveAccessToken("socialId", 1L, List.of(ADMIN, USER));
+    AuthToken authToken = authService.saveAccessToken("socialId", 1L, Set.of(ADMIN, USER));
 
     // When
     LogoutResult result = authService.logout(authToken);
@@ -66,7 +66,7 @@ class AuthServiceTest extends CoreAuthIntegrationTest {
   @DisplayName("로그아웃하지 않았을때 로그아웃 여부를 확인한다.")
   void isLogout_NotLogOuted_Test() {
     // Given
-    AuthToken authToken = authService.saveAccessToken("socialId", 1L, List.of(ADMIN, USER));
+    AuthToken authToken = authService.saveAccessToken("socialId", 1L, Set.of(ADMIN, USER));
 
     // When
     boolean result = authService.isLogout(authToken.getToken());
@@ -79,7 +79,7 @@ class AuthServiceTest extends CoreAuthIntegrationTest {
   @DisplayName("로그아웃 했을때 로그아웃 여부를 확인한다.")
   void isLogout_LogOuted_Test() {
     // Given
-    AuthToken authToken = authService.saveAccessToken("socialId", 1L, List.of(ADMIN, USER));
+    AuthToken authToken = authService.saveAccessToken("socialId", 1L, Set.of(ADMIN, USER));
     authService.logout(authToken);
 
     // When

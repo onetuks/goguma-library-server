@@ -24,7 +24,7 @@ public record MemberStatics(
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
   }
 
-  public MemberStatics update(Set<Category> categories) {
+  public MemberStatics increaseReviewCategoryCounts(Set<Category> categories) {
     return new MemberStatics(
         memberStaticsId,
         reviewCounts,
@@ -36,7 +36,23 @@ public record MemberStatics(
                     Map.Entry::getKey,
                     entry ->
                         categories.contains(entry.getKey())
-                            ? entry.getValue() + 1
+                            ? Math.min(Long.MAX_VALUE, entry.getValue() + 1)
+                            : entry.getValue())));
+  }
+
+  public MemberStatics decreaseReviewCategoryCounts(Set<Category> categories) {
+    return new MemberStatics(
+        memberStaticsId,
+        reviewCounts,
+        followerCounts,
+        followingCounts,
+        reviewCategoryCounts.entrySet().stream()
+            .collect(
+                Collectors.toMap(
+                    Map.Entry::getKey,
+                    entry ->
+                        categories.contains(entry.getKey())
+                            ? Math.max(0, entry.getValue() - 1)
                             : entry.getValue())));
   }
 }
