@@ -4,9 +4,12 @@ dependencies {
     implementation(project(':library-external'))
     implementation(project(':library-domain'))
 
+    // Test
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'com.redis.testcontainers:testcontainers-redis-junit:1.6.4'
+
     // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    testImplementation 'org.springframework.security:spring-security-test'
 
     // OAuth2
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
@@ -18,7 +21,6 @@ dependencies {
 
     // REDIS
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    testImplementation 'com.redis.testcontainers:testcontainers-redis-junit:1.6.4'
 
     // Spring Web
     implementation 'org.springframework.boot:spring-boot-starter-web'

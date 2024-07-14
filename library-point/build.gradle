@@ -1,11 +1,13 @@
 dependencies {
     // Module
     compileOnly(project(':library-domain'))
+    implementation(project(':library-external'))
     implementation(project(':library-storage:db-storage'))
 
     // Test
     testImplementation(project(':library-domain'))
     testImplementation(project(':library-storage:db-storage'))
+    testImplementation(project(':library-object'))
     testImplementation "org.testcontainers:mysql:1.19.8"
     testImplementation 'com.redis.testcontainers:testcontainers-redis-junit:1.6.4'
 
