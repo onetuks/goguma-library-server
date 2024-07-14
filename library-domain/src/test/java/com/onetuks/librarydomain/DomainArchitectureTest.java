@@ -54,6 +54,32 @@ public class DomainArchitectureTest extends DomainIntegrationTest {
     }
 
     @Test
+    @DisplayName("strategy 패키지 안에 있는 클래스는 Strategy 로 끝난다.")
+    void strategy_ClassNamePostfix_Test() {
+      ArchRule rule =
+          ArchRuleDefinition.classes()
+              .that()
+              .resideInAnyPackage("..strategy")
+              .should()
+              .haveSimpleNameEndingWith("Strategy");
+
+      rule.check(javaClasses);
+    }
+
+    @Test
+    @DisplayName("handler 패키지 안에 있는 클래스는 Handler 로 끝난다.")
+    void handler_ClassNamePostfix_Test() {
+      ArchRule rule =
+          ArchRuleDefinition.classes()
+              .that()
+              .resideInAnyPackage("..handler")
+              .should()
+              .haveSimpleNameEndingWith("Handler");
+
+      rule.check(javaClasses);
+    }
+
+    @Test
     @DisplayName("service 패키지 안에 있는 클래스는 Service 로 끝난다.")
     void service_ClassNamePostfix_Test() {
       ArchRule rule =

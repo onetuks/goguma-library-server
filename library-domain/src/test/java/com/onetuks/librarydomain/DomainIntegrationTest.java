@@ -5,6 +5,7 @@ import com.onetuks.librarydomain.book.repository.BookPickRepository;
 import com.onetuks.librarydomain.book.repository.BookRepository;
 import com.onetuks.librarydomain.book.service.BookPickService;
 import com.onetuks.librarydomain.book.service.BookService;
+import com.onetuks.librarydomain.book.service.IsbnSearchService;
 import com.onetuks.librarydomain.global.file.repository.FileRepository;
 import com.onetuks.librarydomain.global.point.service.PointService;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
@@ -31,6 +32,7 @@ public class DomainIntegrationTest {
   @Autowired public BookPickService bookPickService;
   @Autowired public ReviewService reviewService;
   @Autowired public ReviewPickService reviewPickService;
+  @Autowired public IsbnSearchService isbnSearchService;
 
   @MockBean public FileRepository fileRepository;
   @MockBean public MemberRepository memberRepository;

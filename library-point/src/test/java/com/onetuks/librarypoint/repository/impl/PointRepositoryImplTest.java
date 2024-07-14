@@ -2,7 +2,7 @@ package com.onetuks.librarypoint.repository.impl;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.onetuks.librarypoint.repository.CorePointIntegrationTest;
+import com.onetuks.librarypoint.CorePointIntegrationTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.InvalidDataAccessApiUsageException;

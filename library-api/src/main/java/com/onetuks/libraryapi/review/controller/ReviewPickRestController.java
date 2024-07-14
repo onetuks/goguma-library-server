@@ -25,9 +25,7 @@ public class ReviewPickRestController {
   /**
    * 서평픽 등록
    *
-   * - 00시 기준 일간 5회만 포인트 지급
-   * - 서평픽커 1포인트 지급
-   * - 서평리시버 5포인트 지급
+   * <p>- 00시 기준 일간 5회만 포인트 지급 - 서평픽커 1포인트 지급 - 서평리시버 5포인트 지급
    *
    * @param loginId : 로그인 ID
    * @param reviewId : 서평 ID

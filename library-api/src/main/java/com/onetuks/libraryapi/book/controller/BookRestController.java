@@ -7,10 +7,9 @@ import com.onetuks.libraryapi.book.dto.response.BookResponse;
 import com.onetuks.libraryapi.book.dto.response.BookResponse.BookResponses;
 import com.onetuks.libraryauth.util.LoginId;
 import com.onetuks.libraryauth.util.OnlyForAdmin;
+import com.onetuks.librarydomain.book.handler.dto.IsbnResult;
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.book.service.BookService;
-import com.onetuks.libraryexternal.book.handler.dto.IsbnResult;
-import com.onetuks.libraryexternal.book.service.IsbnSearchService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,11 +34,9 @@ import org.springframework.web.multipart.MultipartFile;
 public class BookRestController {
 
   private final BookService bookService;
-  private final IsbnSearchService isbnSearchService;
 
-  public BookRestController(BookService bookService, IsbnSearchService isbnSearchService) {
+  public BookRestController(BookService bookService) {
     this.bookService = bookService;
-    this.isbnSearchService = isbnSearchService;
   }
 
   /**
@@ -51,7 +48,7 @@ public class BookRestController {
   @GetMapping(path = "/isbn/{isbn}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookIsbnGetResponse> getBookWithIsbn(
       @PathVariable(name = "isbn") String isbn) {
-    IsbnResult result = isbnSearchService.search(isbn);
+    IsbnResult result = bookService.search(isbn);
     BookIsbnGetResponse response = BookIsbnGetResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);

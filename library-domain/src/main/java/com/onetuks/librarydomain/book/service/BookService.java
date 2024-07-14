@@ -1,5 +1,6 @@
 package com.onetuks.librarydomain.book.service;
 
+import com.onetuks.librarydomain.book.handler.dto.IsbnResult;
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.book.repository.BookRepository;
 import com.onetuks.librarydomain.book.service.dto.param.BookPatchParam;
@@ -21,16 +22,23 @@ public class BookService {
   private final FileRepository fileRepository;
 
   private final PointService pointService;
+  private final IsbnSearchService isbnSearchService;
 
   public BookService(
       BookRepository bookRepository,
       MemberRepository memberRepository,
       FileRepository fileRepository,
-      PointService pointService) {
+      PointService pointService,
+      IsbnSearchService isbnSearchService) {
     this.bookRepository = bookRepository;
     this.memberRepository = memberRepository;
     this.fileRepository = fileRepository;
     this.pointService = pointService;
+    this.isbnSearchService = isbnSearchService;
+  }
+
+  public IsbnResult search(String isbn) {
+    return isbnSearchService.search(isbn);
   }
 
   @Transactional

@@ -3,8 +3,8 @@ package com.onetuks.librarypoint.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.onetuks.dbstorage.member.entity.MemberEntity;
+import com.onetuks.librarypoint.CorePointIntegrationTest;
 import com.onetuks.librarypoint.fixture.MemberEntityFixture;
-import com.onetuks.librarypoint.repository.CorePointIntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

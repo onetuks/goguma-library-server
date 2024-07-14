@@ -2,8 +2,6 @@ rootProject.name = 'goguma-library-server'
 
 include(':library-object')
 
-include(':library-external')
-
 include(':library-auth')
 
 include(':library-api')
