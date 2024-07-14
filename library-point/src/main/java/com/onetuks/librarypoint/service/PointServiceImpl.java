@@ -9,8 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PointServiceImpl implements PointService {
 
-  private static final int REVIEW_PICK_DAILY_LIMIT = 5;
-
   private static final long BOOK_REGISTRATION_POINT = 20L;
   private static final long REVIEW_REGISTRATION_EVENT_POINT = 30L;
   private static final long REVIEW_REGISTRATION_BASE_POINT = 15L;
