@@ -1,34 +1,35 @@
-package com.onetuks.dbstorage.member.repository;
+package com.onetuks.librarypoint.repository.impl;
 
 import com.onetuks.dbstorage.member.entity.MemberEntity;
-import com.onetuks.librarydomain.member.repository.PointRepository;
+import com.onetuks.dbstorage.member.repository.MemberEntityJpaRepository;
+import com.onetuks.librarypoint.repository.PointRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public class MemberEntityPointRepository implements PointRepository {
+public class PointRepositoryImpl implements PointRepository {
 
   private final MemberEntityJpaRepository repository;
 
-  public MemberEntityPointRepository(MemberEntityJpaRepository repository) {
+  public PointRepositoryImpl(MemberEntityJpaRepository repository) {
     this.repository = repository;
   }
 
   @Override
   @Transactional
-  public void creditPoints(long memberId, long point) {
-    validatePointValue(point);
+  public void creditPoints(long memberId, long creditPoint) {
+    validatePointValue(creditPoint);
 
-    getMember(memberId).addPoints(point);
+    getMember(memberId).addPoints(creditPoint);
   }
 
   @Override
   @Transactional
-  public void debitPoints(long memberId, long point) {
-    validatePointValue(point);
+  public void debitPoints(long memberId, long debitPoint) {
+    validatePointValue(debitPoint);
 
-    getMember(memberId).minusPoints(point);
+    getMember(memberId).minusPoints(debitPoint);
   }
 
   private void validatePointValue(long point) {
