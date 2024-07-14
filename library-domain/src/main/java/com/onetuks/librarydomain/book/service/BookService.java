@@ -1,14 +1,12 @@
 package com.onetuks.librarydomain.book.service;
 
-import static com.onetuks.librarydomain.member.repository.PointRepository.BOOK_REGISTRATION_POINT;
-
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.book.repository.BookRepository;
 import com.onetuks.librarydomain.book.service.dto.param.BookPatchParam;
 import com.onetuks.librarydomain.book.service.dto.param.BookPostParam;
-import com.onetuks.librarydomain.file.FileRepository;
+import com.onetuks.librarydomain.global.file.repository.FileRepository;
+import com.onetuks.librarydomain.global.point.service.PointService;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
-import com.onetuks.librarydomain.member.repository.PointRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,17 +19,18 @@ public class BookService {
   private final BookRepository bookRepository;
   private final MemberRepository memberRepository;
   private final FileRepository fileRepository;
-  private final PointRepository pointRepository;
+
+  private final PointService pointService;
 
   public BookService(
       BookRepository bookRepository,
       MemberRepository memberRepository,
       FileRepository fileRepository,
-      PointRepository pointRepository) {
+      PointService pointService) {
     this.bookRepository = bookRepository;
     this.memberRepository = memberRepository;
     this.fileRepository = fileRepository;
-    this.pointRepository = pointRepository;
+    this.pointService = pointService;
   }
 
   @Transactional
@@ -46,7 +45,7 @@ public class BookService {
             param.isIndie(),
             coverImage);
 
-    pointRepository.creditPoints(loginId, BOOK_REGISTRATION_POINT);
+    pointService.creditPointForBookRegistration(loginId);
     fileRepository.putFile(book.coverImageFile());
 
     return bookRepository.create(book);

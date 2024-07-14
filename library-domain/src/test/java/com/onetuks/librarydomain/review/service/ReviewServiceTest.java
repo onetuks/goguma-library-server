@@ -33,58 +33,60 @@ import org.springframework.data.domain.Pageable;
 class ReviewServiceTest extends DomainIntegrationTest {
 
   @Test
-  @DisplayName("서평을 등록하면 금주도서인 경우 30P, 그 외 15P가 지급된다. 또한 해당 멤버의 서평 카테고리가 업데이트된다.")
+  @DisplayName("서평을 등록하면 포인트가 지급되며, 서평 카테고리 통계가 업데이트된다.")
   void register_CreditPointByBook_Test() {
     // Given
-    Review review =
+    Review beforeReview =
         ReviewFixture.create(
             101L, MemberFixture.create(101L, RoleType.USER), BookFixture.create(101L));
     ReviewParam param = new ReviewParam("서평제목", "서평본문");
-    Member updatedMember =
-        review.member().increaseReviewCategoryStatics(review.book().categories());
-    Review updatedReview =
+    Member picker =
+        beforeReview.member().increaseReviewCategoryStatics(beforeReview.book().categories());
+    Review afterReview =
         new Review(
-            review.reviewId(),
-            updatedMember,
-            review.book(),
-            review.reviewTitle(),
-            review.reviewContent(),
-            review.pickCount(),
-            review.createdAt(),
-            review.updatedAt());
+            beforeReview.reviewId(),
+            picker,
+            beforeReview.book(),
+            beforeReview.reviewTitle(),
+            beforeReview.reviewContent(),
+            beforeReview.pickCount(),
+            beforeReview.createdAt(),
+            beforeReview.updatedAt());
 
-    given(memberRepository.read(review.member().memberId())).willReturn(review.member());
-    given(bookRepository.read(review.book().bookId())).willReturn(review.book());
-    given(memberRepository.update(any(Member.class))).willReturn(updatedMember);
-    given(reviewRepository.create(any(Review.class))).willReturn(updatedReview);
+    given(memberRepository.read(beforeReview.member().memberId()))
+        .willReturn(beforeReview.member());
+    given(bookRepository.read(beforeReview.book().bookId())).willReturn(beforeReview.book());
+    given(memberRepository.update(any(Member.class))).willReturn(picker);
+    given(reviewRepository.create(any(Review.class))).willReturn(afterReview);
 
     // When
-    Review result =
-        reviewService.register(review.member().memberId(), review.book().bookId(), param);
+    Review result = reviewService.register(picker.memberId(), beforeReview.book().bookId(), param);
 
     // Then
     Map<Category, Long> afterMemberStatics = result.member().memberStatics().reviewCategoryCounts();
     Map<Category, Long> beforeMemberStatics =
-        review.member().memberStatics().reviewCategoryCounts();
+        beforeReview.member().memberStatics().reviewCategoryCounts();
 
     assertAll(
         () -> assertThat(result.reviewId()).isPositive(),
-        () -> assertThat(result.member()).isEqualTo(updatedMember),
-        () -> assertThat(result.book()).isEqualTo(review.book()),
-        () -> assertThat(result.reviewTitle()).isEqualTo(review.reviewTitle()),
-        () -> assertThat(result.reviewContent()).isEqualTo(review.reviewContent()),
+        () -> assertThat(result.member()).isEqualTo(picker),
+        () -> assertThat(result.book()).isEqualTo(beforeReview.book()),
+        () -> assertThat(result.reviewTitle()).isEqualTo(beforeReview.reviewTitle()),
+        () -> assertThat(result.reviewContent()).isEqualTo(beforeReview.reviewContent()),
         () -> assertThat(result.pickCount()).isZero(),
         () -> assertThat(result.createdAt()).isNotNull(),
         () -> assertThat(result.updatedAt()).isNotNull());
 
     afterMemberStatics.forEach(
         (category, count) -> {
-          if (review.book().categories().contains(category)) {
+          if (beforeReview.book().categories().contains(category)) {
             assertThat(count).isEqualTo(beforeMemberStatics.get(category) + 1);
           } else {
             assertThat(count).isEqualTo(beforeMemberStatics.get(category));
           }
         });
+
+    verify(pointService, times(1)).creditPointForReviewRegistration(picker.memberId());
   }
 
   @Test
@@ -145,17 +147,16 @@ class ReviewServiceTest extends DomainIntegrationTest {
   @DisplayName("서평을 삭제하면 포인트가 15P 차감되고, 멤버 통계 정보가 업데이트된다.")
   void remove_DebitPoint_Test() {
     // Given
-    Review review =
-        ReviewFixture.create(
-            102L, MemberFixture.create(102L, RoleType.USER), BookFixture.create(102L));
+    Member picker = MemberFixture.create(102L, RoleType.USER);
+    Review review = ReviewFixture.create(102L, picker, BookFixture.create(102L));
 
     given(reviewRepository.read(review.reviewId())).willReturn(review);
 
     // When
-    reviewService.remove(review.member().memberId(), review.reviewId());
+    reviewService.remove(picker.memberId(), review.reviewId());
 
     // Then
-    verify(pointRepository, times(1)).debitPoints(review.member().memberId(), 15);
+    verify(pointService, times(1)).debitPointForReviewRemoval(picker.memberId());
     verify(reviewRepository, times(1)).delete(review.reviewId());
   }
 
