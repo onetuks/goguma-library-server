@@ -10,6 +10,4 @@ public interface DailyPointLimitRepository {
   int find(long memberId);
 
   boolean isCreditable(long memberId);
-
-  void delete(long memberId);
 }
