@@ -1,6 +1,6 @@
 package com.onetuks.librarydomain.member.service;
 
-import com.onetuks.librarydomain.file.FileRepository;
+import com.onetuks.librarydomain.global.file.repository.FileRepository;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.member.model.vo.AuthInfo;
 import com.onetuks.librarydomain.member.repository.MemberRepository;

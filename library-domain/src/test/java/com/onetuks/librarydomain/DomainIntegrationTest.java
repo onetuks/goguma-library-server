@@ -5,11 +5,11 @@ import com.onetuks.librarydomain.book.repository.BookPickRepository;
 import com.onetuks.librarydomain.book.repository.BookRepository;
 import com.onetuks.librarydomain.book.service.BookPickService;
 import com.onetuks.librarydomain.book.service.BookService;
-import com.onetuks.librarydomain.file.FileRepository;
+import com.onetuks.librarydomain.book.service.IsbnSearchService;
+import com.onetuks.librarydomain.global.file.repository.FileRepository;
+import com.onetuks.librarydomain.global.point.service.PointService;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
-import com.onetuks.librarydomain.member.repository.PointRepository;
 import com.onetuks.librarydomain.member.service.MemberService;
-import com.onetuks.librarydomain.review.repository.DailyPointLimitRepository;
 import com.onetuks.librarydomain.review.repository.ReviewPickRepository;
 import com.onetuks.librarydomain.review.repository.ReviewRepository;
 import com.onetuks.librarydomain.review.service.ReviewPickService;
@@ -32,15 +32,16 @@ public class DomainIntegrationTest {
   @Autowired public BookPickService bookPickService;
   @Autowired public ReviewService reviewService;
   @Autowired public ReviewPickService reviewPickService;
+  @Autowired public IsbnSearchService isbnSearchService;
 
   @MockBean public FileRepository fileRepository;
-  @MockBean public PointRepository pointRepository;
   @MockBean public MemberRepository memberRepository;
   @MockBean public BookRepository bookRepository;
   @MockBean public BookPickRepository bookPickRepository;
   @MockBean public ReviewRepository reviewRepository;
   @MockBean public ReviewPickRepository reviewPickRepository;
-  @MockBean public DailyPointLimitRepository dailyPointLimitRepository;
+
+  @MockBean public PointService pointService;
 
   @Autowired private TestFileCleaner testFileCleaner;
 

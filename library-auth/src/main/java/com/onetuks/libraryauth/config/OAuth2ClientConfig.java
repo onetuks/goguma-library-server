@@ -1,6 +1,6 @@
 package com.onetuks.libraryauth.config;
 
-import com.onetuks.libraryexternal.config.WebClientConfig;
+import com.onetuks.libraryobject.config.WebClientConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

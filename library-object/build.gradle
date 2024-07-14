@@ -10,4 +10,11 @@ dependencies {
 
     // Spring Web
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Webflux
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // REDIS
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    testImplementation 'com.redis.testcontainers:testcontainers-redis-junit:1.6.4'
 }

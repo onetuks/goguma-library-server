@@ -1,6 +1,5 @@
 package com.onetuks.librarydomain.book.service;
 
-import static com.onetuks.librarydomain.member.repository.PointRepository.BOOK_REGISTRATION_POINT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
@@ -67,7 +66,7 @@ class BookServiceTest extends DomainIntegrationTest {
         () -> assertThat(result.isPermitted()).isFalse(),
         () -> assertThat(result.coverImageFile()).isEqualTo(book.coverImageFile()));
 
-    verify(pointRepository, times(1)).creditPoints(loginId, BOOK_REGISTRATION_POINT);
+    verify(pointService, times(1)).creditPointForBookRegistration(loginId);
     verify(fileRepository, times(1)).putFile(any());
   }
 
@@ -113,7 +112,7 @@ class BookServiceTest extends DomainIntegrationTest {
             assertThat(result.coverImageFile())
                 .isEqualTo(ImageFile.of(ImageType.COVER_IMAGE, ImageFile.DEFAULT_COVER_IMAGE_URI)));
 
-    verify(pointRepository, times(1)).creditPoints(loginId, BOOK_REGISTRATION_POINT);
+    verify(pointService, times(1)).creditPointForBookRegistration(loginId);
     verify(fileRepository, times(1)).putFile(any());
   }
 

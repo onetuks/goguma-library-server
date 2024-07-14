@@ -19,4 +19,7 @@ dependencies {
 
     // Spring Data Commons (Page)
     implementation 'org.springframework.data:spring-data-commons'
+
+    // Webflux
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
 }

@@ -1,7 +1,6 @@
 dependencies {
     // Module
     implementation(project(':library-object'))
-    implementation(project(':library-external'))
     implementation(project(':library-domain'))
 
     // Spring Security
