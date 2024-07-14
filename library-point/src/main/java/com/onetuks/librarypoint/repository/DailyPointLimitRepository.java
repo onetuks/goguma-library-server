@@ -1,4 +1,4 @@
-package com.onetuks.librarydomain.review.repository;
+package com.onetuks.librarypoint.repository;
 
 import org.springframework.stereotype.Repository;
 

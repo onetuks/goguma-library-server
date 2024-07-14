@@ -1,0 +1,15 @@
+dependencies {
+    // Module
+    compileOnly(project(':library-domain'))
+    implementation(project(':library-storage:db-storage'))
+
+    // JPA
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // MySQL
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    // REDIS
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    testImplementation 'com.redis.testcontainers:testcontainers-redis-junit:1.6.4'
+}

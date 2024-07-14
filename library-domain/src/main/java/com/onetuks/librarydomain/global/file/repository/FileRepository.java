@@ -1,4 +1,4 @@
-package com.onetuks.librarydomain.file;
+package com.onetuks.librarydomain.global.file.repository;
 
 import com.onetuks.libraryobject.vo.ImageFile;
 import org.springframework.stereotype.Repository;

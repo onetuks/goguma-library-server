@@ -75,6 +75,7 @@ dependencies {
     implementation(project(':library-external'))
     implementation(project(':library-api'))
     implementation(project(':library-domain'))
+    implementation(project(':library-point'))
     implementation(project(':library-storage'))
     implementation(project(':library-storage:db-storage'))
     implementation(project(':library-storage:file-storage'))
