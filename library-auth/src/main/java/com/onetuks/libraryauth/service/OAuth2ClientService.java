@@ -3,6 +3,7 @@ package com.onetuks.libraryauth.service;
 import com.onetuks.libraryauth.jwt.AuthHeaderUtil;
 import com.onetuks.libraryauth.jwt.AuthToken;
 import com.onetuks.libraryauth.oauth.ClientProviderStrategyHandler;
+import com.onetuks.libraryauth.oauth.dto.ClientAuthToken;
 import com.onetuks.libraryauth.oauth.dto.KakaoAuthToken;
 import com.onetuks.libraryauth.oauth.strategy.ClientProviderStrategy;
 import com.onetuks.libraryauth.service.dto.LoginResult;
@@ -55,9 +56,9 @@ public class OAuth2ClientService {
         clientProviderStrategyHandler.getClientStrategy(clientProvider);
 
     String coreCode = authCode.replace("Bearer ", "");
-    KakaoAuthToken authToken = clientProviderStrategy.getOAuth2Token(coreCode);
+    ClientAuthToken authToken = clientProviderStrategy.getOAuth2Token(coreCode);
 
     return loginWithAuthToken(
-        clientProvider, AuthHeaderUtil.TOKEN_PREFIX + authToken.access_token());
+        clientProvider, AuthHeaderUtil.TOKEN_PREFIX + authToken.getAccessToken());
   }
 }

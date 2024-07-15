@@ -49,6 +49,14 @@ public class AuthRestController {
     this.memberService = memberService;
   }
 
+  /**
+   * 포스트맨 카카오 로그인
+   * 1. 포스트맨에서 카카오 인가코드 수령
+   * 2. 서버에 Header Authentication : Bearer {인가코드} 전송
+   * 3. 서버 JWT 토큰 발급
+   * @param request 카카오 인가 코드
+   * @return 로그인 응답
+   */
   @PostMapping(path = "/postman/kakao")
   public ResponseEntity<LoginResponse> kakaoLoginWithAuthToken(HttpServletRequest request) {
     LoginResult result =
@@ -80,6 +88,15 @@ public class AuthRestController {
 
     return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(result));
   }
+
+  @PostMapping(path = "/naver")
+  public ResponseEntity<LoginResponse> naverLoginWithAuthCode(HttpServletRequest request) {
+    LoginResult result =
+        oAuth2ClientService.loginWithAuthCode(NAVER, request.getHeader(HEADER_AUTHORIZATION));
+
+    return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(result));
+  }
+
 
   @PutMapping(path = "/refresh")
   public ResponseEntity<RefreshResponse> refreshToken(
