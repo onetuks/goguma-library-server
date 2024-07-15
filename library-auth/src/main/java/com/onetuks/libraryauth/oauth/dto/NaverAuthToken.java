@@ -6,7 +6,8 @@ public record NaverAuthToken(
     String token_type,
     Integer expires_in,
     String error,
-    String error_description) implements ClientAuthToken {
+    String error_description)
+    implements ClientAuthToken {
 
   @Override
   public String getAccessToken() {

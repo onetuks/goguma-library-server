@@ -2,15 +2,14 @@ package com.onetuks.libraryauth.oauth.strategy;
 
 import com.onetuks.libraryauth.config.NaverClientConfig;
 import com.onetuks.libraryauth.exception.TokenValidFailedException;
-import com.onetuks.libraryauth.oauth.dto.KakaoAuthToken;
 import com.onetuks.libraryauth.oauth.dto.NaverAuthToken;
 import com.onetuks.libraryauth.oauth.dto.NaverUser;
-import com.onetuks.librarydomain.book.handler.strategy.util.URIBuilder;
 import com.onetuks.librarydomain.member.model.vo.AuthInfo;
 import com.onetuks.libraryobject.config.WebClientConfig;
 import com.onetuks.libraryobject.enums.ClientProvider;
 import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.error.ErrorCode;
+import com.onetuks.libraryobject.util.URIBuilder;
 import java.util.Objects;
 import java.util.Set;
 import org.springframework.context.annotation.ComponentScan;
@@ -18,7 +17,6 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -31,9 +29,7 @@ public class NaverClientProviderStrategy implements ClientProviderStrategy {
   private final NaverClientConfig naverClientConfig;
 
   public NaverClientProviderStrategy(
-      WebClient webClient,
-      URIBuilder uriBuilder,
-      NaverClientConfig naverClientConfig) {
+      WebClient webClient, URIBuilder uriBuilder, NaverClientConfig naverClientConfig) {
     this.webClient = webClient;
     this.uriBuilder = uriBuilder;
     this.naverClientConfig = naverClientConfig;
@@ -44,10 +40,12 @@ public class NaverClientProviderStrategy implements ClientProviderStrategy {
     NaverUser naverUser =
         webClient
             .get()
-            .uri(naverClientConfig.naverClientRegistration()
-                .getProviderDetails()
-                .getUserInfoEndpoint()
-                .getUri())
+            .uri(
+                naverClientConfig
+                    .naverClientRegistration()
+                    .getProviderDetails()
+                    .getUserInfoEndpoint()
+                    .getUri())
             .headers(httpHeaders -> httpHeaders.set("Authorization", authToken))
             .retrieve()
             .onStatus(
@@ -75,12 +73,11 @@ public class NaverClientProviderStrategy implements ClientProviderStrategy {
   public NaverAuthToken getOAuth2Token(String authCode) {
     return webClient
         .post()
-        .uri(builder ->
-            uriBuilder.buildUri(
-                naverClientConfig.naverClientRegistration()
-                    .getProviderDetails()
-                    .getTokenUri(),
-                buildParamsMap(authCode)))
+        .uri(
+            builder ->
+                uriBuilder.buildUri(
+                    naverClientConfig.naverClientRegistration().getProviderDetails().getTokenUri(),
+                    buildParamsMap(authCode)))
         .retrieve()
         .onStatus(
             HttpStatusCode::is4xxClientError,

@@ -73,7 +73,7 @@ class DbStorageArchitectureTest extends DbStorageIntegrationTest {
   }
 
   @Nested
-  class DependancyTest {
+  class DependencyTest {
 
     @Test
     @DisplayName("Entity는 오직 Repository와 Converter에 의해서만 의존한다")

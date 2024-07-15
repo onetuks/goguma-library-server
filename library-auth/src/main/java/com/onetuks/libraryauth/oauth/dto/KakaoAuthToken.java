@@ -7,7 +7,8 @@ public record KakaoAuthToken(
     int expires_in,
     String refresh_token,
     int refresh_token_expires_in,
-    String scope) implements ClientAuthToken {
+    String scope)
+    implements ClientAuthToken {
 
   @Override
   public String getAccessToken() {

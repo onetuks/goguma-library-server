@@ -4,7 +4,6 @@ import com.onetuks.libraryauth.jwt.AuthHeaderUtil;
 import com.onetuks.libraryauth.jwt.AuthToken;
 import com.onetuks.libraryauth.oauth.ClientProviderStrategyHandler;
 import com.onetuks.libraryauth.oauth.dto.ClientAuthToken;
-import com.onetuks.libraryauth.oauth.dto.KakaoAuthToken;
 import com.onetuks.libraryauth.oauth.strategy.ClientProviderStrategy;
 import com.onetuks.libraryauth.service.dto.LoginResult;
 import com.onetuks.librarydomain.member.model.vo.AuthInfo;

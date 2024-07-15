@@ -129,7 +129,7 @@ public class DomainArchitectureTest extends DomainIntegrationTest {
   }
 
   @Nested
-  class DependancyTest {
+  class DependencyTest {
 
     @Test
     @DisplayName("Service는 Controller를 의존하면 안 된다")
