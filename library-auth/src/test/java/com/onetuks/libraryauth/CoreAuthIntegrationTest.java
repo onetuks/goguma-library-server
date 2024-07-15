@@ -6,6 +6,7 @@ import com.onetuks.libraryauth.oauth.strategy.GoogleClientProviderStrategy;
 import com.onetuks.libraryauth.service.AuthService;
 import com.onetuks.libraryauth.service.OAuth2ClientService;
 import com.onetuks.librarydomain.member.service.MemberService;
+import com.onetuks.libraryobject.util.URIBuilder;
 import com.redis.testcontainers.RedisContainer;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +34,7 @@ public class CoreAuthIntegrationTest {
   @MockBean public MemberService memberService;
 
   @Configuration
-  @ComponentScan(basePackages = "com.onetuks.libraryauth")
+  @ComponentScan(basePackages = "com.onetuks.libraryauth", basePackageClasses = URIBuilder.class)
   public static class CoreAuthConfig {}
 
   static final RedisContainer redis;

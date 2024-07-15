@@ -1,4 +1,4 @@
-package com.onetuks.librarydomain.book.handler.strategy.util;
+package com.onetuks.libraryobject.util;
 
 import java.net.URI;
 import org.springframework.stereotype.Component;
