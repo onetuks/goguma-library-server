@@ -62,4 +62,9 @@ public class ReviewPickService {
   public Page<ReviewPick> searchAll(long loginId, Pageable pageable) {
     return reviewPickRepository.readAll(loginId, pageable);
   }
+
+  @Transactional(readOnly = true)
+  public boolean searchExistence(long loginId, long reviewId) {
+    return reviewPickRepository.read(loginId, reviewId);
+  }
 }

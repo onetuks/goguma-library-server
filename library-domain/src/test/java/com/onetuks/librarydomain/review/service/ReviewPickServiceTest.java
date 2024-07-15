@@ -132,4 +132,27 @@ class ReviewPickServiceTest extends DomainIntegrationTest {
         .hasSize(pageable.getPageSize())
         .allSatisfy(result -> assertThat(result.member().memberId()).isEqualTo(picker.memberId()));
   }
+
+  @Test
+  @DisplayName("해당 유저가 해당 서평을 픽했는지 조회한다.")
+  void searchExistence_Test() {
+    // Given
+    Member picker = MemberFixture.create(104L, RoleType.USER);
+    ReviewPick reviewPick =
+        ReviewPickFixture.create(
+            104L,
+            picker,
+            ReviewFixture.create(
+                104L, MemberFixture.create(204L, RoleType.USER), BookFixture.create(104L)));
+
+    given(reviewPickRepository.read(picker.memberId(), reviewPick.review().reviewId()))
+        .willReturn(true);
+
+    // When
+    boolean result =
+        reviewPickService.searchExistence(picker.memberId(), reviewPick.review().reviewId());
+
+    // Then
+    assertThat(result).isTrue();
+  }
 }

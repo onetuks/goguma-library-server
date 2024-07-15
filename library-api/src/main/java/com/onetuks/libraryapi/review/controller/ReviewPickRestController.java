@@ -81,4 +81,19 @@ public class ReviewPickRestController {
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);
   }
+
+  /**
+   * 서평픽 여부 조회
+   *
+   * @param loginId : 로그인 ID
+   * @param reviewId : 서평 ID
+   * @return : 서평픽 여부
+   */
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Boolean> getMyReviewPick(
+      @LoginId Long loginId, @RequestParam(name = "review-id") Long reviewId) {
+    boolean result = reviewPickService.searchExistence(loginId, reviewId);
+
+    return ResponseEntity.status(HttpStatus.OK).body(result);
+  }
 }
