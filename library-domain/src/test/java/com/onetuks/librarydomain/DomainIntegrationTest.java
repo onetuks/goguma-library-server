@@ -15,6 +15,7 @@ import com.onetuks.librarydomain.review.repository.ReviewRepository;
 import com.onetuks.librarydomain.review.service.ReviewPickService;
 import com.onetuks.librarydomain.review.service.ReviewService;
 import com.onetuks.libraryobject.component.TestFileCleaner;
+import com.onetuks.libraryobject.util.URIBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,7 +49,7 @@ public class DomainIntegrationTest {
   @Configuration
   @ComponentScan(
       basePackages = "com.onetuks.librarydomain",
-      basePackageClasses = TestFileCleaner.class)
+      basePackageClasses = {TestFileCleaner.class, URIBuilder.class})
   public static class DomainConfig {}
 
   @AfterEach

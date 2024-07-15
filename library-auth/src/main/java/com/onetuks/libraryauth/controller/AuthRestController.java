@@ -49,6 +49,12 @@ public class AuthRestController {
     this.memberService = memberService;
   }
 
+  /**
+   * 포스트맨 카카오 로그인 1. 포스트맨에서 카카오 토큰 수령 2. 서버에 Header Authentication : Bearer {토큰} 전송 3. 서버 JWT 토큰 발급
+   *
+   * @param request : 카카오 토큰
+   * @return : 로그인 응답
+   */
   @PostMapping(path = "/postman/kakao")
   public ResponseEntity<LoginResponse> kakaoLoginWithAuthToken(HttpServletRequest request) {
     LoginResult result =
@@ -57,6 +63,13 @@ public class AuthRestController {
     return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(result));
   }
 
+  /**
+   * 클라이언트 카카오 로그인 1. 클라이언트에서 카카오 인가코드 수령 2. 서버에 Header Authentication: Bearer {인가코드} 전송 3. 서버 JWT
+   * 토큰 발급
+   *
+   * @param request : 카카오 인가코드
+   * @return : 로그인 응답
+   */
   @PostMapping(path = "/kakao")
   public ResponseEntity<LoginResponse> kakaoLoginWithAuthCode(HttpServletRequest request) {
     LoginResult result =
@@ -65,6 +78,12 @@ public class AuthRestController {
     return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(result));
   }
 
+  /**
+   * 포스트맨 구글 로그인 1. 포스트맨에서 구글 토큰 수령 2. 서버에 Header Authentication : Bearer {토큰} 전송 3. 서버 JWT 토큰 발급
+   *
+   * @param request : 구글 토큰
+   * @return : 로그인 응답
+   */
   @PostMapping(path = "/postman/google")
   public ResponseEntity<LoginResponse> googleLoginWithAuthToken(HttpServletRequest request) {
     LoginResult result =
@@ -73,6 +92,27 @@ public class AuthRestController {
     return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(result));
   }
 
+  /**
+   * 클라이언트 구글 로그인 1. 클라이언트에서 구글 인가코드 수령 2. 서버에 Header Authentication: Bearer {인가코드} 전송 3. 서버 JWT 토큰
+   * 발급
+   *
+   * @param request : 구글 인가코드
+   * @return : 로그인 응답
+   */
+  @PostMapping(path = "/google")
+  public ResponseEntity<LoginResponse> googleLoginWithAuthCode(HttpServletRequest request) {
+    LoginResult result =
+        oAuth2ClientService.loginWithAuthCode(GOOGLE, request.getHeader(HEADER_AUTHORIZATION));
+
+    return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(result));
+  }
+
+  /**
+   * 포스트맨 네이버 로그인 1. 포스트맨에서 네이버 토큰 수령 2. 서버에 Header Authentication : Bearer {토큰} 전송 3. 서버 JWT 토큰 발급
+   *
+   * @param request : 네이버 토큰
+   * @return : 로그인 응답
+   */
   @PostMapping(path = "/postman/naver")
   public ResponseEntity<LoginResponse> naverLoginWithAuthToken(HttpServletRequest request) {
     LoginResult result =
@@ -81,6 +121,28 @@ public class AuthRestController {
     return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(result));
   }
 
+  /**
+   * 클라이언트 네이버 로그인 1. 클라이언트에서 네이버 인가코드 수령 2. 서버에 Header Authentication: Bearer {인가코드} 전송 3. 서버 JWT
+   * 토큰 발급
+   *
+   * @param request : 네이버 인가코드
+   * @return : 로그인 응답
+   */
+  @PostMapping(path = "/naver")
+  public ResponseEntity<LoginResponse> naverLoginWithAuthCode(HttpServletRequest request) {
+    LoginResult result =
+        oAuth2ClientService.loginWithAuthCode(NAVER, request.getHeader(HEADER_AUTHORIZATION));
+
+    return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(result));
+  }
+
+  /**
+   * 서버 JWT 토큰 갱신
+   *
+   * @param request : 서버 JWT 토큰
+   * @param loginId : 로그인 아이디
+   * @return : 갱신된 JWT 토큰
+   */
   @PutMapping(path = "/refresh")
   public ResponseEntity<RefreshResponse> refreshToken(
       HttpServletRequest request, @LoginId Long loginId) {
@@ -93,6 +155,13 @@ public class AuthRestController {
   }
 
   // TODO : 일반 유저 접근 방지 처리
+  /**
+   * 멤버 권한 상승
+   *
+   * @param request : 서버 JWT 토큰
+   * @param loginId : 로그인 아이디
+   * @return : 권한 상승 응답 (갱신된 JWT 토큰 포함)
+   */
   @PutMapping(path = "/promotion")
   public ResponseEntity<RefreshResponse> promoteMember(
       HttpServletRequest request, @LoginId Long loginId) {
@@ -106,6 +175,12 @@ public class AuthRestController {
     return ResponseEntity.status(HttpStatus.OK).body(RefreshResponse.from(result));
   }
 
+  /**
+   * 로그아웃
+   *
+   * @param request : 서버 JWT 토큰
+   * @return : 로그아웃 응답
+   */
   @DeleteMapping("/logout")
   public ResponseEntity<LogoutResponse> logout(HttpServletRequest request) {
     AuthToken authToken = getAuthToken(request);
@@ -115,12 +190,19 @@ public class AuthRestController {
     return ResponseEntity.status(HttpStatus.OK).body(LogoutResponse.from(result));
   }
 
+  /**
+   * 회원 탈퇴
+   *
+   * @param request : 서버 JWT 토큰
+   * @param loginId : 회원 아이디
+   * @return : 회원 탈퇴 응답
+   */
   @DeleteMapping("/withdraw")
-  public ResponseEntity<Void> withdrawMember(HttpServletRequest request, @LoginId Long memberId) {
+  public ResponseEntity<Void> withdrawMember(HttpServletRequest request, @LoginId Long loginId) {
     AuthToken authToken = getAuthToken(request);
 
     authService.logout(authToken);
-    memberService.remove(memberId);
+    memberService.remove(loginId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }

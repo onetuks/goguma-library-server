@@ -1,7 +1,7 @@
 package com.onetuks.libraryapi.review.controller;
 
 import com.onetuks.libraryapi.review.dto.response.ReviewPickResponse;
-import com.onetuks.libraryapi.review.dto.response.ReviewPickResponse.ReviewPickResponses;
+import com.onetuks.libraryapi.review.dto.response.ReviewResponse.ReviewResponses;
 import com.onetuks.libraryauth.util.LoginId;
 import com.onetuks.librarydomain.review.model.ReviewPick;
 import com.onetuks.librarydomain.review.service.ReviewPickService;
@@ -39,9 +39,7 @@ public class ReviewPickRestController {
    * @param reviewId : 서평 ID
    * @return : 서평픽 응답
    */
-  @PostMapping(
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ReviewPickResponse> postNewReviewPick(
       @LoginId Long loginId, @RequestParam(name = "review-id") Long reviewId) {
     ReviewPick result = reviewPickService.register(loginId, reviewId);
@@ -72,12 +70,12 @@ public class ReviewPickRestController {
    * @param pageable : 페이지 정보
    * @return : 서평픽 목록
    */
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<ReviewPickResponses> getMyReviewPicks(
+  @GetMapping(path = "/my-picks", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<ReviewResponses> getMyReviewPicks(
       @LoginId Long loginId,
       @PageableDefault(sort = "reviewPickId", direction = Direction.DESC) Pageable pageable) {
     Page<ReviewPick> results = reviewPickService.searchAll(loginId, pageable);
-    ReviewPickResponses responses = ReviewPickResponses.from(results);
+    ReviewResponses responses = ReviewResponses.fromPicks(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);
   }

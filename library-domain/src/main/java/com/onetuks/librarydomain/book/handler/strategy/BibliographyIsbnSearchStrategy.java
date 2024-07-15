@@ -2,9 +2,9 @@ package com.onetuks.librarydomain.book.handler.strategy;
 
 import com.onetuks.librarydomain.book.handler.dto.IsbnResult;
 import com.onetuks.librarydomain.book.handler.strategy.dto.BibliographyQueryResponse;
-import com.onetuks.librarydomain.book.handler.strategy.util.URIBuilder;
 import com.onetuks.libraryobject.config.WebClientConfig;
 import com.onetuks.libraryobject.error.ErrorCode;
+import com.onetuks.libraryobject.util.URIBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatusCode;

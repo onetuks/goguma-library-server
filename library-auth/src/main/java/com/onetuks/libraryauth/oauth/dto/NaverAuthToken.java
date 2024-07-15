@@ -1,13 +1,12 @@
 package com.onetuks.libraryauth.oauth.dto;
 
-public record KakaoAuthToken(
-    String token_type,
+public record NaverAuthToken(
     String access_token,
-    String id_token,
-    int expires_in,
     String refresh_token,
-    int refresh_token_expires_in,
-    String scope)
+    String token_type,
+    Integer expires_in,
+    String error,
+    String error_description)
     implements ClientAuthToken {
 
   @Override
