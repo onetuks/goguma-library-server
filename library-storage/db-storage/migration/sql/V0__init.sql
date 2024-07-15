@@ -100,7 +100,8 @@ CREATE TABLE IF NOT EXISTS review_picks
     review_id      BIGINT NOT NULL COMMENT '서평 식별자',
     PRIMARY KEY (review_pick_id),
     FOREIGN KEY (member_id) REFERENCES members (member_id),
-    FOREIGN KEY (review_id) REFERENCES reviews (review_id)
+    FOREIGN KEY (review_id) REFERENCES reviews (review_id),
+    UNIQUE KEY unq_member_id_review_id (member_id, review_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='서평픽 테이블';
 
@@ -111,6 +112,7 @@ CREATE TABLE IF NOT EXISTS book_picks
     book_id      BIGINT NOT NULL COMMENT '책 식별자',
     PRIMARY KEY (book_pick_id),
     FOREIGN KEY (member_id) REFERENCES members (member_id),
-    FOREIGN KEY (book_id) REFERENCES books (book_id)
+    FOREIGN KEY (book_id) REFERENCES books (book_id),
+    UNIQUE KEY unq_member_id_book_id (member_id, book_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='북픽 테이블';

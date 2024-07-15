@@ -15,6 +15,7 @@ import com.onetuks.libraryobject.enums.RoleType;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +45,27 @@ class ReviewPickEntityRepositoryTest extends DbStorageIntegrationTest {
         () -> assertThat(result.reviewPickId()).isPositive(),
         () -> assertThat(result.member().memberId()).isEqualTo(reviewPick.member().memberId()),
         () -> assertThat(result.review().reviewId()).isEqualTo(reviewPick.review().reviewId()));
+  }
+
+  @Test
+  @DisplayName("중복된 서평픽 등록 시 예외를 던진다.")
+  void create_Duplicated_ExceptionThrown() {
+    // Given
+    ReviewPick originReviewPick =
+        reviewPickEntityRepository.create(
+            ReviewPickFixture.create(
+                null,
+                memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
+                reviewEntityRepository.create(
+                    ReviewFixture.create(
+                        null,
+                        memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
+                        bookEntityRepository.create(BookFixture.create(null))))));
+    ReviewPick reviewPick = new ReviewPick(null, originReviewPick.member(), originReviewPick.review());
+
+    // When
+    assertThatThrownBy(() -> reviewPickEntityRepository.create(reviewPick))
+        .isInstanceOf(DataIntegrityViolationException.class);
   }
 
   @Test

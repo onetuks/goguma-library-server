@@ -1,6 +1,7 @@
 package com.onetuks.dbstorage.book.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.dbstorage.DbStorageIntegrationTest;
@@ -13,6 +14,7 @@ import com.onetuks.libraryobject.enums.RoleType;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +39,23 @@ class BookPickEntityRepositoryTest extends DbStorageIntegrationTest {
         () -> assertThat(result.bookPickId()).isPositive(),
         () -> assertThat(result.member()).isEqualTo(bookPick.member()),
         () -> assertThat(result.book()).isEqualTo(bookPick.book()));
+  }
+
+  @Test
+  @DisplayName("중복된 북픽 등록 시 예외를 던진다.")
+  void create_Duplicated_ExceptionThrown() {
+    // Given
+    BookPick originBookPick =
+        bookPickEntityRepository.create(
+            BookPickFixture.create(
+                null,
+                memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
+                bookEntityRepository.create(BookFixture.create(null))));
+    BookPick bookPick = new BookPick(null, originBookPick.member(), originBookPick.book());
+
+    // When
+    assertThatThrownBy(() -> bookPickEntityRepository.create(bookPick))
+        .isInstanceOf(DataIntegrityViolationException.class);
   }
 
   @Test
