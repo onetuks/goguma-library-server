@@ -22,8 +22,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(
     name = "book_picks",
-    uniqueConstraints = @UniqueConstraint(
-        name = "unq_member_id_book_id", columnNames = {"member_id", "book_id"}))
+    uniqueConstraints =
+        @UniqueConstraint(
+            name = "unq_member_id_book_id",
+            columnNames = {"member_id", "book_id"}))
 public class BookPickEntity {
 
   @Id

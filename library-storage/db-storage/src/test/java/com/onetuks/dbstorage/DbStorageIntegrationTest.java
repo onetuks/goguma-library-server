@@ -8,7 +8,6 @@ import com.onetuks.dbstorage.member.repository.MemberEntityRepository;
 import com.onetuks.dbstorage.review.repository.ReviewEntityRepository;
 import com.onetuks.dbstorage.review.repository.ReviewPickEntityRepository;
 import com.onetuks.libraryobject.component.TestFileCleaner;
-import jakarta.persistence.EntityManager;
 import java.util.HashMap;
 import java.util.Map;
 import org.flywaydb.core.Flyway;

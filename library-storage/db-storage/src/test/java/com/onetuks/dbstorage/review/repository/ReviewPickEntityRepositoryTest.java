@@ -61,7 +61,8 @@ class ReviewPickEntityRepositoryTest extends DbStorageIntegrationTest {
                         null,
                         memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
                         bookEntityRepository.create(BookFixture.create(null))))));
-    ReviewPick reviewPick = new ReviewPick(null, originReviewPick.member(), originReviewPick.review());
+    ReviewPick reviewPick =
+        new ReviewPick(null, originReviewPick.member(), originReviewPick.review());
 
     // When
     assertThatThrownBy(() -> reviewPickEntityRepository.create(reviewPick))

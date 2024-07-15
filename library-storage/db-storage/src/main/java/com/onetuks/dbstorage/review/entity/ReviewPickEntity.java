@@ -22,8 +22,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(
     name = "review_picks",
-    uniqueConstraints = @UniqueConstraint(
-        name = "unq_member_id_review_id", columnNames = {"member_id", "review_id"}))
+    uniqueConstraints =
+        @UniqueConstraint(
+            name = "unq_member_id_review_id",
+            columnNames = {"member_id", "review_id"}))
 public class ReviewPickEntity {
 
   @Id
