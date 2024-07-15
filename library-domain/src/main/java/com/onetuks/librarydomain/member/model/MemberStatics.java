@@ -3,6 +3,7 @@ package com.onetuks.librarydomain.member.model;
 import com.onetuks.libraryobject.enums.Category;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public record MemberStatics(
@@ -21,5 +22,37 @@ public record MemberStatics(
         Arrays.stream(Category.values())
             .map(category -> Map.entry(category, 0L))
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+  }
+
+  public MemberStatics increaseReviewCategoryCounts(Set<Category> categories) {
+    return new MemberStatics(
+        memberStaticsId,
+        reviewCounts,
+        followerCounts,
+        followingCounts,
+        reviewCategoryCounts.entrySet().stream()
+            .collect(
+                Collectors.toMap(
+                    Map.Entry::getKey,
+                    entry ->
+                        categories.contains(entry.getKey())
+                            ? Math.min(Long.MAX_VALUE, entry.getValue() + 1)
+                            : entry.getValue())));
+  }
+
+  public MemberStatics decreaseReviewCategoryCounts(Set<Category> categories) {
+    return new MemberStatics(
+        memberStaticsId,
+        reviewCounts,
+        followerCounts,
+        followingCounts,
+        reviewCategoryCounts.entrySet().stream()
+            .collect(
+                Collectors.toMap(
+                    Map.Entry::getKey,
+                    entry ->
+                        categories.contains(entry.getKey())
+                            ? Math.max(0, entry.getValue() - 1)
+                            : entry.getValue())));
   }
 }

@@ -1,7 +1,0 @@
-dependencies {
-    // Module
-    implementation(project(':library-object'))
-
-    // Webflux
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
-}

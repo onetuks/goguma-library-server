@@ -20,9 +20,7 @@ import com.onetuks.libraryauth.util.LoginId;
 import com.onetuks.librarydomain.member.service.MemberService;
 import com.onetuks.libraryobject.enums.RoleType;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -100,13 +98,10 @@ public class AuthRestController {
       HttpServletRequest request, @LoginId Long loginId) {
     AuthToken authToken = getAuthToken(request);
 
-    List<RoleType> newRoles =
-        Collections.synchronizedList(new ArrayList<>(authToken.getRoleTypes()));
-    newRoles.add(RoleType.ADMIN);
+    Set<RoleType> newRoles = authService.grantAdminRole(authToken);
+    RefreshResult result = authService.updateAccessToken(authToken, loginId, newRoles);
 
     memberService.editAuthorities(loginId, newRoles);
-
-    RefreshResult result = authService.updateAccessToken(authToken, loginId, newRoles);
 
     return ResponseEntity.status(HttpStatus.OK).body(RefreshResponse.from(result));
   }

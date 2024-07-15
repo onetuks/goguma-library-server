@@ -2,10 +2,10 @@ package com.onetuks.libraryauth.controller.dto;
 
 import com.onetuks.libraryauth.service.dto.LoginResult;
 import com.onetuks.libraryobject.enums.RoleType;
-import java.util.List;
+import java.util.Set;
 
 public record LoginResponse(
-    String appToken, boolean isNewMember, long loginId, List<RoleType> roles) {
+    String appToken, boolean isNewMember, long loginId, Set<RoleType> roles) {
 
   public static LoginResponse from(LoginResult loginResult) {
     return new LoginResponse(

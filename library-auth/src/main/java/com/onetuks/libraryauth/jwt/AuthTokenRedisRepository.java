@@ -8,25 +8,25 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class AuthTokenRedisRepository implements AuthTokenRepository {
 
-  private final ValueOperations<String, String> valueOperations;
+  private final ValueOperations<String, String> authTokenValueOperations;
 
   public AuthTokenRedisRepository(StringRedisTemplate redisTemplate) {
-    this.valueOperations = redisTemplate.opsForValue();
+    this.authTokenValueOperations = redisTemplate.opsForValue();
   }
 
   @Override
   public void save(String accessToken, String refreshToken) {
-    valueOperations.set(accessToken, refreshToken);
+    authTokenValueOperations.set(accessToken, refreshToken);
   }
 
   @Override
   public void delete(String accessToken) {
-    valueOperations.getOperations().delete(accessToken);
+    authTokenValueOperations.getOperations().delete(accessToken);
   }
 
   @Override
   public Optional<String> findRefreshToken(String accessToken) {
-    String refreshToken = valueOperations.get(accessToken);
+    String refreshToken = authTokenValueOperations.get(accessToken);
     return Optional.ofNullable(refreshToken);
   }
 }

@@ -7,10 +7,9 @@ import com.onetuks.libraryapi.book.dto.response.BookResponse;
 import com.onetuks.libraryapi.book.dto.response.BookResponse.BookResponses;
 import com.onetuks.libraryauth.util.LoginId;
 import com.onetuks.libraryauth.util.OnlyForAdmin;
+import com.onetuks.librarydomain.book.handler.dto.IsbnResult;
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.book.service.BookService;
-import com.onetuks.libraryexternal.book.handler.dto.IsbnResult;
-import com.onetuks.libraryexternal.book.service.IsbnSearchService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,11 +34,9 @@ import org.springframework.web.multipart.MultipartFile;
 public class BookRestController {
 
   private final BookService bookService;
-  private final IsbnSearchService isbnSearchService;
 
-  public BookRestController(BookService bookService, IsbnSearchService isbnSearchService) {
+  public BookRestController(BookService bookService) {
     this.bookService = bookService;
-    this.isbnSearchService = isbnSearchService;
   }
 
   /**
@@ -51,7 +48,7 @@ public class BookRestController {
   @GetMapping(path = "/isbn/{isbn}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookIsbnGetResponse> getBookWithIsbn(
       @PathVariable(name = "isbn") String isbn) {
-    IsbnResult result = isbnSearchService.search(isbn);
+    IsbnResult result = bookService.search(isbn);
     BookIsbnGetResponse response = BookIsbnGetResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -86,11 +83,11 @@ public class BookRestController {
    */
   @OnlyForAdmin
   @PatchMapping(
-      path = "/admin/{bookId}",
+      path = "/admin/{book-id}",
       consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookResponse> patchBook(
-      @PathVariable(name = "bookId") Long bookId,
+      @PathVariable(name = "book-id") Long bookId,
       @RequestPart(name = "request") @Valid BookPatchRequest request,
       @RequestPart(name = "cover-image", required = false) MultipartFile coverImage) {
     Book result = bookService.edit(bookId, request.to(), coverImage);
@@ -106,8 +103,8 @@ public class BookRestController {
    * @return : 204 No Content
    */
   @OnlyForAdmin
-  @DeleteMapping(path = "/admin/{bookId}")
-  public ResponseEntity<Void> deleteBook(@PathVariable(name = "bookId") Long bookId) {
+  @DeleteMapping(path = "/admin/{book-id}")
+  public ResponseEntity<Void> deleteBook(@PathVariable(name = "book-id") Long bookId) {
     bookService.remove(bookId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -137,8 +134,8 @@ public class BookRestController {
    * @param bookId : 도서 ID
    * @return : 도서 정보
    */
-  @GetMapping(path = "/{bookId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<BookResponse> getBook(@PathVariable(name = "bookId") Long bookId) {
+  @GetMapping(path = "/{book-id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<BookResponse> getBook(@PathVariable(name = "book-id") Long bookId) {
     Book result = bookService.search(bookId);
     BookResponse response = BookResponse.from(result);
 

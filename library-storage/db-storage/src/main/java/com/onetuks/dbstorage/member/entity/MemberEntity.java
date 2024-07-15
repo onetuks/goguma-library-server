@@ -1,6 +1,8 @@
 package com.onetuks.dbstorage.member.entity;
 
+import static jakarta.persistence.CascadeType.MERGE;
 import static jakarta.persistence.CascadeType.PERSIST;
+import static jakarta.persistence.CascadeType.REFRESH;
 import static jakarta.persistence.CascadeType.REMOVE;
 
 import com.onetuks.dbstorage.member.entity.embed.AuthInfoEmbeddable;
@@ -67,7 +69,8 @@ public class MemberEntity {
 
   @OneToOne(
       fetch = FetchType.LAZY,
-      cascade = {PERSIST, REMOVE})
+      cascade = {PERSIST, REMOVE, MERGE, REFRESH},
+      orphanRemoval = true)
   @JoinColumn(name = "member_statics_id", unique = true, nullable = false)
   private MemberStaticsEntity memberStaticsEntity;
 
@@ -96,6 +99,10 @@ public class MemberEntity {
 
   public void addPoints(long point) {
     this.points += point;
+  }
+
+  public void minusPoints(long point) {
+    this.points = Math.max(0, this.points - point);
   }
 
   @Override

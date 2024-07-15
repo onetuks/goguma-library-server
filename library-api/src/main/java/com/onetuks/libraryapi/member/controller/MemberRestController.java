@@ -37,12 +37,12 @@ public class MemberRestController {
    * @return : 수정된 멤버의 정보
    */
   @PatchMapping(
-      path = "/{memberId}",
+      path = "/{member-id}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<MemberPatchResponse> patchMemberProfile(
       @LoginId Long loginId,
-      @PathVariable(name = "memberId") Long memberId,
+      @PathVariable(name = "member-id") Long memberId,
       @RequestPart(name = "request") @Valid MemberPatchRequest request,
       @RequestPart(name = "profile-image", required = false) MultipartFile profileImage,
       @RequestPart(name = "profile-background-image", required = false)
@@ -61,9 +61,9 @@ public class MemberRestController {
    * @param memberId : 조회할 멤버의 ID
    * @return : 조회된 멤버의 프로필 정보
    */
-  @GetMapping(path = "/{memberId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/{member-id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<MemberGetResponse> getMemberProfile(
-      @PathVariable(name = "memberId") Long memberId) {
+      @PathVariable(name = "member-id") Long memberId) {
     Member result = memberService.search(memberId);
     MemberGetResponse response = MemberGetResponse.from(result);
 

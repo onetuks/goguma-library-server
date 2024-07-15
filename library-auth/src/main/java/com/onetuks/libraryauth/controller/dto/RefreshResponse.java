@@ -2,9 +2,9 @@ package com.onetuks.libraryauth.controller.dto;
 
 import com.onetuks.libraryauth.service.dto.RefreshResult;
 import com.onetuks.libraryobject.enums.RoleType;
-import java.util.List;
+import java.util.Set;
 
-public record RefreshResponse(String accessToken, long loginId, List<RoleType> roles) {
+public record RefreshResponse(String accessToken, long loginId, Set<RoleType> roles) {
 
   public static RefreshResponse from(RefreshResult refreshResult) {
     return new RefreshResponse(

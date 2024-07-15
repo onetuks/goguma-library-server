@@ -10,7 +10,6 @@ import com.onetuks.librarydomain.member.model.vo.Nickname;
 import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.vo.ImageFile;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -42,7 +41,7 @@ public record Member(
     memberStatics = Optional.ofNullable(memberStatics).orElse(MemberStatics.init());
   }
 
-  public Member changeRoles(List<RoleType> newRoles) {
+  public Member changeRoles(Set<RoleType> newRoles) {
     return new Member(
         memberId(),
         AuthInfo.builder()
@@ -78,6 +77,34 @@ public record Member(
         getProfileImageFile(profileImage),
         getProfileBackgroundImageFile(profileBackgroundImage),
         memberStatics);
+  }
+
+  public Member increaseReviewCategoryStatics(Set<Category> categories) {
+    return new Member(
+        memberId,
+        authInfo,
+        nickname,
+        introduction,
+        interestedCategories,
+        isAlarmAccepted,
+        points,
+        profileImageFile,
+        profileBackgroundImageFile,
+        memberStatics.increaseReviewCategoryCounts(categories));
+  }
+
+  public Member decreaseReviewCategoryStatics(Set<Category> categories) {
+    return new Member(
+        memberId,
+        authInfo,
+        nickname,
+        introduction,
+        interestedCategories,
+        isAlarmAccepted,
+        points,
+        profileImageFile,
+        profileBackgroundImageFile,
+        memberStatics.decreaseReviewCategoryCounts(categories));
   }
 
   private ImageFile getProfileImageFile(MultipartFile profileImage) {

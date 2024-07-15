@@ -4,12 +4,12 @@ import com.onetuks.libraryauth.exception.TokenValidFailedException;
 import com.onetuks.libraryauth.oauth.dto.KakaoAuthToken;
 import com.onetuks.libraryauth.oauth.dto.NaverUser;
 import com.onetuks.librarydomain.member.model.vo.AuthInfo;
-import com.onetuks.libraryexternal.config.WebClientConfig;
+import com.onetuks.libraryobject.config.WebClientConfig;
 import com.onetuks.libraryobject.enums.ClientProvider;
 import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.error.ErrorCode;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
@@ -51,7 +51,7 @@ public class NaverClientProviderStrategy implements ClientProviderStrategy {
     return AuthInfo.builder()
         .socialId(naverUser.getResponse().getId())
         .clientProvider(ClientProvider.NAVER)
-        .roles(List.of(RoleType.USER))
+        .roles(Set.of(RoleType.USER))
         .build();
   }
 

@@ -1,10 +1,12 @@
 package com.onetuks.librarydomain.book.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.times;
+import static org.mockito.BDDMockito.verify;
 
 import com.onetuks.librarydomain.BookFixture;
 import com.onetuks.librarydomain.BookPickFixture;
@@ -13,6 +15,7 @@ import com.onetuks.librarydomain.MemberFixture;
 import com.onetuks.librarydomain.book.model.BookPick;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.libraryobject.enums.RoleType;
+import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -61,6 +64,25 @@ class BookPickServiceTest extends DomainIntegrationTest {
 
     // Then
     verify(bookPickRepository, times(1)).delete(bookPick.bookPickId());
+  }
+
+  @Test
+  @DisplayName("권한 없는 멤버가 북픽 삭제 시 예외를 던진다.")
+  void remove_NotAuthMember_Exception() {
+    // Given
+    long notAuthMemberId = 1L;
+    BookPick bookPick =
+        BookPickFixture.create(
+            103L, MemberFixture.create(103L, RoleType.USER), BookFixture.create(103L));
+
+    given(bookPickRepository.read(bookPick.bookPickId())).willReturn(bookPick);
+
+    // When
+    assertThatThrownBy(() -> bookPickService.remove(notAuthMemberId, bookPick.bookPickId()))
+        .isInstanceOf(ApiAccessDeniedException.class);
+
+    // Then
+    verify(bookPickRepository, times(0)).delete(bookPick.bookPickId());
   }
 
   @Test

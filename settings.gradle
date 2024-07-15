@@ -1,15 +1,15 @@
 rootProject.name = 'goguma-library-server'
 
-include ':library-object'
+include(':library-object')
 
-include ':library-external'
+include(':library-auth')
 
-include ':library-auth'
+include(':library-api')
 
-include ':library-api'
+include(':library-domain')
 
-include ':library-domain'
+include(':library-point')
 
-include ':library-storage'
-include ':library-storage:db-storage'
-include ':library-storage:file-storage'
+include(':library-storage')
+include(':library-storage:db-storage')
+include(':library-storage:file-storage')

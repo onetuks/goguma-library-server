@@ -9,7 +9,7 @@ import io.jsonwebtoken.Jwts.SIG;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -32,13 +32,13 @@ public class AuthTokenProvider {
     this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
   }
 
-  public AuthToken provideAccessToken(String socialId, Long loginId, List<RoleType> roleTypes) {
+  public AuthToken provideAccessToken(String socialId, Long loginId, Set<RoleType> roleTypes) {
     return new AuthToken(
         createToken(socialId, loginId, roleTypes, getExpiryDate(accessTokenExpiryPeriod)),
         secretKey);
   }
 
-  public AuthToken provideRefreshToken(String socialId, Long loginId, List<RoleType> roleTypes) {
+  public AuthToken provideRefreshToken(String socialId, Long loginId, Set<RoleType> roleTypes) {
     return new AuthToken(
         createToken(socialId, loginId, roleTypes, getExpiryDate(refreshTokenExpiryPeriod)),
         secretKey);
@@ -52,7 +52,7 @@ public class AuthTokenProvider {
     return new Date(System.currentTimeMillis() + expiryPeriod);
   }
 
-  private String createToken(String socialId, Long loginId, List<RoleType> roleTypes, Date expiry) {
+  private String createToken(String socialId, Long loginId, Set<RoleType> roleTypes, Date expiry) {
     return Jwts.builder()
         .subject(socialId)
         .claim(LOGIN_ID_KEY, loginId)

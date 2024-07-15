@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(produces = "/books/picks")
+@RequestMapping(path = "/books/picks")
 public class BookPickRestController {
 
   private final BookPickService bookPickService;
@@ -36,9 +36,7 @@ public class BookPickRestController {
    * @param bookId : 도서 ID
    * @return : 북픽 정보
    */
-  @PostMapping(
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookPickResponse> postNewBookPick(
       @LoginId Long loginId, @RequestParam(name = "book-id") Long bookId) {
     BookPick result = bookPickService.register(loginId, bookId);
@@ -48,13 +46,13 @@ public class BookPickRestController {
   }
 
   /**
-   * 북픽 도서 조회
+   * 나의 북픽 도서 다건 조회
    *
    * @param loginId : 로그인 ID
    * @param pageable : 페이지 정보
    * @return : 북픽 도서 목록
    */
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/my-picks", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookResponses> getMyBookPicks(
       @LoginId Long loginId, @PageableDefault(size = 3) Pageable pageable) {
     Page<BookPick> results = bookPickService.searchAll(loginId, pageable);
@@ -67,20 +65,27 @@ public class BookPickRestController {
    * 북픽 여부 조회
    *
    * @param loginId : 로그인 ID
-   * @param bookPickId : 북픽 ID
+   * @param bookId : 북픽 ID
    * @return : 북픽 여부
    */
-  @GetMapping(path = "/{bookPickId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Boolean> getMyBookPick(
-      @LoginId Long loginId, @PathVariable Long bookPickId) {
-    boolean result = bookPickService.searchExistence(loginId, bookPickId);
+      @LoginId Long loginId, @RequestParam(name = "book-id") Long bookId) {
+    boolean result = bookPickService.searchExistence(loginId, bookId);
 
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 
-  @DeleteMapping(path = "/{bookPickId}")
+  /**
+   * 북픽 취소
+   *
+   * @param loginId : 로그인 ID
+   * @param bookPickId : 북픽 ID
+   * @return : 204 No Content
+   */
+  @DeleteMapping(path = "/{book-pick-id}")
   public ResponseEntity<Void> deleteMyBookPick(
-      @LoginId Long loginId, @PathVariable(name = "bookPickId") Long bookPickId) {
+      @LoginId Long loginId, @PathVariable(name = "book-pick-id") Long bookPickId) {
     bookPickService.remove(loginId, bookPickId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

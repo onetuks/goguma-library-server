@@ -41,14 +41,7 @@ public class MemberEntityRepository implements MemberRepository {
 
   @Override
   public Member update(Member member) {
-    return converter.toDomain(
-        repository.save(
-            converter.toEntity(
-                member,
-                repository
-                    .findById(member.memberId())
-                    .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."))
-                    .getMemberStaticsEntity())));
+    return converter.toDomain(repository.save(converter.toEntity(member)));
   }
 
   @Override

@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,7 +20,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "book_picks")
+@Table(
+    name = "book_picks",
+    uniqueConstraints =
+        @UniqueConstraint(
+            name = "unq_member_id_book_id",
+            columnNames = {"member_id", "book_id"}))
 public class BookPickEntity {
 
   @Id

@@ -1,6 +1,6 @@
 package com.onetuks.libraryapi.book.dto.response;
 
-import com.onetuks.libraryexternal.book.handler.dto.IsbnResult;
+import com.onetuks.librarydomain.book.handler.dto.IsbnResult;
 import com.onetuks.libraryobject.enums.Category;
 import java.util.List;
 

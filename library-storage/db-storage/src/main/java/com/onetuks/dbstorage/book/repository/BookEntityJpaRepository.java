@@ -11,7 +11,11 @@ public interface BookEntityJpaRepository extends JpaRepository<BookEntity, Long>
 
   @Query(
       value =
-          "SELECT * FROM books WHERE JSON_CONTAINS(books.categories, :interestedCategories) ORDER BY RAND()",
+          """
+          SELECT * FROM books
+                   WHERE JSON_OVERLAPS(books.categories, :interestedCategories)
+                   ORDER BY RAND()
+          """,
       nativeQuery = true)
   Page<BookEntity> findAllCategoriesInInterestedCategories(
       @Param("interestedCategories") String interestedCategories, Pageable pageable);

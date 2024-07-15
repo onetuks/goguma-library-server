@@ -8,6 +8,8 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.crypto.SecretKey;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -33,12 +35,12 @@ public class AuthToken {
     return getTokenClaims().getSubject();
   }
 
-  public List<RoleType> getRoleTypes() {
-    List<?> roles = getTokenClaims().get(AUTHORITIES_KEY, List.class);
+  public Set<RoleType> getRoleTypes() {
+    Set<?> roles = Set.of(getTokenClaims().get(AUTHORITIES_KEY, List.class));
     return roles.stream()
         .filter(object -> object instanceof String)
         .map(role -> RoleType.valueOf((String) role))
-        .toList();
+        .collect(Collectors.toSet());
   }
 
   public Authentication getAuthentication() {
@@ -46,7 +48,7 @@ public class AuthToken {
 
     String socialId = claims.getSubject();
     Long loginId = claims.get(LOGIN_ID_KEY, Long.class);
-    List<RoleType> roles = getRoleTypes();
+    Set<RoleType> roles = getRoleTypes();
 
     List<SimpleGrantedAuthority> authorities =
         roles.stream().map(RoleType::name).map(SimpleGrantedAuthority::new).toList();

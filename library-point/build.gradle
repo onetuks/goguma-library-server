@@ -1,0 +1,25 @@
+dependencies {
+    // Module
+    compileOnly(project(':library-domain'))
+    implementation(project(':library-storage:db-storage'))
+    implementation(project(':library-object'))
+
+    // Test
+    testImplementation(project(':library-domain'))
+    testImplementation(project(':library-storage:db-storage'))
+    testImplementation(project(':library-object'))
+
+    // JPA
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // MySQL
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    testImplementation "org.testcontainers:mysql:1.19.8"
+
+    // Flyway
+    implementation 'org.flywaydb:flyway-mysql:10.15.2'
+
+    // REDIS
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    testImplementation 'com.redis.testcontainers:testcontainers-redis-junit:1.6.4'
+}

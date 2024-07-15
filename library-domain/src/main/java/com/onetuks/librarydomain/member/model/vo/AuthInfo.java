@@ -2,12 +2,12 @@ package com.onetuks.librarydomain.member.model.vo;
 
 import com.onetuks.libraryobject.enums.ClientProvider;
 import com.onetuks.libraryobject.enums.RoleType;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import lombok.Builder;
 
 @Builder
-public record AuthInfo(String socialId, ClientProvider clientProvider, List<RoleType> roles) {
+public record AuthInfo(String socialId, ClientProvider clientProvider, Set<RoleType> roles) {
 
   @Override
   public boolean equals(Object o) {
