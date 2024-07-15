@@ -7,6 +7,8 @@ import com.onetuks.librarydomain.review.service.ReviewPickService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,8 +26,11 @@ public class ReviewPickRestController {
 
   /**
    * 서평픽 등록
-   *
-   * <p>- 00시 기준 일간 5회만 포인트 지급 - 서평픽커 1포인트 지급 - 서평리시버 5포인트 지급
+   * <p>
+   * - 00시 기준 일간 5회만 포인트 지급
+   * - 서평픽커 1포인트 지급
+   * - 서평리시버 5포인트 지급
+   * </p>
    *
    * @param loginId : 로그인 ID
    * @param reviewId : 서평 ID
@@ -40,5 +45,20 @@ public class ReviewPickRestController {
     ReviewPickResponse response = ReviewPickResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  /**
+   * 서평픽 취소
+   *
+   * @param loginId : 로그인 ID
+   * @param reviewPickId : 서평픽 ID
+   * @return : 응답
+   */
+  @DeleteMapping(path = "/{review-pick-id}")
+  public ResponseEntity<Void> deleteReviewPick(
+      @LoginId Long loginId, @PathVariable(name = "review-pick-id") Long reviewPickId) {
+    reviewPickService.remove(loginId, reviewPickId);
+
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 }

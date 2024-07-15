@@ -7,6 +7,8 @@ import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.librarydomain.review.model.ReviewPick;
 import com.onetuks.librarydomain.review.repository.ReviewPickRepository;
 import com.onetuks.librarydomain.review.repository.ReviewRepository;
+import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
+import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,5 +40,19 @@ public class ReviewPickService {
     pointService.creditPointForReviewPick(picker.memberId(), review.member().memberId());
 
     return reviewPickRepository.create(new ReviewPick(null, picker, review));
+  }
+
+  @Transactional
+  public void remove(long loginId, long reviewPickId) {
+    Member picker = memberRepository.read(loginId);
+    ReviewPick reviewPick = reviewPickRepository.read(reviewPickId);
+
+    if (!Objects.equals(reviewPick.member().memberId(), picker.memberId())) {
+      throw new ApiAccessDeniedException("해당 서평픽에 대한 권한이 없는 멤버입니다.");
+    }
+
+    pointService.debitPointForReviewPick(picker.memberId());
+
+    reviewPickRepository.delete(reviewPick.reviewPickId());
   }
 }
