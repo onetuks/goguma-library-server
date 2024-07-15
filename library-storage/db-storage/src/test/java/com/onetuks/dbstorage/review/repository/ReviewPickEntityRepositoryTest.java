@@ -9,10 +9,15 @@ import com.onetuks.librarydomain.BookFixture;
 import com.onetuks.librarydomain.MemberFixture;
 import com.onetuks.librarydomain.ReviewFixture;
 import com.onetuks.librarydomain.ReviewPickFixture;
+import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.review.model.ReviewPick;
 import com.onetuks.libraryobject.enums.RoleType;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 class ReviewPickEntityRepositoryTest extends DbStorageIntegrationTest {
@@ -64,6 +69,35 @@ class ReviewPickEntityRepositoryTest extends DbStorageIntegrationTest {
         () -> assertThat(result.reviewPickId()).isPositive(),
         () -> assertThat(result.member().memberId()).isEqualTo(reviewPick.member().memberId()),
         () -> assertThat(result.review().reviewId()).isEqualTo(reviewPick.review().reviewId()));
+  }
+
+  @Test
+  @DisplayName("해당 멤버의 모든 서평픽을 조회한다.")
+  void readAll() {
+    // Given
+    Pageable pageable = PageRequest.of(0, 10);
+    Member picker = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
+    IntStream.range(0, 15)
+        .forEach(
+            i ->
+                reviewPickEntityRepository.create(
+                    ReviewPickFixture.create(
+                        null,
+                        picker,
+                        reviewEntityRepository.create(
+                            ReviewFixture.create(
+                                null,
+                                memberEntityRepository.create(
+                                    MemberFixture.create(null, RoleType.USER)),
+                                bookEntityRepository.create(BookFixture.create(null)))))));
+
+    // When
+    Page<ReviewPick> results = reviewPickEntityRepository.readAll(picker.memberId(), pageable);
+
+    // Then
+    assertThat(results)
+        .hasSize(pageable.getPageSize())
+        .allSatisfy(result -> assertThat(result.member().memberId()).isEqualTo(picker.memberId()));
   }
 
   @Test

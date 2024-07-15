@@ -18,8 +18,13 @@ import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.review.model.ReviewPick;
 import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 class ReviewPickServiceTest extends DomainIntegrationTest {
 
@@ -95,5 +100,36 @@ class ReviewPickServiceTest extends DomainIntegrationTest {
 
     verify(reviewPickRepository, never()).delete(reviewPick.reviewPickId());
     verify(pointService, never()).debitPointForReviewPick(notPicker.memberId());
+  }
+
+  @Test
+  @DisplayName("해당 유저의 모든 서평픽을 조회한다.")
+  void searchAll_Test() {
+    // Given
+    Pageable pageable = PageRequest.of(0, 10);
+    Member picker = MemberFixture.create(104L, RoleType.USER);
+    Page<ReviewPick> reviewPicks =
+        new PageImpl<>(
+            IntStream.range(0, pageable.getPageSize())
+                .mapToObj(
+                    i ->
+                        ReviewPickFixture.create(
+                            103L,
+                            picker,
+                            ReviewFixture.create(
+                                103L,
+                                MemberFixture.create(203L, RoleType.USER),
+                                BookFixture.create(103L))))
+                .toList());
+
+    given(reviewPickRepository.readAll(picker.memberId(), pageable)).willReturn(reviewPicks);
+
+    // When
+    Page<ReviewPick> results = reviewPickService.searchAll(picker.memberId(), pageable);
+
+    // Then
+    assertThat(results)
+        .hasSize(pageable.getPageSize())
+        .allSatisfy(result -> assertThat(result.member().memberId()).isEqualTo(picker.memberId()));
   }
 }

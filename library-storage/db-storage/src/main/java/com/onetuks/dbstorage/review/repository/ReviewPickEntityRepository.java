@@ -4,6 +4,8 @@ import com.onetuks.dbstorage.review.converter.ReviewPickConverter;
 import com.onetuks.librarydomain.review.model.ReviewPick;
 import com.onetuks.librarydomain.review.repository.ReviewPickRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -29,6 +31,11 @@ public class ReviewPickEntityRepository implements ReviewPickRepository {
         repository
             .findById(reviewPickId)
             .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 서평픽입니다.")));
+  }
+
+  @Override
+  public Page<ReviewPick> readAll(long memberId, Pageable pageable) {
+    return repository.findAllByMemberEntityMemberId(memberId, pageable).map(converter::toDomain);
   }
 
   @Override

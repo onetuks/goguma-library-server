@@ -9,6 +9,8 @@ import com.onetuks.librarydomain.review.repository.ReviewPickRepository;
 import com.onetuks.librarydomain.review.repository.ReviewRepository;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
 import java.util.Objects;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,5 +56,10 @@ public class ReviewPickService {
     pointService.debitPointForReviewPick(picker.memberId());
 
     reviewPickRepository.delete(reviewPick.reviewPickId());
+  }
+
+  @Transactional(readOnly = true)
+  public Page<ReviewPick> searchAll(long loginId, Pageable pageable) {
+    return reviewPickRepository.readAll(loginId, pageable);
   }
 }
