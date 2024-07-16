@@ -1,6 +1,6 @@
 package com.onetuks.libraryauth.controller;
 
-import static com.onetuks.libraryauth.jwt.AuthHeaderUtil.HEADER_AUTHORIZATION;
+import static com.onetuks.libraryauth.jwt.util.AuthHeaderUtil.HEADER_AUTHORIZATION;
 import static com.onetuks.libraryobject.enums.ClientProvider.GOOGLE;
 import static com.onetuks.libraryobject.enums.ClientProvider.KAKAO;
 import static com.onetuks.libraryobject.enums.ClientProvider.NAVER;
@@ -8,11 +8,11 @@ import static com.onetuks.libraryobject.enums.ClientProvider.NAVER;
 import com.onetuks.libraryauth.controller.dto.LoginResponse;
 import com.onetuks.libraryauth.controller.dto.LogoutResponse;
 import com.onetuks.libraryauth.controller.dto.RefreshResponse;
-import com.onetuks.libraryauth.jwt.AuthHeaderUtil;
-import com.onetuks.libraryauth.jwt.AuthToken;
-import com.onetuks.libraryauth.jwt.AuthTokenProvider;
+import com.onetuks.libraryauth.jwt.util.AuthHeaderUtil;
+import com.onetuks.libraryauth.jwt.service.model.AuthToken;
+import com.onetuks.libraryauth.jwt.service.AuthTokenProvider;
 import com.onetuks.libraryauth.service.AuthService;
-import com.onetuks.libraryauth.service.OAuth2ClientService;
+import com.onetuks.libraryauth.oauth.service.OAuth2ClientService;
 import com.onetuks.libraryauth.service.dto.LoginResult;
 import com.onetuks.libraryauth.service.dto.LogoutResult;
 import com.onetuks.libraryauth.service.dto.RefreshResult;

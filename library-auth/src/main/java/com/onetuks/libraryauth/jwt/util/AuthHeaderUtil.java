@@ -1,4 +1,4 @@
-package com.onetuks.libraryauth.jwt;
+package com.onetuks.libraryauth.jwt.util;
 
 import jakarta.servlet.http.HttpServletRequest;
 

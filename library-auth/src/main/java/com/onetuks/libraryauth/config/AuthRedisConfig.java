@@ -1,6 +1,6 @@
 package com.onetuks.libraryauth.config;
 
-import com.onetuks.libraryauth.jwt.AuthTokenRepository;
+import com.onetuks.libraryauth.jwt.repository.AuthTokenRepository;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 

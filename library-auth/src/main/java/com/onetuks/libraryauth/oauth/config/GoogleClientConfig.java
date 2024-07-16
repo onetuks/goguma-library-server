@@ -1,4 +1,4 @@
-package com.onetuks.libraryauth.config;
+package com.onetuks.libraryauth.oauth.config;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;

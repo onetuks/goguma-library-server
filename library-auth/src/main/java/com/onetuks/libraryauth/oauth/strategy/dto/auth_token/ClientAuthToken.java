@@ -1,4 +1,4 @@
-package com.onetuks.libraryauth.oauth.dto;
+package com.onetuks.libraryauth.oauth.strategy.dto.auth_token;
 
 public interface ClientAuthToken {
 

@@ -1,9 +1,10 @@
-package com.onetuks.libraryauth.oauth.strategy;
+package com.onetuks.libraryauth.oauth.strategy.impl;
 
-import com.onetuks.libraryauth.config.GoogleClientConfig;
 import com.onetuks.libraryauth.exception.TokenValidFailedException;
-import com.onetuks.libraryauth.oauth.dto.GoogleAuthToken;
-import com.onetuks.libraryauth.oauth.dto.GoogleUser;
+import com.onetuks.libraryauth.oauth.config.NaverClientConfig;
+import com.onetuks.libraryauth.oauth.strategy.ClientProviderStrategy;
+import com.onetuks.libraryauth.oauth.strategy.dto.auth_token.NaverAuthToken;
+import com.onetuks.libraryauth.oauth.strategy.dto.user_info.NaverUserInfo;
 import com.onetuks.librarydomain.member.model.vo.AuthInfo;
 import com.onetuks.libraryobject.config.WebClientConfig;
 import com.onetuks.libraryobject.enums.ClientProvider;
@@ -17,33 +18,32 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Component
 @ComponentScan(basePackageClasses = WebClientConfig.class)
-public class GoogleClientProviderStrategy implements ClientProviderStrategy {
+public class NaverClientProviderStrategy implements ClientProviderStrategy {
 
   private final WebClient webClient;
   private final URIBuilder uriBuilder;
-  private final GoogleClientConfig googleClientConfig;
+  private final NaverClientConfig naverClientConfig;
 
-  public GoogleClientProviderStrategy(
-      WebClient webClient, URIBuilder uriBuilder, GoogleClientConfig googleClientConfig) {
+  public NaverClientProviderStrategy(
+      WebClient webClient, URIBuilder uriBuilder, NaverClientConfig naverClientConfig) {
     this.webClient = webClient;
     this.uriBuilder = uriBuilder;
-    this.googleClientConfig = googleClientConfig;
+    this.naverClientConfig = naverClientConfig;
   }
 
   @Override
   public AuthInfo getAuthInfo(String authToken) {
-    GoogleUser googleUser =
+    NaverUserInfo naverUserInfo =
         webClient
             .get()
             .uri(
-                googleClientConfig
-                    .googleClientRegistration()
+                naverClientConfig
+                    .naverClientRegistration()
                     .getProviderDetails()
                     .getUserInfoEndpoint()
                     .getUri())
@@ -57,34 +57,28 @@ public class GoogleClientProviderStrategy implements ClientProviderStrategy {
                 HttpStatusCode::is5xxServerError,
                 clientResponse ->
                     Mono.error(new TokenValidFailedException(ErrorCode.OAUTH_CLIENT_SERVER_ERROR)))
-            .bodyToMono(GoogleUser.class)
+            .bodyToMono(NaverUserInfo.class)
             .block();
 
-    Objects.requireNonNull(googleUser);
+    Objects.requireNonNull(naverUserInfo);
+    Objects.requireNonNull(naverUserInfo.getResponse());
 
     return AuthInfo.builder()
-        .socialId(googleUser.getSub())
-        .clientProvider(ClientProvider.GOOGLE)
+        .socialId(naverUserInfo.getResponse().getId())
+        .clientProvider(ClientProvider.NAVER)
         .roles(Set.of(RoleType.USER))
         .build();
   }
 
   @Override
-  public GoogleAuthToken getOAuth2Token(String authCode) {
+  public NaverAuthToken getOAuth2Token(String authCode) {
     return webClient
         .post()
         .uri(
             builder ->
                 uriBuilder.buildUri(
-                    googleClientConfig
-                        .googleClientRegistration()
-                        .getProviderDetails()
-                        .getTokenUri(),
-                    buildParamsMap()))
-        .headers(
-            httpHeaders ->
-                httpHeaders.set("Content-Type", "application/x-www-form-urlencoded;charset=utf-8"))
-        .body(BodyInserters.fromFormData(buildFormData(authCode)))
+                    naverClientConfig.naverClientRegistration().getProviderDetails().getTokenUri(),
+                    buildParamsMap(authCode)))
         .retrieve()
         .onStatus(
             HttpStatusCode::is4xxClientError,
@@ -94,23 +88,17 @@ public class GoogleClientProviderStrategy implements ClientProviderStrategy {
             HttpStatusCode::is5xxServerError,
             clientResponse ->
                 Mono.error(new TokenValidFailedException(ErrorCode.OAUTH_CLIENT_SERVER_ERROR)))
-        .bodyToMono(GoogleAuthToken.class)
+        .bodyToMono(NaverAuthToken.class)
         .block();
   }
 
-  private MultiValueMap<String, String> buildParamsMap() {
+  private MultiValueMap<String, String> buildParamsMap(String authCode) {
     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-    params.add("client_id", googleClientConfig.getClientId());
-    params.add("client_secret", googleClientConfig.getClientSecret());
+    params.add("grant_type", "authorization_code");
+    params.add("client_id", naverClientConfig.getClientId());
+    params.add("client_secret", naverClientConfig.getClientSecret());
+    params.add("state", naverClientConfig.getClientSecret());
+    params.add("code", authCode);
     return params;
-  }
-
-  private MultiValueMap<String, String> buildFormData(String authCode) {
-    MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-    formData.add("grant_type", "authorization_code");
-    formData.add("code", authCode);
-    formData.add("redirect_uri", googleClientConfig.googleClientRegistration().getRedirectUri());
-    formData.add("state", googleClientConfig.getClientSecret());
-    return formData;
   }
 }

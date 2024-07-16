@@ -3,7 +3,7 @@ package com.onetuks.libraryauth.config;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 import com.onetuks.libraryauth.exception.SecurityExceptionHandlerFilter;
-import com.onetuks.libraryauth.jwt.JwtAuthenticationFilter;
+import com.onetuks.libraryauth.jwt.filter.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

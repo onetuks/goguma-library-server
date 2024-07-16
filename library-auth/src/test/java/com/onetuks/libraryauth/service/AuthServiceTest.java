@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.libraryauth.CoreAuthIntegrationTest;
-import com.onetuks.libraryauth.jwt.AuthToken;
+import com.onetuks.libraryauth.jwt.service.model.AuthToken;
 import com.onetuks.libraryauth.service.dto.LogoutResult;
 import com.onetuks.libraryauth.service.dto.RefreshResult;
 import com.onetuks.libraryobject.enums.RoleType;

@@ -1,8 +1,9 @@
-package com.onetuks.libraryauth.jwt;
+package com.onetuks.libraryauth.jwt.service;
 
-import static com.onetuks.libraryauth.jwt.AuthToken.AUTHORITIES_KEY;
-import static com.onetuks.libraryauth.jwt.AuthToken.LOGIN_ID_KEY;
+import static com.onetuks.libraryauth.jwt.service.model.AuthToken.AUTHORITIES_KEY;
+import static com.onetuks.libraryauth.jwt.service.model.AuthToken.LOGIN_ID_KEY;
 
+import com.onetuks.libraryauth.jwt.service.model.AuthToken;
 import com.onetuks.libraryobject.enums.RoleType;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Jwts.SIG;

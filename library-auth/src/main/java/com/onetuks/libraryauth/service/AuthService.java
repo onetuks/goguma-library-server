@@ -1,9 +1,9 @@
 package com.onetuks.libraryauth.service;
 
 import com.onetuks.libraryauth.exception.TokenExpiredException;
-import com.onetuks.libraryauth.jwt.AuthToken;
-import com.onetuks.libraryauth.jwt.AuthTokenProvider;
-import com.onetuks.libraryauth.jwt.AuthTokenRepository;
+import com.onetuks.libraryauth.jwt.service.model.AuthToken;
+import com.onetuks.libraryauth.jwt.service.AuthTokenProvider;
+import com.onetuks.libraryauth.jwt.repository.AuthTokenRepository;
 import com.onetuks.libraryauth.service.dto.LogoutResult;
 import com.onetuks.libraryauth.service.dto.RefreshResult;
 import com.onetuks.libraryobject.enums.RoleType;

@@ -1,4 +1,4 @@
-package com.onetuks.libraryauth.oauth.dto;
+package com.onetuks.libraryauth.oauth.strategy.dto.user_info;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonNaming(SnakeCaseStrategy.class)
-public class KakaoUser {
+public class KakaoUserInfo {
 
   private Long id;
   private Properties properties;
   private KakaoAccount kakaoAccount;
 
-  public KakaoUser(Long id, Properties properties, KakaoAccount kakaoAccount) {
+  public KakaoUserInfo(Long id, Properties properties, KakaoAccount kakaoAccount) {
     this.id = id;
     this.properties = properties;
     this.kakaoAccount = kakaoAccount;

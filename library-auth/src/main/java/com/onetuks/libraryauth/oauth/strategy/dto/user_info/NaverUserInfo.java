@@ -1,4 +1,4 @@
-package com.onetuks.libraryauth.oauth.dto;
+package com.onetuks.libraryauth.oauth.strategy.dto.user_info;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @JsonNaming(SnakeCaseStrategy.class)
-public class NaverUser {
+public class NaverUserInfo {
 
   private String resultCode;
   private String message;
   private Response response;
 
-  public NaverUser(String resultCode, String message, Response response) {
+  public NaverUserInfo(String resultCode, String message, Response response) {
     this.resultCode = resultCode;
     this.message = message;
     this.response = response;

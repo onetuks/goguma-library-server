@@ -1,5 +1,6 @@
-package com.onetuks.libraryauth.jwt;
+package com.onetuks.libraryauth.jwt.repository;
 
+import com.onetuks.libraryauth.jwt.repository.entity.AuthTokenPair;
 import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 

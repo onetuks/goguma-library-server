@@ -1,5 +1,6 @@
-package com.onetuks.libraryauth.jwt;
+package com.onetuks.libraryauth.jwt.service.model;
 
+import com.onetuks.libraryauth.jwt.service.model.vo.CustomUserDetails;
 import com.onetuks.libraryobject.enums.RoleType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

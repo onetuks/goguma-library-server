@@ -1,4 +1,4 @@
-package com.onetuks.libraryauth.config;
+package com.onetuks.libraryauth.oauth.config;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,25 +8,25 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 
 @Getter
 @Configuration
-public class NaverClientConfig {
+public class KakaoClientConfig {
 
-  @Value("${oauth.naver.client-id}")
+  @Value("${oauth.kakao.client-id}")
   private String clientId;
 
-  @Value("${oauth.naver.clien_secret}")
+  @Value("${oauth.kakao.client-secret}")
   private String clientSecret;
 
-  public ClientRegistration naverClientRegistration() {
-    return ClientRegistration.withRegistrationId("naver")
+  public ClientRegistration kakaoClientRegistration() {
+    return ClientRegistration.withRegistrationId("kakao")
         .clientId(clientId)
         .clientSecret(clientSecret)
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-        .redirectUri("http://localhost:8080/login/oauth2/code/naver")
-        .authorizationUri("https://nid.naver.com/oauth2.0/authorize")
-        .tokenUri("https://nid.naver.com/oauth2.0/token")
-        .userInfoUri("https://openapi.naver.com/v1/nid/me")
+        .redirectUri("http://localhost:8000/login/oauth2/callback")
+        .authorizationUri("https://kauth.kakao.com/oauth/authorize")
+        .tokenUri("https://kauth.kakao.com/oauth/token")
+        .userInfoUri("https://kapi.kakao.com/v2/user/me")
         .userNameAttributeName("id")
-        .clientName("Naver")
+        .clientName("Kakao")
         .build();
   }
 }

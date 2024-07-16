@@ -1,10 +1,11 @@
-package com.onetuks.libraryauth.service;
+package com.onetuks.libraryauth.oauth.service;
 
-import com.onetuks.libraryauth.jwt.AuthHeaderUtil;
-import com.onetuks.libraryauth.jwt.AuthToken;
-import com.onetuks.libraryauth.oauth.ClientProviderStrategyHandler;
-import com.onetuks.libraryauth.oauth.dto.ClientAuthToken;
+import com.onetuks.libraryauth.jwt.util.AuthHeaderUtil;
+import com.onetuks.libraryauth.jwt.service.model.AuthToken;
+import com.onetuks.libraryauth.oauth.handler.ClientProviderStrategyHandler;
+import com.onetuks.libraryauth.oauth.strategy.dto.auth_token.ClientAuthToken;
 import com.onetuks.libraryauth.oauth.strategy.ClientProviderStrategy;
+import com.onetuks.libraryauth.service.AuthService;
 import com.onetuks.libraryauth.service.dto.LoginResult;
 import com.onetuks.librarydomain.member.model.vo.AuthInfo;
 import com.onetuks.librarydomain.member.service.MemberService;

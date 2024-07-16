@@ -1,4 +1,4 @@
-package com.onetuks.libraryauth.jwt;
+package com.onetuks.libraryauth.jwt.repository.entity;
 
 import lombok.AccessLevel;
 import lombok.Getter;

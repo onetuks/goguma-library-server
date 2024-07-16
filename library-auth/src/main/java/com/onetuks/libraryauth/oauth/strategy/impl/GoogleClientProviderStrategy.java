@@ -1,14 +1,16 @@
-package com.onetuks.libraryauth.oauth.strategy;
+package com.onetuks.libraryauth.oauth.strategy.impl;
 
-import com.onetuks.libraryauth.config.KakaoClientConfig;
 import com.onetuks.libraryauth.exception.TokenValidFailedException;
-import com.onetuks.libraryauth.oauth.dto.KakaoAuthToken;
-import com.onetuks.libraryauth.oauth.dto.KakaoUser;
+import com.onetuks.libraryauth.oauth.config.GoogleClientConfig;
+import com.onetuks.libraryauth.oauth.strategy.ClientProviderStrategy;
+import com.onetuks.libraryauth.oauth.strategy.dto.auth_token.GoogleAuthToken;
+import com.onetuks.libraryauth.oauth.strategy.dto.user_info.GoogleUserInfo;
 import com.onetuks.librarydomain.member.model.vo.AuthInfo;
 import com.onetuks.libraryobject.config.WebClientConfig;
 import com.onetuks.libraryobject.enums.ClientProvider;
 import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.error.ErrorCode;
+import com.onetuks.libraryobject.util.URIBuilder;
 import java.util.Objects;
 import java.util.Set;
 import org.springframework.context.annotation.ComponentScan;
@@ -22,24 +24,27 @@ import reactor.core.publisher.Mono;
 
 @Component
 @ComponentScan(basePackageClasses = WebClientConfig.class)
-public class KakaoClientProviderStrategy implements ClientProviderStrategy {
+public class GoogleClientProviderStrategy implements ClientProviderStrategy {
 
   private final WebClient webClient;
-  private final KakaoClientConfig kakaoClientConfig;
+  private final URIBuilder uriBuilder;
+  private final GoogleClientConfig googleClientConfig;
 
-  public KakaoClientProviderStrategy(WebClient webClient, KakaoClientConfig kakaoClientConfig) {
+  public GoogleClientProviderStrategy(
+      WebClient webClient, URIBuilder uriBuilder, GoogleClientConfig googleClientConfig) {
     this.webClient = webClient;
-    this.kakaoClientConfig = kakaoClientConfig;
+    this.uriBuilder = uriBuilder;
+    this.googleClientConfig = googleClientConfig;
   }
 
   @Override
   public AuthInfo getAuthInfo(String authToken) {
-    KakaoUser kakaoUser =
+    GoogleUserInfo googleUserInfo =
         webClient
             .get()
             .uri(
-                kakaoClientConfig
-                    .kakaoClientRegistration()
+                googleClientConfig
+                    .googleClientRegistration()
                     .getProviderDetails()
                     .getUserInfoEndpoint()
                     .getUri())
@@ -53,23 +58,30 @@ public class KakaoClientProviderStrategy implements ClientProviderStrategy {
                 HttpStatusCode::is5xxServerError,
                 clientResponse ->
                     Mono.error(new TokenValidFailedException(ErrorCode.OAUTH_CLIENT_SERVER_ERROR)))
-            .bodyToMono(KakaoUser.class)
+            .bodyToMono(GoogleUserInfo.class)
             .block();
 
-    Objects.requireNonNull(kakaoUser);
+    Objects.requireNonNull(googleUserInfo);
 
     return AuthInfo.builder()
-        .socialId(String.valueOf(kakaoUser.getId()))
-        .clientProvider(ClientProvider.KAKAO)
+        .socialId(googleUserInfo.getSub())
+        .clientProvider(ClientProvider.GOOGLE)
         .roles(Set.of(RoleType.USER))
         .build();
   }
 
   @Override
-  public KakaoAuthToken getOAuth2Token(String authCode) {
+  public GoogleAuthToken getOAuth2Token(String authCode) {
     return webClient
         .post()
-        .uri(kakaoClientConfig.kakaoClientRegistration().getProviderDetails().getTokenUri())
+        .uri(
+            builder ->
+                uriBuilder.buildUri(
+                    googleClientConfig
+                        .googleClientRegistration()
+                        .getProviderDetails()
+                        .getTokenUri(),
+                    buildParamsMap()))
         .headers(
             httpHeaders ->
                 httpHeaders.set("Content-Type", "application/x-www-form-urlencoded;charset=utf-8"))
@@ -83,17 +95,23 @@ public class KakaoClientProviderStrategy implements ClientProviderStrategy {
             HttpStatusCode::is5xxServerError,
             clientResponse ->
                 Mono.error(new TokenValidFailedException(ErrorCode.OAUTH_CLIENT_SERVER_ERROR)))
-        .bodyToMono(KakaoAuthToken.class)
+        .bodyToMono(GoogleAuthToken.class)
         .block();
   }
 
-  private MultiValueMap<String, String> buildFormData(String authToken) {
+  private MultiValueMap<String, String> buildParamsMap() {
+    MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+    params.add("client_id", googleClientConfig.getClientId());
+    params.add("client_secret", googleClientConfig.getClientSecret());
+    return params;
+  }
+
+  private MultiValueMap<String, String> buildFormData(String authCode) {
     MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
     formData.add("grant_type", "authorization_code");
-    formData.add("client_id", kakaoClientConfig.getClientId());
-    formData.add("client_secret", kakaoClientConfig.getClientSecret());
-    formData.add("redirect_uri", kakaoClientConfig.kakaoClientRegistration().getRedirectUri());
-    formData.add("code", authToken);
+    formData.add("code", authCode);
+    formData.add("redirect_uri", googleClientConfig.googleClientRegistration().getRedirectUri());
+    formData.add("state", googleClientConfig.getClientSecret());
     return formData;
   }
 }

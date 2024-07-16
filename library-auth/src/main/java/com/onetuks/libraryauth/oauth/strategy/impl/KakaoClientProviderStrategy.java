@@ -1,15 +1,15 @@
-package com.onetuks.libraryauth.oauth.strategy;
+package com.onetuks.libraryauth.oauth.strategy.impl;
 
-import com.onetuks.libraryauth.config.NaverClientConfig;
 import com.onetuks.libraryauth.exception.TokenValidFailedException;
-import com.onetuks.libraryauth.oauth.dto.NaverAuthToken;
-import com.onetuks.libraryauth.oauth.dto.NaverUser;
+import com.onetuks.libraryauth.oauth.config.KakaoClientConfig;
+import com.onetuks.libraryauth.oauth.strategy.ClientProviderStrategy;
+import com.onetuks.libraryauth.oauth.strategy.dto.auth_token.KakaoAuthToken;
+import com.onetuks.libraryauth.oauth.strategy.dto.user_info.KakaoUserInfo;
 import com.onetuks.librarydomain.member.model.vo.AuthInfo;
 import com.onetuks.libraryobject.config.WebClientConfig;
 import com.onetuks.libraryobject.enums.ClientProvider;
 import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.error.ErrorCode;
-import com.onetuks.libraryobject.util.URIBuilder;
 import java.util.Objects;
 import java.util.Set;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,32 +17,30 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Component
 @ComponentScan(basePackageClasses = WebClientConfig.class)
-public class NaverClientProviderStrategy implements ClientProviderStrategy {
+public class KakaoClientProviderStrategy implements ClientProviderStrategy {
 
   private final WebClient webClient;
-  private final URIBuilder uriBuilder;
-  private final NaverClientConfig naverClientConfig;
+  private final KakaoClientConfig kakaoClientConfig;
 
-  public NaverClientProviderStrategy(
-      WebClient webClient, URIBuilder uriBuilder, NaverClientConfig naverClientConfig) {
+  public KakaoClientProviderStrategy(WebClient webClient, KakaoClientConfig kakaoClientConfig) {
     this.webClient = webClient;
-    this.uriBuilder = uriBuilder;
-    this.naverClientConfig = naverClientConfig;
+    this.kakaoClientConfig = kakaoClientConfig;
   }
 
   @Override
   public AuthInfo getAuthInfo(String authToken) {
-    NaverUser naverUser =
+    KakaoUserInfo kakaoUserInfo =
         webClient
             .get()
             .uri(
-                naverClientConfig
-                    .naverClientRegistration()
+                kakaoClientConfig
+                    .kakaoClientRegistration()
                     .getProviderDetails()
                     .getUserInfoEndpoint()
                     .getUri())
@@ -56,28 +54,27 @@ public class NaverClientProviderStrategy implements ClientProviderStrategy {
                 HttpStatusCode::is5xxServerError,
                 clientResponse ->
                     Mono.error(new TokenValidFailedException(ErrorCode.OAUTH_CLIENT_SERVER_ERROR)))
-            .bodyToMono(NaverUser.class)
+            .bodyToMono(KakaoUserInfo.class)
             .block();
 
-    Objects.requireNonNull(naverUser);
-    Objects.requireNonNull(naverUser.getResponse());
+    Objects.requireNonNull(kakaoUserInfo);
 
     return AuthInfo.builder()
-        .socialId(naverUser.getResponse().getId())
-        .clientProvider(ClientProvider.NAVER)
+        .socialId(String.valueOf(kakaoUserInfo.getId()))
+        .clientProvider(ClientProvider.KAKAO)
         .roles(Set.of(RoleType.USER))
         .build();
   }
 
   @Override
-  public NaverAuthToken getOAuth2Token(String authCode) {
+  public KakaoAuthToken getOAuth2Token(String authCode) {
     return webClient
         .post()
-        .uri(
-            builder ->
-                uriBuilder.buildUri(
-                    naverClientConfig.naverClientRegistration().getProviderDetails().getTokenUri(),
-                    buildParamsMap(authCode)))
+        .uri(kakaoClientConfig.kakaoClientRegistration().getProviderDetails().getTokenUri())
+        .headers(
+            httpHeaders ->
+                httpHeaders.set("Content-Type", "application/x-www-form-urlencoded;charset=utf-8"))
+        .body(BodyInserters.fromFormData(buildFormData(authCode)))
         .retrieve()
         .onStatus(
             HttpStatusCode::is4xxClientError,
@@ -87,17 +84,17 @@ public class NaverClientProviderStrategy implements ClientProviderStrategy {
             HttpStatusCode::is5xxServerError,
             clientResponse ->
                 Mono.error(new TokenValidFailedException(ErrorCode.OAUTH_CLIENT_SERVER_ERROR)))
-        .bodyToMono(NaverAuthToken.class)
+        .bodyToMono(KakaoAuthToken.class)
         .block();
   }
 
-  private MultiValueMap<String, String> buildParamsMap(String authCode) {
-    MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-    params.add("grant_type", "authorization_code");
-    params.add("client_id", naverClientConfig.getClientId());
-    params.add("client_secret", naverClientConfig.getClientSecret());
-    params.add("state", naverClientConfig.getClientSecret());
-    params.add("code", authCode);
-    return params;
+  private MultiValueMap<String, String> buildFormData(String authToken) {
+    MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+    formData.add("grant_type", "authorization_code");
+    formData.add("client_id", kakaoClientConfig.getClientId());
+    formData.add("client_secret", kakaoClientConfig.getClientSecret());
+    formData.add("redirect_uri", kakaoClientConfig.kakaoClientRegistration().getRedirectUri());
+    formData.add("code", authToken);
+    return formData;
   }
 }

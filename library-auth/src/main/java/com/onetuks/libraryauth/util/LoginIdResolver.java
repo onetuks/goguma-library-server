@@ -1,6 +1,6 @@
 package com.onetuks.libraryauth.util;
 
-import com.onetuks.libraryauth.jwt.CustomUserDetails;
+import com.onetuks.libraryauth.jwt.service.model.vo.CustomUserDetails;
 import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import org.springframework.core.MethodParameter;

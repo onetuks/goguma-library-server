@@ -1,9 +1,9 @@
-package com.onetuks.libraryauth.oauth;
+package com.onetuks.libraryauth.oauth.handler;
 
 import com.onetuks.libraryauth.oauth.strategy.ClientProviderStrategy;
-import com.onetuks.libraryauth.oauth.strategy.GoogleClientProviderStrategy;
-import com.onetuks.libraryauth.oauth.strategy.KakaoClientProviderStrategy;
-import com.onetuks.libraryauth.oauth.strategy.NaverClientProviderStrategy;
+import com.onetuks.libraryauth.oauth.strategy.impl.GoogleClientProviderStrategy;
+import com.onetuks.libraryauth.oauth.strategy.impl.KakaoClientProviderStrategy;
+import com.onetuks.libraryauth.oauth.strategy.impl.NaverClientProviderStrategy;
 import com.onetuks.libraryobject.enums.ClientProvider;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,4 +1,4 @@
-package com.onetuks.libraryauth.config;
+package com.onetuks.libraryauth.oauth.config;
 
 import com.onetuks.libraryobject.config.WebClientConfig;
 import org.springframework.context.annotation.Bean;

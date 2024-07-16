@@ -1,4 +1,4 @@
-package com.onetuks.libraryauth.jwt;
+package com.onetuks.libraryauth.jwt.service.model.vo;
 
 import com.onetuks.libraryobject.annotation.Generated;
 import java.util.Collection;
