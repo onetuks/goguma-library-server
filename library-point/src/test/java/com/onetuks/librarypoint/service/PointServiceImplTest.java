@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
 import com.onetuks.librarypoint.CorePointIntegrationTest;
 import com.onetuks.librarypoint.fixture.MemberEntityFixture;
+import com.onetuks.librarypoint.repository.entity.DailyPointLimit;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -85,7 +87,8 @@ class PointServiceImplTest extends CorePointIntegrationTest {
         memberEntityJpaRepository.findById(picker.getMemberId()).orElseThrow().getPoints();
     long receiverPoint =
         memberEntityJpaRepository.findById(receiver.getMemberId()).orElseThrow().getPoints();
-    long pickerCreditCount = dailyPointLimitRepository.find(picker.getMemberId());
+    long pickerCreditCount = dailyPointLimitRepository.findById(picker.getMemberId())
+        .orElseThrow().getCreditCount();
 
     assertThat(pickerPoint).isEqualTo(expectedPickerPoint);
     assertThat(receiverPoint).isEqualTo(expectedReceiverPoint);
@@ -103,7 +106,8 @@ class PointServiceImplTest extends CorePointIntegrationTest {
     long expectedReceiverPoint = receiver.getPoints();
     long expectedPickerCreditCount = 5;
 
-    dailyPointLimitRepository.save(picker.getMemberId(), 5);
+    IntStream.range(0, 5)
+        .forEach(i -> dailyPointLimitRepository.increaseCreditCount(picker.getMemberId()));
 
     // When
     pointService.creditPointForReviewPick(picker.getMemberId(), receiver.getMemberId());
@@ -113,7 +117,8 @@ class PointServiceImplTest extends CorePointIntegrationTest {
         memberEntityJpaRepository.findById(picker.getMemberId()).orElseThrow().getPoints();
     long receiverPoint =
         memberEntityJpaRepository.findById(receiver.getMemberId()).orElseThrow().getPoints();
-    long pickerCreditCount = dailyPointLimitRepository.find(picker.getMemberId());
+    long pickerCreditCount = dailyPointLimitRepository.findById(picker.getMemberId())
+        .orElseThrow().getCreditCount();
 
     assertThat(pickerPoint).isEqualTo(expectedPickerPoint);
     assertThat(receiverPoint).isEqualTo(expectedReceiverPoint);
@@ -122,18 +127,47 @@ class PointServiceImplTest extends CorePointIntegrationTest {
 
   @Test
   @DisplayName("서평픽 취소 시 픽커에게 1포인트 차감하고, 일일 서평픽 포인트 지급수를 1 감소시킨다.")
-  void debitPointForReviewPick() {
+  void debitPointForReviewPick_Test() {
     // Given
-    long expectedPoint = memberEntity.getPoints() - 1L;
-    int expectedCount = -1;
+    MemberEntity picker = memberEntityJpaRepository.save(MemberEntityFixture.create());
+
+    long expectedPoint = picker.getPoints() - 1L;
+    int expectedCount = 2;
+
+    dailyPointLimitRepository.save(new DailyPointLimit(picker.getMemberId(), expectedCount + 1));
 
     // When
-    pointService.debitPointForReviewPick(memberEntity.getMemberId());
+    pointService.debitPointForReviewPick(picker.getMemberId());
 
     // Then
     long resultPoint =
-        memberEntityJpaRepository.findById(memberEntity.getMemberId()).orElseThrow().getPoints();
-    long resultCount = dailyPointLimitRepository.find(memberEntity.getMemberId());
+        memberEntityJpaRepository.findById(picker.getMemberId()).orElseThrow().getPoints();
+    long resultCount =
+        dailyPointLimitRepository.findById(picker.getMemberId()).orElseThrow().getCreditCount();
+
+    assertThat(resultPoint).isEqualTo(expectedPoint);
+    assertThat(resultCount).isEqualTo(expectedCount);
+  }
+
+  @Test
+  @DisplayName("오늘 서평픽한 적이 없다면 포인트와 잔여횟수가 차감되지 않는다.")
+  void debitPointForReviewPick_IfZeroCreditCount_Test() {
+    // Given
+    MemberEntity picker = memberEntityJpaRepository.save(MemberEntityFixture.create());
+
+    dailyPointLimitRepository.save(new DailyPointLimit(picker.getMemberId(), 0));
+
+    long expectedPoint = picker.getPoints();
+    long expectedCount = 0;
+
+    // When
+    pointService.debitPointForReviewPick(picker.getMemberId());
+
+    // Then
+    long resultPoint =
+        memberEntityJpaRepository.findById(picker.getMemberId()).orElseThrow().getPoints();
+    long resultCount =
+        dailyPointLimitRepository.findById(picker.getMemberId()).orElseThrow().getCreditCount();
 
     assertThat(resultPoint).isEqualTo(expectedPoint);
     assertThat(resultCount).isEqualTo(expectedCount);
