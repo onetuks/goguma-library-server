@@ -10,14 +10,12 @@ public interface DailyPointLimitRepository extends CrudRepository<DailyPointLimi
   int INITIAL_CREDIT_COUNT = 1;
 
   default boolean isCreditable(long memberId) {
-    return this.findById(memberId)
-        .map(DailyPointLimit::getCreditCount).orElse(0)
+    return this.findById(memberId).map(DailyPointLimit::getCreditCount).orElse(0)
         < REVIEW_PICK_DAILY_LIMIT;
   }
 
   default boolean isDebitable(long memberId) {
-    return this.findById(memberId)
-        .map(DailyPointLimit::getCreditCount).orElse(0)
+    return this.findById(memberId).map(DailyPointLimit::getCreditCount).orElse(0)
         > DEFAULT_CREDIT_COUNT;
   }
 

@@ -1,8 +1,9 @@
 package com.onetuks.librarypoint.config;
 
+import com.onetuks.librarypoint.repository.DailyPointLimitRepository;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 
 @Configuration
-@EnableRedisRepositories(basePackages = "com.onetuks.librarypoint.repository")
+@EnableRedisRepositories(basePackageClasses = DailyPointLimitRepository.class)
 public class PointRedisConfig {}

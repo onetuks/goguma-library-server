@@ -15,13 +15,11 @@ import org.springframework.data.redis.core.TimeToLive;
 @RedisHash(value = "daily_point_limit", timeToLive = 60 * 60 * 24)
 public class DailyPointLimit {
 
-  @Id
-  private Long memberId;
+  @Id private Long memberId;
 
   private Integer creditCount;
 
-  @TimeToLive
-  private Long expirationInSeconds;
+  @TimeToLive private Long expirationInSeconds;
 
   public DailyPointLimit(Long memberId, Integer creditCount) {
     this.memberId = memberId;
@@ -32,9 +30,7 @@ public class DailyPointLimit {
   private Long getTodayRemainSeconds() {
     return Duration.between(
             LocalDateTime.now(),
-            LocalDateTime.of(
-                LocalDateTime.now().toLocalDate().plusDays(1),
-                LocalTime.MIDNIGHT))
+            LocalDateTime.of(LocalDateTime.now().toLocalDate().plusDays(1), LocalTime.MIDNIGHT))
         .getSeconds();
   }
 

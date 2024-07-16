@@ -87,8 +87,8 @@ class PointServiceImplTest extends CorePointIntegrationTest {
         memberEntityJpaRepository.findById(picker.getMemberId()).orElseThrow().getPoints();
     long receiverPoint =
         memberEntityJpaRepository.findById(receiver.getMemberId()).orElseThrow().getPoints();
-    long pickerCreditCount = dailyPointLimitRepository.findById(picker.getMemberId())
-        .orElseThrow().getCreditCount();
+    long pickerCreditCount =
+        dailyPointLimitRepository.findById(picker.getMemberId()).orElseThrow().getCreditCount();
 
     assertThat(pickerPoint).isEqualTo(expectedPickerPoint);
     assertThat(receiverPoint).isEqualTo(expectedReceiverPoint);
@@ -117,8 +117,8 @@ class PointServiceImplTest extends CorePointIntegrationTest {
         memberEntityJpaRepository.findById(picker.getMemberId()).orElseThrow().getPoints();
     long receiverPoint =
         memberEntityJpaRepository.findById(receiver.getMemberId()).orElseThrow().getPoints();
-    long pickerCreditCount = dailyPointLimitRepository.findById(picker.getMemberId())
-        .orElseThrow().getCreditCount();
+    long pickerCreditCount =
+        dailyPointLimitRepository.findById(picker.getMemberId()).orElseThrow().getCreditCount();
 
     assertThat(pickerPoint).isEqualTo(expectedPickerPoint);
     assertThat(receiverPoint).isEqualTo(expectedReceiverPoint);

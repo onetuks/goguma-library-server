@@ -1,12 +1,19 @@
 package com.onetuks.libraryauth.jwt;
 
 import java.util.Optional;
+import org.springframework.data.repository.CrudRepository;
 
-public interface AuthTokenRepository {
+public interface AuthTokenRepository extends CrudRepository<AuthTokenPair, String> {
 
-  void save(String accessToken, String refreshToken);
+  default void save(String accessToken, String refreshToken) {
+    this.save(new AuthTokenPair(accessToken, refreshToken));
+  }
 
-  void delete(String accessToken);
+  default void delete(String accessToken) {
+    this.deleteById(accessToken);
+  }
 
-  Optional<String> findRefreshToken(String accessToken);
+  default Optional<String> findRefreshToken(String accessToken) {
+    return this.findById(accessToken).map(AuthTokenPair::getRefreshToken);
+  }
 }
