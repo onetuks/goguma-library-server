@@ -23,20 +23,21 @@ public class AuthService {
   private final MemberService memberService;
 
   public AuthService(
-      AuthTokenService authTokenService,
-      OAuth2Service oAuth2Service,
-      MemberService memberService) {
+      AuthTokenService authTokenService, OAuth2Service oAuth2Service, MemberService memberService) {
     this.authTokenService = authTokenService;
     this.oAuth2Service = oAuth2Service;
     this.memberService = memberService;
   }
 
   @Transactional
-  public LoginResult loginWithClientAuthToken(ClientProvider clientProvider, String authorizationHeader) {
-    UserInfo userInfo = oAuth2Service.getUserInfoWithClientAuthToken(clientProvider, authorizationHeader);
+  public LoginResult loginWithClientAuthToken(
+      ClientProvider clientProvider, String authorizationHeader) {
+    UserInfo userInfo =
+        oAuth2Service.getUserInfoWithClientAuthToken(clientProvider, authorizationHeader);
     MemberAuthResult savedMember = memberService.registerIfNotExists(userInfo.toDomain());
-    AuthToken newAuthToken = authTokenService.saveAccessToken(
-        userInfo.socialId(), savedMember.memberId(), savedMember.roles());
+    AuthToken newAuthToken =
+        authTokenService.saveAccessToken(
+            userInfo.socialId(), savedMember.memberId(), savedMember.roles());
 
     return LoginResult.of(
         newAuthToken.getToken(),
@@ -46,12 +47,14 @@ public class AuthService {
   }
 
   @Transactional
-  public LoginResult loginWithClientAuthCode(ClientProvider clientProvider, String authorizationHeader) {
+  public LoginResult loginWithClientAuthCode(
+      ClientProvider clientProvider, String authorizationHeader) {
     String clientAuthCode = authorizationHeader.replace("Bearer ", "");
     UserInfo userInfo = oAuth2Service.getUserInfoWithClientAuthCode(clientProvider, clientAuthCode);
     MemberAuthResult savedMember = memberService.registerIfNotExists(userInfo.toDomain());
-    AuthToken newAuthToken = authTokenService.saveAccessToken(
-        userInfo.socialId(), savedMember.memberId(), savedMember.roles());
+    AuthToken newAuthToken =
+        authTokenService.saveAccessToken(
+            userInfo.socialId(), savedMember.memberId(), savedMember.roles());
 
     return LoginResult.of(
         newAuthToken.getToken(),
@@ -69,7 +72,8 @@ public class AuthService {
 
   @Transactional
   public RefreshResult updateAuthToken(String accessToken, long loginId) {
-    AuthToken newAccessToken = authTokenService.updateAccessToken(accessToken, loginId, Set.of(RoleType.ADMIN));
+    AuthToken newAccessToken =
+        authTokenService.updateAccessToken(accessToken, loginId, Set.of(RoleType.ADMIN));
 
     memberService.editAuthorities(loginId, newAccessToken.getRoleTypes());
 

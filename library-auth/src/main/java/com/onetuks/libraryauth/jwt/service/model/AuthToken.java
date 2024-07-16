@@ -7,9 +7,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -41,9 +38,7 @@ public class AuthToken {
 
   public Set<RoleType> getRoleTypes() {
     List<?> roles = getTokenClaims().get(AUTHORITIES_KEY, List.class);
-    return roles.stream()
-        .map(role -> RoleType.valueOf((String) role))
-        .collect(Collectors.toSet());
+    return roles.stream().map(role -> RoleType.valueOf((String) role)).collect(Collectors.toSet());
   }
 
   public Authentication getAuthentication() {

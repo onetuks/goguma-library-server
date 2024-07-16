@@ -42,7 +42,8 @@ public class AuthRestController {
   @PostMapping(path = "/postman/kakao")
   public ResponseEntity<LoginResponse> kakaoLoginWithAuthToken(HttpServletRequest request) {
     LoginResult result =
-        authService.loginWithClientAuthToken(KAKAO, AuthHeaderUtil.getAuthorizationHeaderValue(request));
+        authService.loginWithClientAuthToken(
+            KAKAO, AuthHeaderUtil.getAuthorizationHeaderValue(request));
 
     return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(result));
   }
@@ -57,7 +58,8 @@ public class AuthRestController {
   @PostMapping(path = "/kakao")
   public ResponseEntity<LoginResponse> kakaoLoginWithAuthCode(HttpServletRequest request) {
     LoginResult result =
-        authService.loginWithClientAuthCode(KAKAO, AuthHeaderUtil.getAuthorizationHeaderValue(request));
+        authService.loginWithClientAuthCode(
+            KAKAO, AuthHeaderUtil.getAuthorizationHeaderValue(request));
 
     return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(result));
   }
@@ -71,7 +73,8 @@ public class AuthRestController {
   @PostMapping(path = "/postman/google")
   public ResponseEntity<LoginResponse> googleLoginWithAuthToken(HttpServletRequest request) {
     LoginResult result =
-        authService.loginWithClientAuthToken(GOOGLE, AuthHeaderUtil.getAuthorizationHeaderValue(request));
+        authService.loginWithClientAuthToken(
+            GOOGLE, AuthHeaderUtil.getAuthorizationHeaderValue(request));
 
     return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(result));
   }
@@ -86,7 +89,8 @@ public class AuthRestController {
   @PostMapping(path = "/google")
   public ResponseEntity<LoginResponse> googleLoginWithAuthCode(HttpServletRequest request) {
     LoginResult result =
-        authService.loginWithClientAuthCode(GOOGLE, AuthHeaderUtil.getAuthorizationHeaderValue(request));
+        authService.loginWithClientAuthCode(
+            GOOGLE, AuthHeaderUtil.getAuthorizationHeaderValue(request));
 
     return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(result));
   }
@@ -100,7 +104,8 @@ public class AuthRestController {
   @PostMapping(path = "/postman/naver")
   public ResponseEntity<LoginResponse> naverLoginWithAuthToken(HttpServletRequest request) {
     LoginResult result =
-        authService.loginWithClientAuthToken(NAVER, AuthHeaderUtil.getAuthorizationHeaderValue(request));
+        authService.loginWithClientAuthToken(
+            NAVER, AuthHeaderUtil.getAuthorizationHeaderValue(request));
 
     return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(result));
   }
@@ -115,7 +120,8 @@ public class AuthRestController {
   @PostMapping(path = "/naver")
   public ResponseEntity<LoginResponse> naverLoginWithAuthCode(HttpServletRequest request) {
     LoginResult result =
-        authService.loginWithClientAuthCode(NAVER, AuthHeaderUtil.getAuthorizationHeaderValue(request));
+        authService.loginWithClientAuthCode(
+            NAVER, AuthHeaderUtil.getAuthorizationHeaderValue(request));
 
     return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(result));
   }
@@ -147,7 +153,8 @@ public class AuthRestController {
   @PatchMapping(path = "/promotion")
   public ResponseEntity<RefreshResponse> promote(
       HttpServletRequest request, @LoginId Long loginId) {
-    RefreshResult result = authService.updateAuthToken(AuthHeaderUtil.getAuthorizationHeaderValue(request), loginId);
+    RefreshResult result =
+        authService.updateAuthToken(AuthHeaderUtil.getAuthorizationHeaderValue(request), loginId);
 
     return ResponseEntity.status(HttpStatus.OK).body(RefreshResponse.from(result));
   }

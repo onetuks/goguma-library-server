@@ -2,9 +2,9 @@ package com.onetuks.libraryauth;
 
 import com.onetuks.libraryauth.CoreAuthIntegrationTest.CoreAuthConfig;
 import com.onetuks.libraryauth.CoreAuthIntegrationTest.CoreAuthIntegrationTestInitializer;
-import com.onetuks.libraryauth.oauth.strategy.impl.GoogleOAuth2ClientStrategy;
 import com.onetuks.libraryauth.jwt.service.AuthTokenService;
 import com.onetuks.libraryauth.oauth.service.OAuth2Service;
+import com.onetuks.libraryauth.oauth.strategy.impl.GoogleOAuth2ClientStrategy;
 import com.onetuks.librarydomain.member.service.MemberService;
 import com.onetuks.libraryobject.util.URIBuilder;
 import com.redis.testcontainers.RedisContainer;

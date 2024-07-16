@@ -4,7 +4,6 @@ import com.onetuks.libraryobject.enums.ClientProvider;
 import com.onetuks.libraryobject.enums.RoleType;
 import java.util.Objects;
 import java.util.Set;
-import lombok.Builder;
 
 public record AuthInfo(String socialId, ClientProvider clientProvider, Set<RoleType> roles) {
 

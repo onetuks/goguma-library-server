@@ -2,8 +2,8 @@ package com.onetuks.libraryauth.jwt.service;
 
 import com.onetuks.libraryauth.exception.TokenExpiredException;
 import com.onetuks.libraryauth.exception.TokenIsLogoutException;
-import com.onetuks.libraryauth.jwt.service.model.AuthToken;
 import com.onetuks.libraryauth.jwt.repository.AuthTokenRepository;
+import com.onetuks.libraryauth.jwt.service.model.AuthToken;
 import com.onetuks.libraryauth.jwt.service.provider.AuthTokenProvider;
 import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.error.ErrorCode;
@@ -18,7 +18,8 @@ public class AuthTokenService {
   private final AuthTokenProvider authTokenProvider;
   private final AuthTokenRepository authTokenRepository;
 
-  public AuthTokenService(AuthTokenProvider authTokenProvider, AuthTokenRepository authTokenRepository) {
+  public AuthTokenService(
+      AuthTokenProvider authTokenProvider, AuthTokenRepository authTokenRepository) {
     this.authTokenProvider = authTokenProvider;
     this.authTokenRepository = authTokenRepository;
   }
@@ -45,12 +46,14 @@ public class AuthTokenService {
   }
 
   @Transactional
-  public AuthToken updateAccessToken(String accessTokenValue, long loginId, Set<RoleType> grantedRoles) {
+  public AuthToken updateAccessToken(
+      String accessTokenValue, long loginId, Set<RoleType> grantedRoles) {
     AuthToken accessToken = authTokenProvider.convertToAuthToken(accessTokenValue);
 
     authTokenRepository.delete(accessToken.getToken());
 
-    return saveAccessToken(accessToken.getSocialId(), loginId, grantRoles(accessToken, grantedRoles));
+    return saveAccessToken(
+        accessToken.getSocialId(), loginId, grantRoles(accessToken, grantedRoles));
   }
 
   @Transactional
@@ -77,9 +80,10 @@ public class AuthTokenService {
   }
 
   private void validateRefreshToken(AuthToken accessToken) {
-    String refreshToken = authTokenRepository
-        .findRefreshToken(accessToken.getToken())
-        .orElseThrow(() -> new TokenExpiredException(ErrorCode.EXPIRED_REFRESH_TOKEN));
+    String refreshToken =
+        authTokenRepository
+            .findRefreshToken(accessToken.getToken())
+            .orElseThrow(() -> new TokenExpiredException(ErrorCode.EXPIRED_REFRESH_TOKEN));
     AuthToken authToken = authTokenProvider.convertToAuthToken(refreshToken);
 
     boolean isValidRefreshToken = authToken.isValidTokenClaims();

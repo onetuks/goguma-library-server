@@ -23,15 +23,15 @@ public class AuthTokenProvider {
 
   public AuthToken provideAccessToken(String socialId, Long loginId, Set<RoleType> roleTypes) {
     return new AuthToken(
-        createToken(socialId, loginId, roleTypes,
-            getExpiryDate(jwtConfig.getAccessTokenExpiryPeriod())),
+        createToken(
+            socialId, loginId, roleTypes, getExpiryDate(jwtConfig.getAccessTokenExpiryPeriod())),
         jwtConfig.getSecretKey());
   }
 
   public AuthToken provideRefreshToken(String socialId, Long loginId, Set<RoleType> roleTypes) {
     return new AuthToken(
-        createToken(socialId, loginId, roleTypes,
-            getExpiryDate(jwtConfig.getRefreshTokenExpiryPeriod())),
+        createToken(
+            socialId, loginId, roleTypes, getExpiryDate(jwtConfig.getRefreshTokenExpiryPeriod())),
         jwtConfig.getSecretKey());
   }
 

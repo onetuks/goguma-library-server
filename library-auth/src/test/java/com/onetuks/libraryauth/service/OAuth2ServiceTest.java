@@ -1,15 +1,11 @@
 package com.onetuks.libraryauth.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 import com.onetuks.libraryauth.CoreAuthIntegrationTest;
 import com.onetuks.libraryauth.oauth.strategy.dto.user_info.UserInfo;
-import com.onetuks.libraryauth.service.dto.LoginResult;
-import com.onetuks.librarydomain.member.model.vo.AuthInfo;
-import com.onetuks.librarydomain.member.service.dto.result.MemberAuthResult;
 import com.onetuks.libraryobject.enums.ClientProvider;
 import com.onetuks.libraryobject.enums.RoleType;
 import java.util.Set;

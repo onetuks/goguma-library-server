@@ -18,15 +18,16 @@ public class OAuth2Service {
   }
 
   @Transactional
-  public UserInfo getUserInfoWithClientAuthToken(ClientProvider clientProvider, String clientAuthToken) {
-    return strategyHandler.getClientStrategy(clientProvider)
-        .getUserInfo(clientAuthToken);
+  public UserInfo getUserInfoWithClientAuthToken(
+      ClientProvider clientProvider, String clientAuthToken) {
+    return strategyHandler.getClientStrategy(clientProvider).getUserInfo(clientAuthToken);
   }
 
   @Transactional
-  public UserInfo getUserInfoWithClientAuthCode(ClientProvider clientProvider, String clientAuthCode) {
-    ClientAuthToken clientAuthToken = strategyHandler.getClientStrategy(clientProvider)
-        .getClientAuthToken(clientAuthCode);
+  public UserInfo getUserInfoWithClientAuthCode(
+      ClientProvider clientProvider, String clientAuthCode) {
+    ClientAuthToken clientAuthToken =
+        strategyHandler.getClientStrategy(clientProvider).getClientAuthToken(clientAuthCode);
 
     return this.getUserInfoWithClientAuthToken(
         clientProvider, AuthHeaderUtil.TOKEN_PREFIX + clientAuthToken.getAccessToken());
