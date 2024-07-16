@@ -9,15 +9,15 @@ public class AuthHeaderUtil {
 
   private AuthHeaderUtil() {}
 
-  public static String extractAuthToken(HttpServletRequest request) {
-
+  public static String getAuthorizationHeaderValue(HttpServletRequest request) {
     String httpHeaderAuthorizationString = request.getHeader(HEADER_AUTHORIZATION);
 
-    if (httpHeaderAuthorizationString == null
-        || !httpHeaderAuthorizationString.startsWith(TOKEN_PREFIX)) {
-      return null;
+    if (httpHeaderAuthorizationString == null) {
+      throw new IllegalArgumentException("Authorization header is not found.");
     }
 
-    return httpHeaderAuthorizationString.substring(TOKEN_PREFIX.length());
+    return httpHeaderAuthorizationString.startsWith(TOKEN_PREFIX)
+        ? httpHeaderAuthorizationString.substring(TOKEN_PREFIX.length())
+        : httpHeaderAuthorizationString.trim();
   }
 }

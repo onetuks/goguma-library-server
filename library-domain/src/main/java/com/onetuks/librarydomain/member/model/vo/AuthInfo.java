@@ -6,7 +6,6 @@ import java.util.Objects;
 import java.util.Set;
 import lombok.Builder;
 
-@Builder
 public record AuthInfo(String socialId, ClientProvider clientProvider, Set<RoleType> roles) {
 
   @Override

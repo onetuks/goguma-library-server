@@ -2,10 +2,10 @@ package com.onetuks.libraryauth.oauth.strategy.impl;
 
 import com.onetuks.libraryauth.exception.TokenValidFailedException;
 import com.onetuks.libraryauth.oauth.config.GoogleClientConfig;
-import com.onetuks.libraryauth.oauth.strategy.ClientProviderStrategy;
+import com.onetuks.libraryauth.oauth.strategy.OAuth2ClientStrategy;
 import com.onetuks.libraryauth.oauth.strategy.dto.auth_token.GoogleAuthToken;
 import com.onetuks.libraryauth.oauth.strategy.dto.user_info.GoogleUserInfo;
-import com.onetuks.librarydomain.member.model.vo.AuthInfo;
+import com.onetuks.libraryauth.oauth.strategy.dto.user_info.UserInfo;
 import com.onetuks.libraryobject.config.WebClientConfig;
 import com.onetuks.libraryobject.enums.ClientProvider;
 import com.onetuks.libraryobject.enums.RoleType;
@@ -24,13 +24,13 @@ import reactor.core.publisher.Mono;
 
 @Component
 @ComponentScan(basePackageClasses = WebClientConfig.class)
-public class GoogleClientProviderStrategy implements ClientProviderStrategy {
+public class GoogleOAuth2ClientStrategy implements OAuth2ClientStrategy {
 
   private final WebClient webClient;
   private final URIBuilder uriBuilder;
   private final GoogleClientConfig googleClientConfig;
 
-  public GoogleClientProviderStrategy(
+  public GoogleOAuth2ClientStrategy(
       WebClient webClient, URIBuilder uriBuilder, GoogleClientConfig googleClientConfig) {
     this.webClient = webClient;
     this.uriBuilder = uriBuilder;
@@ -38,7 +38,7 @@ public class GoogleClientProviderStrategy implements ClientProviderStrategy {
   }
 
   @Override
-  public AuthInfo getAuthInfo(String authToken) {
+  public UserInfo getUserInfo(String clientAuthToken) {
     GoogleUserInfo googleUserInfo =
         webClient
             .get()
@@ -48,7 +48,7 @@ public class GoogleClientProviderStrategy implements ClientProviderStrategy {
                     .getProviderDetails()
                     .getUserInfoEndpoint()
                     .getUri())
-            .headers(httpHeaders -> httpHeaders.set("Authorization", authToken))
+            .headers(httpHeaders -> httpHeaders.set("Authorization", clientAuthToken))
             .retrieve()
             .onStatus(
                 HttpStatusCode::is4xxClientError,
@@ -63,7 +63,7 @@ public class GoogleClientProviderStrategy implements ClientProviderStrategy {
 
     Objects.requireNonNull(googleUserInfo);
 
-    return AuthInfo.builder()
+    return UserInfo.builder()
         .socialId(googleUserInfo.getSub())
         .clientProvider(ClientProvider.GOOGLE)
         .roles(Set.of(RoleType.USER))
@@ -71,7 +71,7 @@ public class GoogleClientProviderStrategy implements ClientProviderStrategy {
   }
 
   @Override
-  public GoogleAuthToken getOAuth2Token(String authCode) {
+  public GoogleAuthToken getClientAuthToken(String clientAuthCode) {
     return webClient
         .post()
         .uri(
@@ -85,7 +85,7 @@ public class GoogleClientProviderStrategy implements ClientProviderStrategy {
         .headers(
             httpHeaders ->
                 httpHeaders.set("Content-Type", "application/x-www-form-urlencoded;charset=utf-8"))
-        .body(BodyInserters.fromFormData(buildFormData(authCode)))
+        .body(BodyInserters.fromFormData(buildFormData(clientAuthCode)))
         .retrieve()
         .onStatus(
             HttpStatusCode::is4xxClientError,

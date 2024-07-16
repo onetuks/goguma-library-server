@@ -7,6 +7,9 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -21,13 +24,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @Slf4j
 public class AuthToken {
 
-  protected static final String AUTHORITIES_KEY = "roles";
-  protected static final String LOGIN_ID_KEY = "loginId";
+  public static final String AUTHORITIES_KEY = "roles";
+  public static final String LOGIN_ID_KEY = "loginId";
 
   @Getter private final String token;
   private final SecretKey secretKey;
 
-  AuthToken(String token, SecretKey secretKey) {
+  public AuthToken(String token, SecretKey secretKey) {
     this.token = token;
     this.secretKey = secretKey;
   }
@@ -37,9 +40,8 @@ public class AuthToken {
   }
 
   public Set<RoleType> getRoleTypes() {
-    Set<?> roles = Set.of(getTokenClaims().get(AUTHORITIES_KEY, List.class));
+    List<?> roles = getTokenClaims().get(AUTHORITIES_KEY, List.class);
     return roles.stream()
-        .filter(object -> object instanceof String)
         .map(role -> RoleType.valueOf((String) role))
         .collect(Collectors.toSet());
   }

@@ -44,11 +44,7 @@ public record Member(
   public Member changeRoles(Set<RoleType> newRoles) {
     return new Member(
         memberId(),
-        AuthInfo.builder()
-            .socialId(authInfo.socialId())
-            .clientProvider(authInfo.clientProvider())
-            .roles(newRoles)
-            .build(),
+        new AuthInfo(authInfo.socialId(), authInfo.clientProvider(), newRoles),
         nickname(),
         introduction(),
         interestedCategories(),

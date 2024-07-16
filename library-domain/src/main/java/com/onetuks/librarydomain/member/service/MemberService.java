@@ -78,10 +78,12 @@ public class MemberService {
   }
 
   @Transactional
-  public void remove(long memberId) {
+  public boolean remove(long memberId) {
     Member member = memberRepository.read(memberId);
 
     fileRepository.deleteFile(member.profileImageFile());
     memberRepository.delete(memberId);
+
+    return true;
   }
 }
