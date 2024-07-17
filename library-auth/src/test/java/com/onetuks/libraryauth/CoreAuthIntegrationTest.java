@@ -40,7 +40,7 @@ public class CoreAuthIntegrationTest {
   static final RedisContainer redis;
 
   static {
-    redis = new RedisContainer(RedisContainer.DEFAULT_IMAGE_NAME.withTag("7"));
+    redis = new RedisContainer(RedisContainer.DEFAULT_IMAGE_NAME.withTag("latest"));
     redis.start();
   }
 
