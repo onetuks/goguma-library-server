@@ -14,6 +14,8 @@ import com.onetuks.librarydomain.review.repository.ReviewPickRepository;
 import com.onetuks.librarydomain.review.repository.ReviewRepository;
 import com.onetuks.librarydomain.review.service.ReviewPickService;
 import com.onetuks.librarydomain.review.service.ReviewService;
+import com.onetuks.librarydomain.weekly.repository.WeeklyFeaturedBookRepository;
+import com.onetuks.librarydomain.weekly.service.WeeklyFeaturedBookService;
 import com.onetuks.libraryobject.component.TestFileCleaner;
 import com.onetuks.libraryobject.util.URIBuilder;
 import org.junit.jupiter.api.AfterEach;
@@ -34,6 +36,7 @@ public class DomainIntegrationTest {
   @Autowired public ReviewService reviewService;
   @Autowired public ReviewPickService reviewPickService;
   @Autowired public IsbnSearchService isbnSearchService;
+  @Autowired public WeeklyFeaturedBookService weeklyFeaturedBookService;
 
   @MockBean public FileRepository fileRepository;
   @MockBean public MemberRepository memberRepository;
@@ -41,6 +44,7 @@ public class DomainIntegrationTest {
   @MockBean public BookPickRepository bookPickRepository;
   @MockBean public ReviewRepository reviewRepository;
   @MockBean public ReviewPickRepository reviewPickRepository;
+  @MockBean public WeeklyFeaturedBookRepository weeklyFeaturedBookRepository;
 
   @MockBean public PointService pointService;
 
