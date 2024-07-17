@@ -10,31 +10,31 @@ import org.springframework.stereotype.Component;
 @Component
 public class BookConverter {
 
-  public BookEntity toEntity(Book book) {
+  public BookEntity toEntity(Book model) {
     return new BookEntity(
-        book.bookId(),
-        book.title(),
-        book.authorName(),
-        book.introduction(),
-        book.isbn(),
-        book.publisher(),
-        book.categories(),
-        book.coverImageFile().fileName(),
-        book.isIndie(),
-        book.isPermitted());
+        model.bookId(),
+        model.title(),
+        model.authorName(),
+        model.introduction(),
+        model.isbn(),
+        model.publisher(),
+        model.categories(),
+        model.coverImageFile().fileName(),
+        model.isIndie(),
+        model.isPermitted());
   }
 
-  public Book toDomain(BookEntity bookEntity) {
+  public Book toModel(BookEntity entity) {
     return new Book(
-        bookEntity.getBookId(),
-        bookEntity.getTitle(),
-        bookEntity.getAuthorName(),
-        bookEntity.getIntroduction(),
-        bookEntity.getIsbn(),
-        bookEntity.getPublisher(),
-        bookEntity.getCategories(),
-        ImageFile.of(COVER_IMAGE, bookEntity.getCoverImageUri()),
-        bookEntity.getIsIndie(),
-        bookEntity.getIsPermitted());
+        entity.getBookId(),
+        entity.getTitle(),
+        entity.getAuthorName(),
+        entity.getIntroduction(),
+        entity.getIsbn(),
+        entity.getPublisher(),
+        entity.getCategories(),
+        ImageFile.of(COVER_IMAGE, entity.getCoverImageUri()),
+        entity.getIsIndie(),
+        entity.getIsPermitted());
   }
 }

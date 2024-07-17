@@ -16,17 +16,17 @@ public class BookPickConverter {
     this.bookConverter = bookConverter;
   }
 
-  public BookPickEntity toEntity(BookPick bookPick) {
+  public BookPickEntity toEntity(BookPick model) {
     return new BookPickEntity(
-        bookPick.bookPickId(),
-        memberConverter.toEntity(bookPick.member()),
-        bookConverter.toEntity(bookPick.book()));
+        model.bookPickId(),
+        memberConverter.toEntity(model.member()),
+        bookConverter.toEntity(model.book()));
   }
 
-  public BookPick toDomain(BookPickEntity bookPickEntity) {
+  public BookPick toModel(BookPickEntity entity) {
     return new BookPick(
-        bookPickEntity.getBookPickId(),
-        memberConverter.toDomain(bookPickEntity.getMemberEntity()),
-        bookConverter.toDomain(bookPickEntity.getBookEntity()));
+        entity.getBookPickId(),
+        memberConverter.toModel(entity.getMemberEntity()),
+        bookConverter.toModel(entity.getBookEntity()));
   }
 }

@@ -27,12 +27,12 @@ public class ReviewEntityRepository implements ReviewRepository {
 
   @Override
   public Review create(Review review) {
-    return converter.toDomain(repository.save(converter.toEntity(review)));
+    return converter.toModel(repository.save(converter.toEntity(review)));
   }
 
   @Override
   public Review read(long reviewId) {
-    return converter.toDomain(
+    return converter.toModel(
         repository
             .findById(reviewId)
             .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 서평입니다.")));
@@ -40,22 +40,22 @@ public class ReviewEntityRepository implements ReviewRepository {
 
   @Override
   public Page<Review> readAll(SortBy sortBy, Pageable pageable) {
-    return qDslRepository.findAll(sortBy, pageable).map(converter::toDomain);
+    return qDslRepository.findAll(sortBy, pageable).map(converter::toModel);
   }
 
   @Override
   public Page<Review> readAll(long bookId, SortBy sortBy, Pageable pageable) {
-    return qDslRepository.findAll(bookId, sortBy, pageable).map(converter::toDomain);
+    return qDslRepository.findAll(bookId, sortBy, pageable).map(converter::toModel);
   }
 
   @Override
   public Page<Review> readAll(long memberId, Pageable pageable) {
-    return repository.findAllByMemberEntityMemberId(memberId, pageable).map(converter::toDomain);
+    return repository.findAllByMemberEntityMemberId(memberId, pageable).map(converter::toModel);
   }
 
   @Override
   public Review update(Review review) {
-    return converter.toDomain(repository.save(converter.toEntity(review)));
+    return converter.toModel(repository.save(converter.toEntity(review)));
   }
 
   @Override

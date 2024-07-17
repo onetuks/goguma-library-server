@@ -33,12 +33,12 @@ public class BookEntityRepository implements BookRepository {
 
   @Override
   public Book create(Book book) {
-    return converter.toDomain(repository.save(converter.toEntity(book)));
+    return converter.toModel(repository.save(converter.toEntity(book)));
   }
 
   @Override
   public Book read(long bookId) {
-    return converter.toDomain(
+    return converter.toModel(
         repository
             .findById(bookId)
             .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 도서입니다.")));
@@ -46,12 +46,12 @@ public class BookEntityRepository implements BookRepository {
 
   @Override
   public Page<Book> readAll(boolean inspectionMode, Pageable pageable) {
-    return qDslRepository.findAllByIsPermitted(inspectionMode, pageable).map(converter::toDomain);
+    return qDslRepository.findAllByIsPermitted(inspectionMode, pageable).map(converter::toModel);
   }
 
   @Override
   public Page<Book> readAll(String keyword, Pageable pageable) {
-    return qDslRepository.findAllByKeyword(keyword, pageable).map(converter::toDomain);
+    return qDslRepository.findAllByKeyword(keyword, pageable).map(converter::toModel);
   }
 
   @Override
@@ -63,7 +63,7 @@ public class BookEntityRepository implements BookRepository {
               : repository.findAllCategoriesInInterestedCategories(
                   objectMapper.writeValueAsString(interestedCategories), pageable);
 
-      return results.map(converter::toDomain);
+      return results.map(converter::toModel);
     } catch (JsonProcessingException e) {
       throw new IllegalStateException("카테고리 조회 중 오류가 발생했습니다.");
     }
@@ -71,7 +71,7 @@ public class BookEntityRepository implements BookRepository {
 
   @Override
   public Book update(Book book) {
-    return converter.toDomain(repository.save(converter.toEntity(book)));
+    return converter.toModel(repository.save(converter.toEntity(book)));
   }
 
   @Override
