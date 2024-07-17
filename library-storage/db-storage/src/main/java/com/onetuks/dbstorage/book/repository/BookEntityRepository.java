@@ -8,6 +8,7 @@ import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.book.repository.BookRepository;
 import com.onetuks.libraryobject.enums.Category;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -67,6 +68,17 @@ public class BookEntityRepository implements BookRepository {
     } catch (JsonProcessingException e) {
       throw new IllegalStateException("카테고리 조회 중 오류가 발생했습니다.");
     }
+  }
+
+  @Override
+  public List<Book> readAllNotIn(List<Book> allWeeklyFeaturedBooks, Pageable pageable) {
+    return repository
+        .findAllNotInPastWeeklyFeaturedBooks(
+            allWeeklyFeaturedBooks.stream().map(Book::bookId).toList(), pageable)
+        .getContent()
+        .stream()
+        .map(converter::toModel)
+        .toList();
   }
 
   @Override

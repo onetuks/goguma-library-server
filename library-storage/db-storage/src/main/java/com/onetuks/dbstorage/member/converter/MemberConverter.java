@@ -45,14 +45,13 @@ public class MemberConverter {
   }
 
   private AuthInfoEmbeddable toEmbeddable(AuthInfo valueObject) {
-    return new AuthInfoEmbeddable(valueObject.socialId(), valueObject.clientProvider(), valueObject.roles());
+    return new AuthInfoEmbeddable(
+        valueObject.socialId(), valueObject.clientProvider(), valueObject.roles());
   }
 
   private AuthInfo toValueObject(AuthInfoEmbeddable embeddable) {
     return new AuthInfo(
-        embeddable.getSocialId(),
-        embeddable.getClientProvider(),
-        embeddable.getRoles());
+        embeddable.getSocialId(), embeddable.getClientProvider(), embeddable.getRoles());
   }
 
   private MemberStaticsEntity toStaticsEntity(MemberStatics staticsModel) {

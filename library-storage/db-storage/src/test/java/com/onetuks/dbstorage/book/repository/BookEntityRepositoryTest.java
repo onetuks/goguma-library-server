@@ -220,6 +220,28 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
   }
 
   @Test
+  @DisplayName("기존 금주도서를 제외한 도서를 세건 조회한다.")
+  void readAllNotIn_ExcludedPastFeaturedBooks_Test() {
+    // Given
+    Pageable pageable = PageRequest.of(0, 3);
+    List<Book> allBooks =
+        IntStream.range(0, 10)
+            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null)))
+            .toList();
+    List<Book> pastFeaturedBooks = allBooks.subList(0, 5);
+
+    // When
+    List<Book> results = bookEntityRepository.readAllNotIn(pastFeaturedBooks, pageable);
+
+    // Then
+    List<Long> pastFeaturedBooksIds = pastFeaturedBooks.stream().map(Book::bookId).toList();
+
+    assertThat(results)
+        .hasSize(pageable.getPageSize())
+        .allSatisfy(result -> assertThat(result.bookId()).isNotIn(pastFeaturedBooksIds));
+  }
+
+  @Test
   @DisplayName("도서 엔티티를 수정한다.")
   void update() {
     // Given
