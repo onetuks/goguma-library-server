@@ -116,3 +116,24 @@ CREATE TABLE IF NOT EXISTS book_picks
     UNIQUE KEY unq_member_id_book_id (member_id, book_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='북픽 테이블';
+
+CREATE TABLE IF NOT EXISTS weakly_featured_books_events
+(
+    weakly_featured_books_event_id BIGINT   NOT NULL AUTO_INCREMENT COMMENT '금주도서 이벤트 식별자',
+    started_at                    DATETIME NOT NULL COMMENT '이벤트 시작일',
+    ended_at                      DATETIME NOT NULL COMMENT '이벤트 종료일',
+    PRIMARY KEY (weakly_featured_books_event_id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='금주도서 이벤트 테이블';
+
+CREATE TABLE IF NOT EXISTS weakly_featured_books
+(
+    weakly_featured_book_id       BIGINT NOT NULL AUTO_INCREMENT COMMENT '금주도서 식별자',
+    weakly_featured_books_event_id BIGINT NOT NULL COMMENT '금주도서 이벤트 식별자',
+    book_id                       BIGINT NOT NULL COMMENT '도서 식별자',
+    PRIMARY KEY (weakly_featured_book_id),
+    FOREIGN KEY (weakly_featured_books_event_id) REFERENCES weakly_featured_books_events (weakly_featured_books_event_id),
+    FOREIGN KEY (book_id) REFERENCES books (book_id),
+    UNIQUE KEY unq_weakly_featured_book_event_id_book_id (weakly_featured_books_event_id, book_id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='금주도서 테이블';
