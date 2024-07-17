@@ -2,9 +2,9 @@ package com.onetuks.libraryauth;
 
 import com.onetuks.libraryauth.CoreAuthIntegrationTest.CoreAuthConfig;
 import com.onetuks.libraryauth.CoreAuthIntegrationTest.CoreAuthIntegrationTestInitializer;
-import com.onetuks.libraryauth.oauth.strategy.GoogleClientProviderStrategy;
-import com.onetuks.libraryauth.service.AuthService;
-import com.onetuks.libraryauth.service.OAuth2ClientService;
+import com.onetuks.libraryauth.jwt.service.AuthTokenService;
+import com.onetuks.libraryauth.oauth.service.OAuth2Service;
+import com.onetuks.libraryauth.oauth.strategy.impl.GoogleOAuth2ClientStrategy;
 import com.onetuks.librarydomain.member.service.MemberService;
 import com.onetuks.libraryobject.util.URIBuilder;
 import com.redis.testcontainers.RedisContainer;
@@ -27,10 +27,10 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(initializers = CoreAuthIntegrationTestInitializer.class)
 public class CoreAuthIntegrationTest {
 
-  @Autowired public AuthService authService;
-  @Autowired public OAuth2ClientService oAuth2ClientService;
+  @Autowired public AuthTokenService authTokenService;
+  @Autowired public OAuth2Service oAuth2Service;
 
-  @MockBean public GoogleClientProviderStrategy googleClientProviderStrategy;
+  @MockBean public GoogleOAuth2ClientStrategy googleClientProviderStrategy;
   @MockBean public MemberService memberService;
 
   @Configuration

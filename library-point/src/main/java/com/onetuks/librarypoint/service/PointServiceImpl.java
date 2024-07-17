@@ -47,8 +47,7 @@ public class PointServiceImpl implements PointService {
   @Transactional
   public void creditPointForReviewPick(long pickerMemberId, long receiverMemberId) {
     if (dailyPointLimitRepository.isCreditable(pickerMemberId)) {
-      dailyPointLimitRepository.save(
-          pickerMemberId, dailyPointLimitRepository.find(pickerMemberId) + 1);
+      dailyPointLimitRepository.increaseCreditCount(pickerMemberId);
       pointRepository.creditPoints(pickerMemberId, REVIEW_PICK_PICKER_POINT);
       pointRepository.creditPoints(receiverMemberId, REVIEW_PICK_RECEIVER_POINT);
     }
@@ -57,8 +56,9 @@ public class PointServiceImpl implements PointService {
   @Override
   @Transactional
   public void debitPointForReviewPick(long pickerMemberId) {
-    dailyPointLimitRepository.save(
-        pickerMemberId, dailyPointLimitRepository.find(pickerMemberId) - 1);
-    pointRepository.debitPoints(pickerMemberId, REVIEW_PICK_PICKER_POINT);
+    if (dailyPointLimitRepository.isDebitable(pickerMemberId)) {
+      dailyPointLimitRepository.decreaseCreditCount(pickerMemberId);
+      pointRepository.debitPoints(pickerMemberId, REVIEW_PICK_PICKER_POINT);
+    }
   }
 }

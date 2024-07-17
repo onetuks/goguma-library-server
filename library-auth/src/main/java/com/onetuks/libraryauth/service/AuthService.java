@@ -1,84 +1,99 @@
 package com.onetuks.libraryauth.service;
 
-import com.onetuks.libraryauth.exception.TokenExpiredException;
-import com.onetuks.libraryauth.jwt.AuthToken;
-import com.onetuks.libraryauth.jwt.AuthTokenProvider;
-import com.onetuks.libraryauth.jwt.AuthTokenRepository;
+import com.onetuks.libraryauth.jwt.service.AuthTokenService;
+import com.onetuks.libraryauth.jwt.service.model.AuthToken;
+import com.onetuks.libraryauth.oauth.service.OAuth2Service;
+import com.onetuks.libraryauth.oauth.strategy.dto.user_info.UserInfo;
+import com.onetuks.libraryauth.service.dto.LoginResult;
 import com.onetuks.libraryauth.service.dto.LogoutResult;
 import com.onetuks.libraryauth.service.dto.RefreshResult;
+import com.onetuks.librarydomain.member.service.MemberService;
+import com.onetuks.librarydomain.member.service.dto.result.MemberAuthResult;
+import com.onetuks.libraryobject.enums.ClientProvider;
 import com.onetuks.libraryobject.enums.RoleType;
-import com.onetuks.libraryobject.error.ErrorCode;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {
 
-  private final AuthTokenProvider authTokenProvider;
-  private final AuthTokenRepository authTokenRepository;
+  private final AuthTokenService authTokenService;
+  private final OAuth2Service oAuth2Service;
+  private final MemberService memberService;
 
-  public AuthService(AuthTokenProvider authTokenProvider, AuthTokenRepository authTokenRepository) {
-    this.authTokenProvider = authTokenProvider;
-    this.authTokenRepository = authTokenRepository;
+  public AuthService(
+      AuthTokenService authTokenService, OAuth2Service oAuth2Service, MemberService memberService) {
+    this.authTokenService = authTokenService;
+    this.oAuth2Service = oAuth2Service;
+    this.memberService = memberService;
   }
 
   @Transactional
-  public AuthToken saveAccessToken(String socialId, Long loginId, Set<RoleType> roleTypes) {
-    AuthToken accessToken = authTokenProvider.provideAccessToken(socialId, loginId, roleTypes);
-    AuthToken refreshToken = authTokenProvider.provideRefreshToken(socialId, loginId, roleTypes);
+  public LoginResult loginWithClientAuthToken(
+      ClientProvider clientProvider, String authorizationHeader) {
+    UserInfo userInfo =
+        oAuth2Service.getUserInfoWithClientAuthToken(clientProvider, authorizationHeader);
+    MemberAuthResult savedMember = memberService.registerIfNotExists(userInfo.toDomain());
+    AuthToken newAuthToken =
+        authTokenService.saveAccessToken(
+            userInfo.socialId(), savedMember.memberId(), savedMember.roles());
 
-    authTokenRepository.save(accessToken.getToken(), refreshToken.getToken());
-
-    return accessToken;
+    return LoginResult.of(
+        newAuthToken.getToken(),
+        savedMember.isNewMember(),
+        savedMember.memberId(),
+        savedMember.roles());
   }
 
   @Transactional
-  public RefreshResult updateAccessToken(
-      AuthToken accessToken, Long loginId, Set<RoleType> roleTypes) {
-    String socialId = accessToken.getSocialId();
+  public LoginResult loginWithClientAuthCode(
+      ClientProvider clientProvider, String authorizationHeader) {
+    String clientAuthCode = authorizationHeader.replace("Bearer ", "");
+    UserInfo userInfo = oAuth2Service.getUserInfoWithClientAuthCode(clientProvider, clientAuthCode);
+    MemberAuthResult savedMember = memberService.registerIfNotExists(userInfo.toDomain());
+    AuthToken newAuthToken =
+        authTokenService.saveAccessToken(
+            userInfo.socialId(), savedMember.memberId(), savedMember.roles());
 
-    validateRefreshToken(accessToken.getToken());
-
-    authTokenRepository.delete(accessToken.getToken());
-    AuthToken newAccessToken = saveAccessToken(socialId, loginId, roleTypes);
-
-    return RefreshResult.of(newAccessToken.getToken(), loginId, roleTypes);
+    return LoginResult.of(
+        newAuthToken.getToken(),
+        savedMember.isNewMember(),
+        savedMember.memberId(),
+        savedMember.roles());
   }
 
   @Transactional
-  public LogoutResult logout(AuthToken authToken) {
-    authTokenRepository.delete(authToken.getToken());
-    return new LogoutResult(true);
+  public RefreshResult refreshAuthToken(String accessToken, long loginId) {
+    AuthToken newAccessToken = authTokenService.refreshAccessToken(accessToken, loginId);
+
+    return RefreshResult.of(newAccessToken.getToken(), loginId, newAccessToken.getRoleTypes());
   }
 
-  @Transactional(readOnly = true)
-  public boolean isLogout(String accessToken) {
-    return authTokenRepository.findRefreshToken(accessToken).isEmpty();
+  @Transactional
+  public RefreshResult updateAuthToken(String accessToken, long loginId) {
+    AuthToken newAccessToken =
+        authTokenService.updateAccessToken(accessToken, loginId, Set.of(RoleType.ADMIN));
+
+    memberService.editAuthorities(loginId, newAccessToken.getRoleTypes());
+
+    return RefreshResult.of(newAccessToken.getToken(), loginId, newAccessToken.getRoleTypes());
   }
 
-  public Set<RoleType> grantAdminRole(AuthToken authToken) {
-    Set<RoleType> roles = ConcurrentHashMap.newKeySet();
-    roles.addAll(authToken.getRoleTypes());
-    roles.add(RoleType.ADMIN);
-    return roles;
+  @Transactional
+  public LogoutResult logout(String accessToken) {
+    boolean removalSucceed = authTokenService.removeAccessToken(accessToken);
+
+    return new LogoutResult(removalSucceed);
   }
 
-  private void validateRefreshToken(String accessToken) {
-    boolean isValidRefreshToken = findRefreshToken(accessToken).isValidTokenClaims();
+  @Transactional
+  public void withdraw(String accessToken, long loginId) {
+    boolean tokenRemovalSucceed = authTokenService.removeAccessToken(accessToken);
+    boolean memberRemovalSucceed = memberService.remove(loginId);
 
-    if (!isValidRefreshToken) {
-      throw new TokenExpiredException(ErrorCode.EXPIRED_REFRESH_TOKEN);
+    if (tokenRemovalSucceed && memberRemovalSucceed) {
+      throw new IllegalStateException("회원 탈퇴에 실패했습니다.");
     }
-  }
-
-  private AuthToken findRefreshToken(String accessToken) {
-    String refreshToken =
-        authTokenRepository
-            .findRefreshToken(accessToken)
-            .orElseThrow(() -> new TokenExpiredException(ErrorCode.EXPIRED_REFRESH_TOKEN));
-
-    return authTokenProvider.convertToAuthToken(refreshToken);
   }
 }
