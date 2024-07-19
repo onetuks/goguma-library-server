@@ -56,11 +56,13 @@ class WeeklyFeaturedBookEntityRepositoryTest extends DbStorageIntegrationTest {
                     weeklyFeaturedBookEntityRepository.create(WeeklyFeaturedBook.of(featuredBook)))
             .toList();
 
+    entityManager.flush();
+
     // When
     Page<WeeklyFeaturedBook> results = weeklyFeaturedBookEntityRepository.readAllForThisWeek();
 
     // Then
-    assertThat(results)
+    assertThat(results.getContent())
         .hasSize(weeklyFeaturedBooks.size())
         .allSatisfy(
             result -> {

@@ -8,9 +8,12 @@ import com.onetuks.librarydomain.member.repository.MemberRepository;
 import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.librarydomain.review.repository.ReviewRepository;
 import com.onetuks.librarydomain.review.service.dto.param.ReviewParam;
+import com.onetuks.librarydomain.weekly.model.WeeklyFeaturedBook;
+import com.onetuks.librarydomain.weekly.repository.WeeklyFeaturedBookRepository;
 import com.onetuks.libraryobject.enums.SortBy;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ public class ReviewService {
   private final ReviewRepository reviewRepository;
   private final MemberRepository memberRepository;
   private final BookRepository bookRepository;
+  private final WeeklyFeaturedBookRepository weeklyFeaturedBookRepository;
 
   private final PointService pointService;
 
@@ -29,10 +33,12 @@ public class ReviewService {
       ReviewRepository reviewRepository,
       MemberRepository memberRepository,
       BookRepository bookRepository,
+      WeeklyFeaturedBookRepository weeklyFeaturedBookRepository,
       PointService pointService) {
     this.reviewRepository = reviewRepository;
     this.memberRepository = memberRepository;
     this.bookRepository = bookRepository;
+    this.weeklyFeaturedBookRepository = weeklyFeaturedBookRepository;
     this.pointService = pointService;
   }
 
@@ -43,7 +49,12 @@ public class ReviewService {
 
     Member updateMember =
         memberRepository.update(member.increaseReviewCategoryStatics(book.categories()));
-    pointService.creditPointForReviewRegistration(member.memberId());
+
+    boolean isFeaturedBook =
+        weeklyFeaturedBookRepository.readAllForThisWeek().getContent().stream()
+            .map(WeeklyFeaturedBook::book)
+            .anyMatch(featuredBook -> Objects.equals(featuredBook.bookId(), book.bookId()));
+    pointService.creditPointForReviewRegistration(member.memberId(), isFeaturedBook);
 
     return reviewRepository.create(
         new Review(updateMember, book, param.reviewTitle(), param.reviewContent()));

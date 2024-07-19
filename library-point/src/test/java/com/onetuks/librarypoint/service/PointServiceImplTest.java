@@ -38,12 +38,30 @@ class PointServiceImplTest extends CorePointIntegrationTest {
 
   @Test
   @DisplayName("서평 등록 시 일반도서라면 15포인트를 지급한다.")
-  void creditPointForReviewRegistration_Credit15Point_Test() {
+  void creditPointForReviewRegistration_IsNotWeeklyFeaturedBookCredit15Point_Test() {
     // Given
+    boolean isWeeklyFeaturedBook = false;
     long expected = memberEntity.getPoints() + 15L;
 
     // When
-    pointService.creditPointForReviewRegistration(memberEntity.getMemberId());
+    pointService.creditPointForReviewRegistration(memberEntity.getMemberId(), isWeeklyFeaturedBook);
+
+    // Then
+    long result =
+        memberEntityJpaRepository.findById(memberEntity.getMemberId()).orElseThrow().getPoints();
+
+    assertThat(result).isEqualTo(expected);
+  }
+
+  @Test
+  @DisplayName("서평 등록 시 일반도서라면 15포인트를 지급한다.")
+  void creditPointForReviewRegistration_IsWeeklyFeaturedBookCredit30Point_Test() {
+    // Given
+    boolean isWeeklyFeaturedBook = false;
+    long expected = memberEntity.getPoints() + 15L;
+
+    // When
+    pointService.creditPointForReviewRegistration(memberEntity.getMemberId(), isWeeklyFeaturedBook);
 
     // Then
     long result =

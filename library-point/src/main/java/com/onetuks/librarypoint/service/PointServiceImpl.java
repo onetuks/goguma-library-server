@@ -32,9 +32,10 @@ public class PointServiceImpl implements PointService {
 
   @Override
   @Transactional
-  public void creditPointForReviewRegistration(long memberId) {
-    // todo 서평 등록 시 포인트 지급 (금주도서 : 30P / 일반도서: 15P)
-    pointRepository.creditPoints(memberId, REVIEW_REGISTRATION_BASE_POINT);
+  public void creditPointForReviewRegistration(long memberId, boolean isWeeklyFeaturedBook) {
+    pointRepository.creditPoints(
+        memberId,
+        isWeeklyFeaturedBook ? REVIEW_REGISTRATION_EVENT_POINT : REVIEW_REGISTRATION_BASE_POINT);
   }
 
   @Override

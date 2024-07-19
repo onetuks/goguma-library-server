@@ -16,6 +16,7 @@ import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.librarydomain.review.service.dto.param.ReviewParam;
+import com.onetuks.librarydomain.weekly.model.WeeklyFeaturedBook;
 import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.enums.SortBy;
@@ -42,6 +43,11 @@ class ReviewServiceTest extends DomainIntegrationTest {
     ReviewParam param = new ReviewParam("서평제목", "서평본문");
     Member picker =
         beforeReview.member().increaseReviewCategoryStatics(beforeReview.book().categories());
+    Page<WeeklyFeaturedBook> weeklyFeaturedBooks =
+        new PageImpl<>(
+            IntStream.range(0, 3)
+                .mapToObj(i -> WeeklyFeaturedBook.of(beforeReview.book()))
+                .toList());
     Review afterReview =
         new Review(
             beforeReview.reviewId(),
@@ -58,6 +64,7 @@ class ReviewServiceTest extends DomainIntegrationTest {
     given(bookRepository.read(beforeReview.book().bookId())).willReturn(beforeReview.book());
     given(memberRepository.update(any(Member.class))).willReturn(picker);
     given(reviewRepository.create(any(Review.class))).willReturn(afterReview);
+    given(weeklyFeaturedBookRepository.readAllForThisWeek()).willReturn(weeklyFeaturedBooks);
 
     // When
     Review result = reviewService.register(picker.memberId(), beforeReview.book().bookId(), param);
@@ -86,7 +93,7 @@ class ReviewServiceTest extends DomainIntegrationTest {
           }
         });
 
-    verify(pointService, times(1)).creditPointForReviewRegistration(picker.memberId());
+    verify(pointService, times(1)).creditPointForReviewRegistration(picker.memberId(), true);
   }
 
   @Test
