@@ -14,8 +14,6 @@ import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 class WeeklyFeaturedBookEntityRepositoryTest extends DbStorageIntegrationTest {
 
@@ -47,22 +45,23 @@ class WeeklyFeaturedBookEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("금주도서 중 실제 이번주 금주도서만 다건 조회한다.")
   void readAll_ForThisWeek_OnlyThisWeek_Test() {
     // Given
-    Pageable pageable = PageRequest.of(0, 3);
     List<Book> featuredBooks =
-        IntStream.range(0, pageable.getPageSize())
+        IntStream.range(0, 3)
             .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null)))
             .toList();
-    featuredBooks.forEach(
-        featuredBook ->
-            weeklyFeaturedBookEntityRepository.create(WeeklyFeaturedBook.of(featuredBook)));
+    List<WeeklyFeaturedBook> weeklyFeaturedBooks =
+        featuredBooks.stream()
+            .map(
+                featuredBook ->
+                    weeklyFeaturedBookEntityRepository.create(WeeklyFeaturedBook.of(featuredBook)))
+            .toList();
 
     // When
-    Page<WeeklyFeaturedBook> results =
-        weeklyFeaturedBookEntityRepository.readAllForThisWeek(pageable);
+    Page<WeeklyFeaturedBook> results = weeklyFeaturedBookEntityRepository.readAllForThisWeek();
 
     // Then
     assertThat(results)
-        .hasSize(pageable.getPageSize())
+        .hasSize(weeklyFeaturedBooks.size())
         .allSatisfy(
             result -> {
               assertThat(result.weeklyFeaturedBooksEvent().startedAt())

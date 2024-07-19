@@ -316,7 +316,6 @@ class BookServiceTest extends DomainIntegrationTest {
   void searchWithInterestedCategoriesTest() {
     // Given
     int count = 3;
-    Pageable pageable = PageRequest.of(0, count);
     Member member = MemberFixture.create(127L, RoleType.ADMIN);
     List<Book> allBooks =
         IntStream.range(0, 5).mapToObj(i -> BookFixture.create((long) i)).toList();
@@ -330,10 +329,10 @@ class BookServiceTest extends DomainIntegrationTest {
                 .toList());
 
     given(memberRepository.read(member.memberId())).willReturn(member);
-    given(bookRepository.readAll(anySet(), any(Pageable.class))).willReturn(expected);
+    given(bookRepository.readAll(anySet())).willReturn(expected);
 
     // When
-    Page<Book> results = bookService.searchWithInterestedCategories(member.memberId(), pageable);
+    Page<Book> results = bookService.searchWithInterestedCategories(member.memberId());
 
     // Then
     assertThat(results)

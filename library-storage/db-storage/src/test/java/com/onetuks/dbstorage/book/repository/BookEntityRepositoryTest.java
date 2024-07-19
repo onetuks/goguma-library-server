@@ -157,7 +157,6 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
   void readAll_WithInterestedCategories_FindAllTest() {
     // Given
     int count = 3;
-    Pageable pageable = PageRequest.of(0, count);
     Set<Category> interestedCategories =
         memberEntityRepository
             .create(MemberFixture.create(null, RoleType.USER))
@@ -180,7 +179,7 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
             });
 
     // When
-    Page<Book> results = bookEntityRepository.readAll(interestedCategories, pageable);
+    Page<Book> results = bookEntityRepository.readAll(interestedCategories);
 
     // Then
     assertThat(results)
@@ -193,7 +192,7 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("멤버의 관심 카테고리가 ALL이면 모든 도서를 조회한다.")
   void readAll_WithInterestedCategoriesAll_FindAllTest() {
     // Given
-    Pageable pageable = PageRequest.of(0, 3);
+    int count = 3;
     Set<Category> interestedCategories = Set.of(Category.ALL);
     IntStream.range(0, 5)
         .forEach(
@@ -213,17 +212,17 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
             });
 
     // When
-    Page<Book> results = bookEntityRepository.readAll(interestedCategories, pageable);
+    Page<Book> results = bookEntityRepository.readAll(interestedCategories);
 
     // Then
-    assertThat(results).hasSize(pageable.getPageSize());
+    assertThat(results).hasSize(count);
   }
 
   @Test
   @DisplayName("기존 금주도서를 제외한 도서를 세건 조회한다.")
   void readAllNotIn_ExcludedPastFeaturedBooks_Test() {
     // Given
-    Pageable pageable = PageRequest.of(0, 3);
+    int count = 3;
     List<Book> allBooks =
         IntStream.range(0, 10)
             .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null)))
@@ -231,13 +230,13 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
     List<Book> pastFeaturedBooks = allBooks.subList(0, 5);
 
     // When
-    List<Book> results = bookEntityRepository.readAllNotIn(pastFeaturedBooks, pageable);
+    List<Book> results = bookEntityRepository.readAllNotIn(pastFeaturedBooks);
 
     // Then
     List<Long> pastFeaturedBooksIds = pastFeaturedBooks.stream().map(Book::bookId).toList();
 
     assertThat(results)
-        .hasSize(pageable.getPageSize())
+        .hasSize(count)
         .allSatisfy(result -> assertThat(result.bookId()).isNotIn(pastFeaturedBooksIds));
   }
 

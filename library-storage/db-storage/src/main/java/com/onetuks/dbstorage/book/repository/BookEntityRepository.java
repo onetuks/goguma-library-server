@@ -11,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Set;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -56,8 +57,10 @@ public class BookEntityRepository implements BookRepository {
   }
 
   @Override
-  public Page<Book> readAll(Set<Category> interestedCategories, Pageable pageable) {
+  public Page<Book> readAll(Set<Category> interestedCategories) {
     try {
+      Pageable pageable = PageRequest.of(0, INTERESTED_CATEGORIES_RECOMMEND_BOOKS_COUNT);
+
       Page<BookEntity> results =
           interestedCategories.contains(Category.ALL)
               ? repository.findAll(pageable)
@@ -71,10 +74,11 @@ public class BookEntityRepository implements BookRepository {
   }
 
   @Override
-  public List<Book> readAllNotIn(List<Book> allWeeklyFeaturedBooks, Pageable pageable) {
+  public List<Book> readAllNotIn(List<Book> allWeeklyFeaturedBooks) {
     return repository
         .findAllNotInPastWeeklyFeaturedBooks(
-            allWeeklyFeaturedBooks.stream().map(Book::bookId).toList(), pageable)
+            allWeeklyFeaturedBooks.stream().map(Book::bookId).toList(),
+            PageRequest.of(0, WEEKLY_FEATURED_RECOMMEND_BOOKS_COUNT))
         .getContent()
         .stream()
         .map(converter::toModel)

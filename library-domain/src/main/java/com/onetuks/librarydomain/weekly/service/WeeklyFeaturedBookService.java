@@ -6,8 +6,6 @@ import com.onetuks.librarydomain.weekly.model.WeeklyFeaturedBook;
 import com.onetuks.librarydomain.weekly.repository.WeeklyFeaturedBookRepository;
 import java.util.List;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,14 +28,13 @@ public class WeeklyFeaturedBookService {
     List<WeeklyFeaturedBook> allWeeklyFeaturedBooks = weeklyFeaturedBookRepository.readAll();
     List<Book> featuredBooks =
         bookRepository.readAllNotIn(
-            allWeeklyFeaturedBooks.stream().map(WeeklyFeaturedBook::book).toList(),
-            PageRequest.of(0, 3));
+            allWeeklyFeaturedBooks.stream().map(WeeklyFeaturedBook::book).toList());
 
     featuredBooks.forEach(book -> weeklyFeaturedBookRepository.create(WeeklyFeaturedBook.of(book)));
   }
 
   @Transactional(readOnly = true)
-  public Page<Book> searchAllForThisWeek(Pageable pageable) {
-    return weeklyFeaturedBookRepository.readAllForThisWeek(pageable).map(WeeklyFeaturedBook::book);
+  public Page<Book> searchAllForThisWeek() {
+    return weeklyFeaturedBookRepository.readAllForThisWeek().map(WeeklyFeaturedBook::book);
   }
 }

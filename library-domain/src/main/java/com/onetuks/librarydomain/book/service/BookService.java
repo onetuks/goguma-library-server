@@ -100,7 +100,7 @@ public class BookService {
   }
 
   @Transactional(readOnly = true)
-  public Page<Book> searchWithInterestedCategories(long loginId, Pageable pageable) {
-    return bookRepository.readAll(memberRepository.read(loginId).interestedCategories(), pageable);
+  public Page<Book> searchWithInterestedCategories(long loginId) {
+    return bookRepository.readAll(memberRepository.read(loginId).interestedCategories());
   }
 }

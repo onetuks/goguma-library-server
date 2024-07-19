@@ -12,6 +12,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReviewRepository {
 
+  int BEST_QUALITY_MEMBER_COUNT = 7;
+  int BEST_QUANTITY_MEMBER_COUNT = 3;
+
   Review create(Review review);
 
   Review read(long reviewId);
@@ -22,9 +25,9 @@ public interface ReviewRepository {
 
   Page<Review> readAll(long memberId, Pageable pageable);
 
-  Page<Review> readAllWeeklyMostPicked(List<Book> thisWeekFeaturedBooks, Pageable pageable);
+  Page<Review> readAllWeeklyMostPicked(List<Book> thisWeekFeaturedBooks);
 
-  Page<Member> readAllWeeklyMostWrite(List<Book> thisWeekFeaturedBooks, Pageable pageable);
+  Page<Member> readAllWeeklyMostWrite(List<Book> thisWeekFeaturedBooks);
 
   Review update(Review review);
 

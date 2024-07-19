@@ -169,7 +169,7 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("금주도서에 해당하는 서평 중 서평픽이 많은 순으로 7건 조회한다.")
   void readAllWeeklyMostPicked_OnlyWeeklyFeaturedBookReview_OrderByPickCountDesc_Test() {
     // Given
-    Pageable pageable = PageRequest.of(0, 7);
+    int count = 7;
     List<Book> thisWeekFeaturedBooks =
         IntStream.range(0, 5)
             .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null)))
@@ -198,15 +198,14 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
         });
 
     // When
-    Page<Review> results =
-        reviewEntityRepository.readAllWeeklyMostPicked(thisWeekFeaturedBooks, pageable);
+    Page<Review> results = reviewEntityRepository.readAllWeeklyMostPicked(thisWeekFeaturedBooks);
 
     // Then
     long firstReviewPickCount = results.getContent().getFirst().pickCount();
     long lastReviewPickCount = results.getContent().getFirst().pickCount();
 
     assertAll(
-        () -> assertThat(results).hasSize(pageable.getPageSize()),
+        () -> assertThat(results).hasSize(count),
         () -> assertThat(firstReviewPickCount).isGreaterThanOrEqualTo(lastReviewPickCount));
   }
 
@@ -214,7 +213,7 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("금주도서에 해당하는 서평을 가장 많이 작성한 순으로 3명 조회한다.")
   void readAllWeeklyMostWrite_OnlyWeeklyFeaturedBookReview_OrderByWriteCount_Test() {
     // Given
-    Pageable pageable = PageRequest.of(0, 3);
+    int count = 3;
     List<Book> thisWeekFeaturedBooks =
         IntStream.range(0, 3)
             .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null)))
@@ -240,8 +239,7 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
                     ReviewFixture.create(null, members.get(2), thisWeekFeaturedBooks.get(i))));
 
     // When
-    Page<Member> results =
-        reviewEntityRepository.readAllWeeklyMostWrite(thisWeekFeaturedBooks, pageable);
+    Page<Member> results = reviewEntityRepository.readAllWeeklyMostWrite(thisWeekFeaturedBooks);
 
     // Then
     Member firstMember = results.getContent().getFirst();
@@ -257,7 +255,7 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
             .getTotalElements();
 
     assertAll(
-        () -> assertThat(results).hasSize(pageable.getPageSize()),
+        () -> assertThat(results).hasSize(count),
         () -> assertThat(firstMemberReviewCount).isGreaterThanOrEqualTo(lastMemberReviewCount));
   }
 

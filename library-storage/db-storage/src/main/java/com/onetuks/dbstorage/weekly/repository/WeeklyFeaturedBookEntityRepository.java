@@ -7,7 +7,7 @@ import com.onetuks.librarydomain.weekly.repository.WeeklyFeaturedBookRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -27,11 +27,12 @@ public class WeeklyFeaturedBookEntityRepository implements WeeklyFeaturedBookRep
     return converter.toModel(repository.save(converter.toEntity(weeklyFeaturedBook)));
   }
 
-  public Page<WeeklyFeaturedBook> readAllForThisWeek(Pageable pageable) {
+  public Page<WeeklyFeaturedBook> readAllForThisWeek() {
     LocalDateTime thisMondayMidnight = WeeklyFeaturedBooksEvent.getThisMondayMidnight();
 
     return repository
-        .findAllByWeeklyFeaturedBooksEventEntityStartedAtAfter(thisMondayMidnight, pageable)
+        .findAllByWeeklyFeaturedBooksEventEntityStartedAtAfter(
+            thisMondayMidnight, PageRequest.of(0, WEEKLY_FEATURED_BOOKS_COUNT))
         .map(converter::toModel);
   }
 

@@ -11,6 +11,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BookRepository {
 
+  int INTERESTED_CATEGORIES_RECOMMEND_BOOKS_COUNT = 3;
+  int WEEKLY_FEATURED_RECOMMEND_BOOKS_COUNT = 3;
+
   Book create(Book book);
 
   Book read(long bookId);
@@ -19,9 +22,9 @@ public interface BookRepository {
 
   Page<Book> readAll(String keyword, Pageable pageable);
 
-  Page<Book> readAll(Set<Category> interestedCategories, Pageable pageable);
+  Page<Book> readAll(Set<Category> interestedCategories);
 
-  List<Book> readAllNotIn(List<Book> allWeeklyFeaturedBooks, Pageable pageable);
+  List<Book> readAllNotIn(List<Book> allWeeklyFeaturedBooks);
 
   Book update(Book book);
 

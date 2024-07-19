@@ -38,7 +38,7 @@ class WeeklyFeaturedBookServiceTest extends DomainIntegrationTest {
         allBooks.subList(allWeeklyFeaturedBooks.size(), allWeeklyFeaturedBooks.size() + 3);
 
     given(weeklyFeaturedBookRepository.readAll()).willReturn(allWeeklyFeaturedBooks);
-    given(bookRepository.readAllNotIn(anyList(), any(PageRequest.class))).willReturn(featuredBooks);
+    given(bookRepository.readAllNotIn(anyList())).willReturn(featuredBooks);
 
     // When
     weeklyFeaturedBookService.registerAll();
@@ -52,21 +52,20 @@ class WeeklyFeaturedBookServiceTest extends DomainIntegrationTest {
   @DisplayName("이번주의 금주도서를 조회하면 3권의 도서가 조회된다.")
   void searchAllForThisWeek() {
     // Given
-    Pageable pageable = PageRequest.of(0, 3);
+    int count = 3;
     Page<WeeklyFeaturedBook> weeklyFeaturedBooks =
         new PageImpl<>(
-            IntStream.range(0, 3)
+            IntStream.range(0, count)
                 .mapToObj(
                     i -> WeeklyFeaturedBookFixture.create((long) i, BookFixture.create((long) i)))
                 .toList());
 
-    given(weeklyFeaturedBookRepository.readAllForThisWeek(pageable))
-        .willReturn(weeklyFeaturedBooks);
+    given(weeklyFeaturedBookRepository.readAllForThisWeek()).willReturn(weeklyFeaturedBooks);
 
     // When
-    Page<Book> results = weeklyFeaturedBookService.searchAllForThisWeek(pageable);
+    Page<Book> results = weeklyFeaturedBookService.searchAllForThisWeek();
 
     // Then
-    assertThat(results).hasSize(pageable.getPageSize());
+    assertThat(results).hasSize(count);
   }
 }
