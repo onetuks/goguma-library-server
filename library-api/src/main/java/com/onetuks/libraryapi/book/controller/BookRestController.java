@@ -189,7 +189,7 @@ public class BookRestController {
   @GetMapping(path = "/recommend/weekly-featured", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookResponses> getWeeklyBooks(
       @PageableDefault(size = 3) Pageable pageable) {
-    Page<Book> results = weeklyFeaturedBookService.searchAll(pageable);
+    Page<Book> results = weeklyFeaturedBookService.searchAllForThisWeek(pageable);
     BookResponses responses = BookResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);

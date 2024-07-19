@@ -37,7 +37,7 @@ public class WeeklyFeaturedBookService {
   }
 
   @Transactional(readOnly = true)
-  public Page<Book> searchAll(Pageable pageable) {
-    return weeklyFeaturedBookRepository.readAll(pageable).map(WeeklyFeaturedBook::book);
+  public Page<Book> searchAllForThisWeek(Pageable pageable) {
+    return weeklyFeaturedBookRepository.readAllForThisWeek(pageable).map(WeeklyFeaturedBook::book);
   }
 }

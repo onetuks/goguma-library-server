@@ -45,7 +45,7 @@ class WeeklyFeaturedBookEntityRepositoryTest extends DbStorageIntegrationTest {
 
   @Test
   @DisplayName("금주도서 중 실제 이번주 금주도서만 다건 조회한다.")
-  void readAll_OnlyThisWeek_Test() {
+  void readAll_ForThisWeek_OnlyThisWeek_Test() {
     // Given
     Pageable pageable = PageRequest.of(0, 3);
     List<Book> featuredBooks =
@@ -57,7 +57,8 @@ class WeeklyFeaturedBookEntityRepositoryTest extends DbStorageIntegrationTest {
             weeklyFeaturedBookEntityRepository.create(WeeklyFeaturedBook.of(featuredBook)));
 
     // When
-    Page<WeeklyFeaturedBook> results = weeklyFeaturedBookEntityRepository.readAll(pageable);
+    Page<WeeklyFeaturedBook> results =
+        weeklyFeaturedBookEntityRepository.readAllForThisWeek(pageable);
 
     // Then
     assertThat(results)
@@ -73,7 +74,7 @@ class WeeklyFeaturedBookEntityRepositoryTest extends DbStorageIntegrationTest {
 
   @Test
   @DisplayName("모든 금주도서를 다건 조회한다.")
-  void readAll_Test() {
+  void readAll_ForThisWeek_Test() {
     // Given
     int count = 10;
     IntStream.range(0, count)

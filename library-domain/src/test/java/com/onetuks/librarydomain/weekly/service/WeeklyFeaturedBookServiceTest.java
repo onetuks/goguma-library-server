@@ -50,7 +50,7 @@ class WeeklyFeaturedBookServiceTest extends DomainIntegrationTest {
 
   @Test
   @DisplayName("이번주의 금주도서를 조회하면 3권의 도서가 조회된다.")
-  void searchAll() {
+  void searchAllForThisWeek() {
     // Given
     Pageable pageable = PageRequest.of(0, 3);
     Page<WeeklyFeaturedBook> weeklyFeaturedBooks =
@@ -60,10 +60,11 @@ class WeeklyFeaturedBookServiceTest extends DomainIntegrationTest {
                     i -> WeeklyFeaturedBookFixture.create((long) i, BookFixture.create((long) i)))
                 .toList());
 
-    given(weeklyFeaturedBookRepository.readAll(pageable)).willReturn(weeklyFeaturedBooks);
+    given(weeklyFeaturedBookRepository.readAllForThisWeek(pageable))
+        .willReturn(weeklyFeaturedBooks);
 
     // When
-    Page<Book> results = weeklyFeaturedBookService.searchAll(pageable);
+    Page<Book> results = weeklyFeaturedBookService.searchAllForThisWeek(pageable);
 
     // Then
     assertThat(results).hasSize(pageable.getPageSize());

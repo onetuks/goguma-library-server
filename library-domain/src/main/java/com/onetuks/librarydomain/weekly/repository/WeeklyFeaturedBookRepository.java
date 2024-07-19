@@ -11,7 +11,7 @@ public interface WeeklyFeaturedBookRepository {
 
   WeeklyFeaturedBook create(WeeklyFeaturedBook weeklyFeaturedBook);
 
-  Page<WeeklyFeaturedBook> readAll(Pageable pageable);
+  Page<WeeklyFeaturedBook> readAllForThisWeek(Pageable pageable);
 
   List<WeeklyFeaturedBook> readAll();
 }

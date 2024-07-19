@@ -8,6 +8,7 @@ import com.onetuks.dbstorage.DbStorageIntegrationTest;
 import com.onetuks.librarydomain.BookFixture;
 import com.onetuks.librarydomain.MemberFixture;
 import com.onetuks.librarydomain.ReviewFixture;
+import com.onetuks.librarydomain.ReviewPickFixture;
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.review.model.Review;
@@ -162,6 +163,102 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
     assertThat(results)
         .hasSize(pageable.getPageSize())
         .allSatisfy(result -> assertThat(result.member()).isEqualTo(member));
+  }
+
+  @Test
+  @DisplayName("금주도서에 해당하는 서평 중 서평픽이 많은 순으로 7건 조회한다.")
+  void readAllWeeklyMostPicked_OnlyWeeklyFeaturedBookReview_OrderByPickCountDesc_Test() {
+    // Given
+    Pageable pageable = PageRequest.of(0, 7);
+    List<Book> thisWeekFeaturedBooks =
+        IntStream.range(0, 5)
+            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null)))
+            .toList();
+    thisWeekFeaturedBooks.forEach(
+        book -> {
+          List<Review> reviews =
+              IntStream.range(0, 3)
+                  .mapToObj(
+                      i ->
+                          reviewEntityRepository.create(
+                              ReviewFixture.create(
+                                  null,
+                                  memberEntityRepository.create(
+                                      MemberFixture.create(null, RoleType.USER)),
+                                  book)))
+                  .toList();
+
+          reviews.forEach(
+              review ->
+                  reviewPickEntityRepository.create(
+                      ReviewPickFixture.create(
+                          null,
+                          memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
+                          review)));
+        });
+
+    // When
+    Page<Review> results =
+        reviewEntityRepository.readAllWeeklyMostPicked(thisWeekFeaturedBooks, pageable);
+
+    // Then
+    long firstReviewPickCount = results.getContent().getFirst().pickCount();
+    long lastReviewPickCount = results.getContent().getFirst().pickCount();
+
+    assertAll(
+        () -> assertThat(results).hasSize(pageable.getPageSize()),
+        () -> assertThat(firstReviewPickCount).isGreaterThanOrEqualTo(lastReviewPickCount));
+  }
+
+  @Test
+  @DisplayName("금주도서에 해당하는 서평을 가장 많이 작성한 순으로 3명 조회한다.")
+  void readAllWeeklyMostWrite_OnlyWeeklyFeaturedBookReview_OrderByWriteCount_Test() {
+    // Given
+    Pageable pageable = PageRequest.of(0, 3);
+    List<Book> thisWeekFeaturedBooks =
+        IntStream.range(0, 3)
+            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null)))
+            .toList();
+    List<Member> members =
+        IntStream.range(0, 4)
+            .mapToObj(i -> memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)))
+            .toList();
+    IntStream.range(0, 3)
+        .forEach(
+            i ->
+                reviewEntityRepository.create(
+                    ReviewFixture.create(null, members.getFirst(), thisWeekFeaturedBooks.get(i))));
+    IntStream.range(0, 2)
+        .forEach(
+            i ->
+                reviewEntityRepository.create(
+                    ReviewFixture.create(null, members.get(1), thisWeekFeaturedBooks.get(i))));
+    IntStream.range(0, 1)
+        .forEach(
+            i ->
+                reviewEntityRepository.create(
+                    ReviewFixture.create(null, members.get(2), thisWeekFeaturedBooks.get(i))));
+
+    // When
+    Page<Member> results =
+        reviewEntityRepository.readAllWeeklyMostWrite(thisWeekFeaturedBooks, pageable);
+
+    // Then
+    Member firstMember = results.getContent().getFirst();
+    Member lastMember = results.getContent().getLast();
+
+    long firstMemberReviewCount =
+        reviewEntityRepository
+            .readAll(firstMember.memberId(), PageRequest.of(0, 1_000))
+            .getTotalElements();
+    long lastMemberReviewCount =
+        reviewEntityRepository
+            .readAll(lastMember.memberId(), PageRequest.of(0, 1_000))
+            .getTotalElements();
+
+    assertAll(
+        () -> assertThat(results).hasSize(pageable.getPageSize()),
+        () -> assertThat(firstMemberReviewCount).isGreaterThanOrEqualTo(lastMemberReviewCount));
   }
 
   @Test

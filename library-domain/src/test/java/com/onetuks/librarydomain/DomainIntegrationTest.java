@@ -9,6 +9,7 @@ import com.onetuks.librarydomain.book.service.IsbnSearchService;
 import com.onetuks.librarydomain.global.file.repository.FileRepository;
 import com.onetuks.librarydomain.global.point.service.PointService;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
+import com.onetuks.librarydomain.member.service.MemberFacadeService;
 import com.onetuks.librarydomain.member.service.MemberService;
 import com.onetuks.librarydomain.review.repository.ReviewPickRepository;
 import com.onetuks.librarydomain.review.repository.ReviewRepository;
@@ -37,6 +38,7 @@ public class DomainIntegrationTest {
   @Autowired public ReviewPickService reviewPickService;
   @Autowired public IsbnSearchService isbnSearchService;
   @Autowired public WeeklyFeaturedBookService weeklyFeaturedBookService;
+  @Autowired public MemberFacadeService memberFacadeService;
 
   @MockBean public FileRepository fileRepository;
   @MockBean public MemberRepository memberRepository;

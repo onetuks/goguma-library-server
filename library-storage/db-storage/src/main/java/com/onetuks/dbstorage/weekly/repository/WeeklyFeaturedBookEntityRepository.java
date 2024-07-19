@@ -27,8 +27,7 @@ public class WeeklyFeaturedBookEntityRepository implements WeeklyFeaturedBookRep
     return converter.toModel(repository.save(converter.toEntity(weeklyFeaturedBook)));
   }
 
-  @Override
-  public Page<WeeklyFeaturedBook> readAll(Pageable pageable) {
+  public Page<WeeklyFeaturedBook> readAllForThisWeek(Pageable pageable) {
     LocalDateTime thisMondayMidnight = WeeklyFeaturedBooksEvent.getThisMondayMidnight();
 
     return repository
