@@ -57,6 +57,7 @@ class WeeklyFeaturedBookEntityRepositoryTest extends DbStorageIntegrationTest {
             .toList();
 
     entityManager.flush();
+    entityManager.clear();
 
     // When
     Page<WeeklyFeaturedBook> results = weeklyFeaturedBookEntityRepository.readAllForThisWeek();
