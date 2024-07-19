@@ -16,60 +16,59 @@ import org.springframework.stereotype.Component;
 @Component
 public class MemberConverter {
 
-  public MemberEntity toEntity(Member member) {
+  public MemberEntity toEntity(Member model) {
     return new MemberEntity(
-        member.memberId(),
-        toEmbeddable(member.authInfo()),
-        member.nickname().value(),
-        member.introduction(),
-        member.interestedCategories(),
-        member.isAlarmAccepted(),
-        member.points(),
-        member.profileImageFile().fileName(),
-        member.profileBackgroundImageFile().fileName(),
-        toStaticsEntity(member.memberStatics()));
+        model.memberId(),
+        toEmbeddable(model.authInfo()),
+        model.nickname().value(),
+        model.introduction(),
+        model.interestedCategories(),
+        model.isAlarmAccepted(),
+        model.points(),
+        model.profileImageFile().fileName(),
+        model.profileBackgroundImageFile().fileName(),
+        toStaticsEntity(model.memberStatics()));
   }
 
-  public Member toDomain(MemberEntity memberEntity) {
+  public Member toModel(MemberEntity entity) {
     return new Member(
-        memberEntity.getMemberId(),
-        toValueObject(memberEntity.getAuthInfoEmbeddable()),
-        new Nickname(memberEntity.getNickname()),
-        memberEntity.getIntroduction(),
-        memberEntity.getInterestedCategories(),
-        memberEntity.getIsAlarmAccepted(),
-        memberEntity.getPoints(),
-        ImageFile.of(PROFILE_IMAGE, memberEntity.getProfileImageUri()),
-        ImageFile.of(PROFILE_BACKGROUND_IMAGE, memberEntity.getProfileBackgroundImageUri()),
-        toStaticsDomain(memberEntity.getMemberStaticsEntity()));
+        entity.getMemberId(),
+        toValueObject(entity.getAuthInfoEmbeddable()),
+        new Nickname(entity.getNickname()),
+        entity.getIntroduction(),
+        entity.getInterestedCategories(),
+        entity.getIsAlarmAccepted(),
+        entity.getPoints(),
+        ImageFile.of(PROFILE_IMAGE, entity.getProfileImageUri()),
+        ImageFile.of(PROFILE_BACKGROUND_IMAGE, entity.getProfileBackgroundImageUri()),
+        toStaticsModel(entity.getMemberStaticsEntity()));
   }
 
-  private AuthInfoEmbeddable toEmbeddable(AuthInfo authInfo) {
-    return new AuthInfoEmbeddable(authInfo.socialId(), authInfo.clientProvider(), authInfo.roles());
+  private AuthInfoEmbeddable toEmbeddable(AuthInfo valueObject) {
+    return new AuthInfoEmbeddable(
+        valueObject.socialId(), valueObject.clientProvider(), valueObject.roles());
   }
 
-  private AuthInfo toValueObject(AuthInfoEmbeddable authInfoEmbeddable) {
+  private AuthInfo toValueObject(AuthInfoEmbeddable embeddable) {
     return new AuthInfo(
-        authInfoEmbeddable.getSocialId(),
-        authInfoEmbeddable.getClientProvider(),
-        authInfoEmbeddable.getRoles());
+        embeddable.getSocialId(), embeddable.getClientProvider(), embeddable.getRoles());
   }
 
-  private MemberStaticsEntity toStaticsEntity(MemberStatics memberStatics) {
+  private MemberStaticsEntity toStaticsEntity(MemberStatics staticsModel) {
     return new MemberStaticsEntity(
-        memberStatics.memberStaticsId(),
-        memberStatics.reviewCounts(),
-        memberStatics.followerCounts(),
-        memberStatics.followingCounts(),
-        memberStatics.reviewCategoryCounts());
+        staticsModel.memberStaticsId(),
+        staticsModel.reviewCounts(),
+        staticsModel.followerCounts(),
+        staticsModel.followingCounts(),
+        staticsModel.reviewCategoryCounts());
   }
 
-  private MemberStatics toStaticsDomain(MemberStaticsEntity memberStaticsEntity) {
+  private MemberStatics toStaticsModel(MemberStaticsEntity staticsEntity) {
     return new MemberStatics(
-        memberStaticsEntity.getMemberStaticsId(),
-        memberStaticsEntity.getReviewCounts(),
-        memberStaticsEntity.getFollowerCounts(),
-        memberStaticsEntity.getFollowingCounts(),
-        memberStaticsEntity.getReviewCategoryCounts());
+        staticsEntity.getMemberStaticsId(),
+        staticsEntity.getReviewCounts(),
+        staticsEntity.getFollowerCounts(),
+        staticsEntity.getFollowingCounts(),
+        staticsEntity.getReviewCategoryCounts());
   }
 }

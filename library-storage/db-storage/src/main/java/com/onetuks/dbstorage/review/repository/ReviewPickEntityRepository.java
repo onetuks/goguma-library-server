@@ -22,12 +22,12 @@ public class ReviewPickEntityRepository implements ReviewPickRepository {
 
   @Override
   public ReviewPick create(ReviewPick reviewPick) {
-    return converter.toDomain(repository.save(converter.toEntity(reviewPick)));
+    return converter.toModel(repository.save(converter.toEntity(reviewPick)));
   }
 
   @Override
   public ReviewPick read(long reviewPickId) {
-    return converter.toDomain(
+    return converter.toModel(
         repository
             .findById(reviewPickId)
             .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 서평픽입니다.")));
@@ -35,7 +35,7 @@ public class ReviewPickEntityRepository implements ReviewPickRepository {
 
   @Override
   public Page<ReviewPick> readAll(long memberId, Pageable pageable) {
-    return repository.findAllByMemberEntityMemberId(memberId, pageable).map(converter::toDomain);
+    return repository.findAllByMemberEntityMemberId(memberId, pageable).map(converter::toModel);
   }
 
   @Override

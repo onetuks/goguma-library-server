@@ -2,11 +2,14 @@ package com.onetuks.libraryapi.member.controller;
 
 import com.onetuks.libraryapi.member.dto.request.MemberPatchRequest;
 import com.onetuks.libraryapi.member.dto.response.MemberGetResponse;
+import com.onetuks.libraryapi.member.dto.response.MemberGetResponses;
 import com.onetuks.libraryapi.member.dto.response.MemberPatchResponse;
 import com.onetuks.libraryauth.util.LoginId;
 import com.onetuks.librarydomain.member.model.Member;
+import com.onetuks.librarydomain.member.service.MemberFacadeService;
 import com.onetuks.librarydomain.member.service.MemberService;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +26,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class MemberRestController {
 
   private final MemberService memberService;
+  private final MemberFacadeService memberFacadeService;
 
-  public MemberRestController(MemberService memberService) {
+  public MemberRestController(
+      MemberService memberService, MemberFacadeService memberFacadeService) {
     this.memberService = memberService;
+    this.memberFacadeService = memberFacadeService;
   }
 
   /**
@@ -68,5 +74,18 @@ public class MemberRestController {
     MemberGetResponse response = MemberGetResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  /**
+   * 추천 멤버 프로필 조회 금주도서 기간동안 서평픽 많은 작가 7인 + 작성 서평 많은 작가 3인
+   *
+   * @return : 추천 멤버 프로필 목록
+   */
+  @GetMapping(path = "/recommend", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<MemberGetResponses> getRecommendedMemberProfiles() {
+    List<Member> results = memberFacadeService.searchAllForRecommend();
+    MemberGetResponses responses = MemberGetResponses.from(results);
+
+    return ResponseEntity.status(HttpStatus.OK).body(responses);
   }
 }

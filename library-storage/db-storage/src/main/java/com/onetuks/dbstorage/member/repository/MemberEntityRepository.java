@@ -21,12 +21,12 @@ public class MemberEntityRepository implements MemberRepository {
 
   @Override
   public Member create(Member member) {
-    return converter.toDomain(repository.save(converter.toEntity(member)));
+    return converter.toModel(repository.save(converter.toEntity(member)));
   }
 
   @Override
   public Member read(long memberId) {
-    return converter.toDomain(
+    return converter.toModel(
         repository
             .findById(memberId)
             .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다.")));
@@ -36,12 +36,12 @@ public class MemberEntityRepository implements MemberRepository {
   public Optional<Member> read(String social, ClientProvider clientProvider) {
     return repository
         .findByAuthInfoEmbeddableSocialIdAndAuthInfoEmbeddableClientProvider(social, clientProvider)
-        .map(converter::toDomain);
+        .map(converter::toModel);
   }
 
   @Override
   public Member update(Member member) {
-    return converter.toDomain(repository.save(converter.toEntity(member)));
+    return converter.toModel(repository.save(converter.toEntity(member)));
   }
 
   @Override

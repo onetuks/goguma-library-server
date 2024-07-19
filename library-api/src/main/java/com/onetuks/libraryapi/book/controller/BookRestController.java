@@ -10,6 +10,7 @@ import com.onetuks.libraryauth.util.OnlyForAdmin;
 import com.onetuks.librarydomain.book.handler.dto.IsbnResult;
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.book.service.BookService;
+import com.onetuks.librarydomain.weekly.service.WeeklyFeaturedBookService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,9 +35,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class BookRestController {
 
   private final BookService bookService;
+  private final WeeklyFeaturedBookService weeklyFeaturedBookService;
 
-  public BookRestController(BookService bookService) {
+  public BookRestController(
+      BookService bookService, WeeklyFeaturedBookService weeklyFeaturedBookService) {
     this.bookService = bookService;
+    this.weeklyFeaturedBookService = weeklyFeaturedBookService;
   }
 
   /**
@@ -162,15 +166,26 @@ public class BookRestController {
    * 관심 카테고리 포함 도서 다건 조회
    *
    * @param loginId : 로그인 ID
-   * @param pageable : 페이지 정보
    * @return : 관심 카테고리 포함 도서 목록
    */
   @GetMapping(
       path = "/recommend/interested-categories",
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<BookResponses> getBooksWithInterestedCategories(
-      @LoginId Long loginId, @PageableDefault(size = 3) Pageable pageable) {
-    Page<Book> results = bookService.searchWithInterestedCategories(loginId, pageable);
+  public ResponseEntity<BookResponses> getBooksWithInterestedCategories(@LoginId Long loginId) {
+    Page<Book> results = bookService.searchWithInterestedCategories(loginId);
+    BookResponses responses = BookResponses.from(results);
+
+    return ResponseEntity.status(HttpStatus.OK).body(responses);
+  }
+
+  /**
+   * 금주도서 조회
+   *
+   * @return : 금주 도서 목록
+   */
+  @GetMapping(path = "/recommend/weekly-featured", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<BookResponses> getWeeklyBooks() {
+    Page<Book> results = weeklyFeaturedBookService.searchAllForThisWeek();
     BookResponses responses = BookResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);

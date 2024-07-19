@@ -7,7 +7,7 @@ public interface PointService {
 
   void creditPointForBookRegistration(long memberId);
 
-  void creditPointForReviewRegistration(long memberId);
+  void creditPointForReviewRegistration(long memberId, boolean isWeeklyFeaturedBook);
 
   void debitPointForReviewRemoval(long memberId);
 

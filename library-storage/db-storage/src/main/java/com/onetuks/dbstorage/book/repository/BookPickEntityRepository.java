@@ -22,12 +22,12 @@ public class BookPickEntityRepository implements BookPickRepository {
 
   @Override
   public BookPick create(BookPick bookPick) {
-    return converter.toDomain(repository.save(converter.toEntity(bookPick)));
+    return converter.toModel(repository.save(converter.toEntity(bookPick)));
   }
 
   @Override
   public BookPick read(long bookPickId) {
-    return converter.toDomain(
+    return converter.toModel(
         repository
             .findById(bookPickId)
             .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 북픽입니다.")));
@@ -40,7 +40,7 @@ public class BookPickEntityRepository implements BookPickRepository {
 
   @Override
   public Page<BookPick> readAll(long memberId, Pageable pageable) {
-    return repository.findAllByMemberEntityMemberId(memberId, pageable).map(converter::toDomain);
+    return repository.findAllByMemberEntityMemberId(memberId, pageable).map(converter::toModel);
   }
 
   @Override

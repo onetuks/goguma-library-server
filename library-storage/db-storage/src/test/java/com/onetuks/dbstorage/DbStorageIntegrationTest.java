@@ -7,7 +7,9 @@ import com.onetuks.dbstorage.book.repository.BookPickEntityRepository;
 import com.onetuks.dbstorage.member.repository.MemberEntityRepository;
 import com.onetuks.dbstorage.review.repository.ReviewEntityRepository;
 import com.onetuks.dbstorage.review.repository.ReviewPickEntityRepository;
+import com.onetuks.dbstorage.weekly.repository.WeeklyFeaturedBookEntityRepository;
 import com.onetuks.libraryobject.component.TestFileCleaner;
+import jakarta.persistence.EntityManager;
 import java.util.HashMap;
 import java.util.Map;
 import org.flywaydb.core.Flyway;
@@ -31,11 +33,14 @@ import org.testcontainers.containers.MySQLContainer;
 @ContextConfiguration(initializers = DbStorageInitializer.class)
 public class DbStorageIntegrationTest {
 
+  @Autowired public EntityManager entityManager;
+
   @Autowired public MemberEntityRepository memberEntityRepository;
   @Autowired public BookEntityRepository bookEntityRepository;
   @Autowired public BookPickEntityRepository bookPickEntityRepository;
   @Autowired public ReviewEntityRepository reviewEntityRepository;
   @Autowired public ReviewPickEntityRepository reviewPickEntityRepository;
+  @Autowired public WeeklyFeaturedBookEntityRepository weeklyFeaturedBookEntityRepository;
 
   @Configuration
   @ComponentScan(basePackages = "com.onetuks.dbstorage", basePackageClasses = TestFileCleaner.class)

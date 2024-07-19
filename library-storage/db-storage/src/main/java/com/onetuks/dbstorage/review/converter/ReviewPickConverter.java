@@ -16,17 +16,17 @@ public class ReviewPickConverter {
     this.reviewConverter = reviewConverter;
   }
 
-  public ReviewPickEntity toEntity(ReviewPick reviewPick) {
+  public ReviewPickEntity toEntity(ReviewPick model) {
     return new ReviewPickEntity(
-        reviewPick.reviewPickId(),
-        memberConverter.toEntity(reviewPick.member()),
-        reviewConverter.toEntity(reviewPick.review()));
+        model.reviewPickId(),
+        memberConverter.toEntity(model.member()),
+        reviewConverter.toEntity(model.review()));
   }
 
-  public ReviewPick toDomain(ReviewPickEntity reviewPickEntity) {
+  public ReviewPick toModel(ReviewPickEntity entity) {
     return new ReviewPick(
-        reviewPickEntity.getReviewPickId(),
-        memberConverter.toDomain(reviewPickEntity.getMemberEntity()),
-        reviewConverter.toDomain(reviewPickEntity.getReviewEntity()));
+        entity.getReviewPickId(),
+        memberConverter.toModel(entity.getMemberEntity()),
+        reviewConverter.toModel(entity.getReviewEntity()));
   }
 }

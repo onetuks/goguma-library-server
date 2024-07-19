@@ -1,6 +1,7 @@
 package com.onetuks.dbstorage.book.repository;
 
 import com.onetuks.dbstorage.book.entity.BookEntity;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,4 +20,9 @@ public interface BookEntityJpaRepository extends JpaRepository<BookEntity, Long>
       nativeQuery = true)
   Page<BookEntity> findAllCategoriesInInterestedCategories(
       @Param("interestedCategories") String interestedCategories, Pageable pageable);
+
+  @Query("SELECT b FROM BookEntity b WHERE b.bookId NOT IN :pastWeeklyFeaturedBooksIds")
+  Page<BookEntity> findAllNotInPastWeeklyFeaturedBooks(
+      @Param("pastWeeklyFeaturedBooksIds") List<Long> pastWeeklyFeaturedBooksIds,
+      Pageable pageable);
 }

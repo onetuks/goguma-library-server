@@ -17,25 +17,25 @@ public class ReviewConverter {
     this.bookConverter = bookConverter;
   }
 
-  public ReviewEntity toEntity(Review review) {
+  public ReviewEntity toEntity(Review model) {
     return new ReviewEntity(
-        review.reviewId(),
-        memberConverter.toEntity(review.member()),
-        bookConverter.toEntity(review.book()),
-        review.reviewTitle(),
-        review.reviewContent(),
-        review.pickCount());
+        model.reviewId(),
+        memberConverter.toEntity(model.member()),
+        bookConverter.toEntity(model.book()),
+        model.reviewTitle(),
+        model.reviewContent(),
+        model.pickCount());
   }
 
-  public Review toDomain(ReviewEntity reviewEntity) {
+  public Review toModel(ReviewEntity entity) {
     return new Review(
-        reviewEntity.getReviewId(),
-        memberConverter.toDomain(reviewEntity.getMemberEntity()),
-        bookConverter.toDomain(reviewEntity.getBookEntity()),
-        reviewEntity.getReviewTitle(),
-        reviewEntity.getReviewContent(),
-        reviewEntity.getPickCount(),
-        reviewEntity.getCreatedAt(),
-        reviewEntity.getUpdatedAt());
+        entity.getReviewId(),
+        memberConverter.toModel(entity.getMemberEntity()),
+        bookConverter.toModel(entity.getBookEntity()),
+        entity.getReviewTitle(),
+        entity.getReviewContent(),
+        entity.getPickCount(),
+        entity.getCreatedAt(),
+        entity.getUpdatedAt());
   }
 }
