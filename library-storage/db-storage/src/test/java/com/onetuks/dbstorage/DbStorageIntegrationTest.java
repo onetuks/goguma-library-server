@@ -9,7 +9,6 @@ import com.onetuks.dbstorage.review.repository.ReviewEntityRepository;
 import com.onetuks.dbstorage.review.repository.ReviewPickEntityRepository;
 import com.onetuks.dbstorage.weekly.repository.WeeklyFeaturedBookEntityRepository;
 import com.onetuks.libraryobject.component.TestFileCleaner;
-import jakarta.persistence.EntityManager;
 import java.util.HashMap;
 import java.util.Map;
 import org.flywaydb.core.Flyway;
@@ -32,8 +31,6 @@ import org.testcontainers.containers.MySQLContainer;
 @SpringBootTest(classes = DbStorageConfig.class)
 @ContextConfiguration(initializers = DbStorageInitializer.class)
 public class DbStorageIntegrationTest {
-
-  @Autowired public EntityManager entityManager;
 
   @Autowired public MemberEntityRepository memberEntityRepository;
   @Autowired public BookEntityRepository bookEntityRepository;

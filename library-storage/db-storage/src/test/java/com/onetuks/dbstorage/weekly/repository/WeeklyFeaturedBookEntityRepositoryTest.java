@@ -45,26 +45,19 @@ class WeeklyFeaturedBookEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("금주도서 중 실제 이번주 금주도서만 다건 조회한다.")
   void readAll_ForThisWeek_OnlyThisWeek_Test() {
     // Given
-    List<Book> featuredBooks =
-        IntStream.range(0, 3)
-            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null)))
-            .toList();
-    List<WeeklyFeaturedBook> weeklyFeaturedBooks =
-        featuredBooks.stream()
-            .map(
-                featuredBook ->
-                    weeklyFeaturedBookEntityRepository.create(WeeklyFeaturedBook.of(featuredBook)))
-            .toList();
-
-    entityManager.flush();
-    entityManager.clear();
+    int count = 3;
+    IntStream.range(0, count)
+        .forEach(
+            i ->
+                weeklyFeaturedBookEntityRepository.create(
+                    WeeklyFeaturedBook.of(bookEntityRepository.create(BookFixture.create(null)))));
 
     // When
     Page<WeeklyFeaturedBook> results = weeklyFeaturedBookEntityRepository.readAllForThisWeek();
 
     // Then
     assertThat(results.getContent())
-        .hasSize(weeklyFeaturedBooks.size())
+        .hasSize(count)
         .allSatisfy(
             result -> {
               assertThat(result.weeklyFeaturedBooksEvent().startedAt())
