@@ -4,71 +4,71 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.dbstorage.DbStorageIntegrationTest;
-import com.onetuks.librarydomain.FollowShipFixture;
+import com.onetuks.librarydomain.FollowFixture;
 import com.onetuks.librarydomain.MemberFixture;
-import com.onetuks.librarydomain.member.model.FollowShip;
+import com.onetuks.librarydomain.member.model.Follow;
 import com.onetuks.libraryobject.enums.RoleType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class FollowShipEntityRepositoryTest extends DbStorageIntegrationTest {
+class FollowEntityRepositoryTest extends DbStorageIntegrationTest {
 
   @Test
   @DisplayName("팔로우십을 등록한다.")
   void create() {
     // Given
-    FollowShip followShip =
-        FollowShipFixture.create(
+    Follow follow =
+        FollowFixture.create(
             null,
             memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
             memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)));
 
     // When
-    FollowShip result = followShipEntityRepository.create(followShip);
+    Follow result = followEntityRepository.create(follow);
 
     // Then
     assertAll(
-        () -> assertThat(result.followShipId()).isNotNull(),
-        () -> assertThat(result.follower().memberId()).isEqualTo(followShip.follower().memberId()),
-        () -> assertThat(result.followee().memberId()).isEqualTo(followShip.followee().memberId()));
+        () -> assertThat(result.followId()).isNotNull(),
+        () -> assertThat(result.follower().memberId()).isEqualTo(follow.follower().memberId()),
+        () -> assertThat(result.followee().memberId()).isEqualTo(follow.followee().memberId()));
   }
 
   @Test
   @DisplayName("팔로우십을 조회한다.")
   void read() {
     // Given
-    FollowShip followShip =
-        followShipEntityRepository.create(
-            FollowShipFixture.create(
+    Follow follow =
+        followEntityRepository.create(
+            FollowFixture.create(
                 null,
                 memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
                 memberEntityRepository.create(MemberFixture.create(null, RoleType.USER))));
 
     // When
-    FollowShip result = followShipEntityRepository.read(followShip.followShipId());
+    Follow result = followEntityRepository.read(follow.followId());
 
     // Then
     assertAll(
-        () -> assertThat(result.followShipId()).isNotNull(),
-        () -> assertThat(result.follower().memberId()).isEqualTo(followShip.follower().memberId()),
-        () -> assertThat(result.followee().memberId()).isEqualTo(followShip.followee().memberId()));
+        () -> assertThat(result.followId()).isNotNull(),
+        () -> assertThat(result.follower().memberId()).isEqualTo(follow.follower().memberId()),
+        () -> assertThat(result.followee().memberId()).isEqualTo(follow.followee().memberId()));
   }
 
   @Test
   @DisplayName("팔로우십이 존재하는지 조회한다.")
   void readExistence() {
     // Given
-    FollowShip followShip =
-        followShipEntityRepository.create(
-            FollowShipFixture.create(
+    Follow follow =
+        followEntityRepository.create(
+            FollowFixture.create(
                 null,
                 memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
                 memberEntityRepository.create(MemberFixture.create(null, RoleType.USER))));
 
     // When
     boolean result =
-        followShipEntityRepository.readExistence(
-            followShip.follower().memberId(), followShip.followee().memberId());
+        followEntityRepository.readExistence(
+            follow.follower().memberId(), follow.followee().memberId());
 
     // Then
     assertThat(result).isTrue();
@@ -78,20 +78,20 @@ class FollowShipEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("팔로우십을 제거한다.")
   void delete() {
     // Given
-    FollowShip followShip =
-        followShipEntityRepository.create(
-            FollowShipFixture.create(
+    Follow follow =
+        followEntityRepository.create(
+            FollowFixture.create(
                 null,
                 memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
                 memberEntityRepository.create(MemberFixture.create(null, RoleType.USER))));
 
     // When
-    followShipEntityRepository.delete(followShip.followShipId());
+    followEntityRepository.delete(follow.followId());
 
     // Then
     boolean result =
-        followShipEntityRepository.readExistence(
-            followShip.follower().memberId(), followShip.followee().memberId());
+        followEntityRepository.readExistence(
+            follow.follower().memberId(), follow.followee().memberId());
 
     assertThat(result).isFalse();
   }
