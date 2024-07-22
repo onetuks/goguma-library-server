@@ -33,8 +33,10 @@ public class AuthService {
   @Transactional
   public LoginResult loginWithClientAuthToken(
       ClientProvider clientProvider, String authorizationHeader) {
-    String clientAuthToken = authorizationHeader.contains(AuthHeaderUtil.TOKEN_PREFIX)
-        ? authorizationHeader : AuthHeaderUtil.TOKEN_PREFIX + authorizationHeader;
+    String clientAuthToken =
+        authorizationHeader.contains(AuthHeaderUtil.TOKEN_PREFIX)
+            ? authorizationHeader
+            : AuthHeaderUtil.TOKEN_PREFIX + authorizationHeader;
     UserInfo userInfo =
         oAuth2Service.getUserInfoWithClientAuthToken(clientProvider, clientAuthToken);
     MemberAuthResult savedMember = memberService.registerIfNotExists(userInfo.toDomain());

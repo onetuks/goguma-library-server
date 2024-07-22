@@ -2,7 +2,6 @@ package com.onetuks.librarydomain.weekly.model;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 
 public record WeeklyFeaturedBooksEvent(
@@ -17,7 +16,7 @@ public record WeeklyFeaturedBooksEvent(
 
   public static LocalDateTime getNextMondayMidnight() {
     return LocalDateTime.now()
-        .with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY))
+        .with(TemporalAdjusters.next(DayOfWeek.MONDAY))
         .toLocalDate()
         .atStartOfDay();
   }
