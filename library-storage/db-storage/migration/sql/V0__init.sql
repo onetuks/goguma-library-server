@@ -29,17 +29,6 @@ CREATE TABLE IF NOT EXISTS members
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='멤버 테이블';
 
-CREATE TABLE IF NOT EXISTS follows
-(
-    follow_id   BIGINT NOT NULL AUTO_INCREMENT COMMENT '팔로우 식별자',
-    follower_id BIGINT NOT NULL COMMENT '나를 팔로우한 멤버(팔로워) 식별자',
-    followee_id BIGINT NOT NULL COMMENT '내가 팔로우한 멤버(팔로이) 식별자',
-    PRIMARY KEY (follow_id),
-    FOREIGN KEY (follower_id) REFERENCES members (member_id) ON DELETE CASCADE,
-    FOREIGN KEY (followee_id) REFERENCES members (member_id) ON DELETE CASCADE
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='팔로우 테이블';
-
 CREATE TABLE IF NOT EXISTS badges
 (
     badge_id        BIGINT       NOT NULL AUTO_INCREMENT COMMENT '뱃지 식별자',
@@ -117,6 +106,18 @@ CREATE TABLE IF NOT EXISTS book_picks
     UNIQUE KEY unq_member_id_book_id (member_id, book_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='북픽 테이블';
+
+CREATE TABLE IF NOT EXISTS follow_ships
+(
+    follow_ship_id   BIGINT NOT NULL AUTO_INCREMENT COMMENT '팔로우 식별자',
+    follower_id BIGINT NOT NULL COMMENT '팔로우한 멤버(팔로워) 식별자',
+    followee_id BIGINT NOT NULL COMMENT '팔로우 받은 멤버(팔로이) 식별자',
+    PRIMARY KEY (follow_ship_id),
+    FOREIGN KEY (follower_id) REFERENCES members (member_id) ON DELETE CASCADE,
+    FOREIGN KEY (followee_id) REFERENCES members (member_id) ON DELETE CASCADE,
+    UNIQUE KEY unq_follower_id_followee_id (follower_id, followee_id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='팔로우 테이블';
 
 CREATE TABLE IF NOT EXISTS weekly_featured_books_events
 (
