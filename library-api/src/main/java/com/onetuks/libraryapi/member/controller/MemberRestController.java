@@ -9,7 +9,7 @@ import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.member.service.MemberFacadeService;
 import com.onetuks.librarydomain.member.service.MemberService;
 import jakarta.validation.Valid;
-import java.util.List;
+import java.util.Set;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -83,7 +83,7 @@ public class MemberRestController {
    */
   @GetMapping(path = "/recommend", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<MemberGetResponses> getRecommendedMemberProfiles() {
-    List<Member> results = memberFacadeService.searchAllForRecommend();
+    Set<Member> results = memberFacadeService.searchAllForRecommend();
     MemberGetResponses responses = MemberGetResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);

@@ -13,7 +13,7 @@ import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.librarydomain.weekly.model.WeeklyFeaturedBook;
 import com.onetuks.libraryobject.enums.RoleType;
-import java.util.List;
+import java.util.Set;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -57,9 +57,9 @@ class MemberFacadeServiceTest extends DomainIntegrationTest {
     given(reviewRepository.readAllWeeklyMostWrite(anyList())).willReturn(weeklyMostWriteMembers);
 
     // When
-    List<Member> results = memberFacadeService.searchAllForRecommend();
+    Set<Member> results = memberFacadeService.searchAllForRecommend();
 
     // Then
-    assertThat(results).hasSize(count);
+    assertThat(results).hasSizeLessThanOrEqualTo(count);
   }
 }
