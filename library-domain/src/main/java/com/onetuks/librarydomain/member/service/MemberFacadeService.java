@@ -6,9 +6,10 @@ import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.librarydomain.review.repository.ReviewRepository;
 import com.onetuks.librarydomain.weekly.model.WeeklyFeaturedBook;
 import com.onetuks.librarydomain.weekly.repository.WeeklyFeaturedBookRepository;
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +27,7 @@ public class MemberFacadeService {
   }
 
   @Transactional(readOnly = true)
-  public List<Member> searchAllForRecommend() {
+  public Set<Member> searchAllForRecommend() {
     List<Book> thisWeekFeaturedBooks =
         weeklyFeaturedBookRepository.readAllForThisWeek().getContent().stream()
             .map(WeeklyFeaturedBook::book)
@@ -40,7 +41,7 @@ public class MemberFacadeService {
     List<Member> bestQuantityMembers =
         reviewRepository.readAllWeeklyMostWrite(thisWeekFeaturedBooks).getContent();
 
-    List<Member> recommendedMembers = Collections.synchronizedList(new ArrayList<>());
+    Set<Member> recommendedMembers = Collections.synchronizedSet(new HashSet<>());
     recommendedMembers.addAll(bestQualityMembers);
     recommendedMembers.addAll(bestQuantityMembers);
     return recommendedMembers;

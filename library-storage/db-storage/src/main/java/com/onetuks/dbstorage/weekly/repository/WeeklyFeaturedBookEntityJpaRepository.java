@@ -9,6 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface WeeklyFeaturedBookEntityJpaRepository
     extends JpaRepository<WeeklyFeaturedBookEntity, Long> {
 
-  Page<WeeklyFeaturedBookEntity> findAllByWeeklyFeaturedBooksEventEntityStartedAtAfter(
+  Page<WeeklyFeaturedBookEntity> findAllByWeeklyFeaturedBooksEventEntityStartedAtGreaterThanEqual(
       LocalDateTime thisMondayMidnight, Pageable pageable);
 }

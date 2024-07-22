@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS member_badges
     member_id       BIGINT NOT NULL COMMENT '멤버 식별자',
     badge_id        BIGINT NOT NULL COMMENT '뱃지 식별자',
     PRIMARY KEY (member_badge_id),
-    FOREIGN KEY (member_id) REFERENCES members (member_id) ON DELETE CASCADE ,
+    FOREIGN KEY (member_id) REFERENCES members (member_id) ON DELETE CASCADE,
     FOREIGN KEY (badge_id) REFERENCES badges (badge_id) ON DELETE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='멤버 뱃지 테이블';
@@ -95,9 +95,10 @@ CREATE TABLE IF NOT EXISTS reviews
 
 CREATE TABLE IF NOT EXISTS review_picks
 (
-    review_pick_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '서평픽 식별자',
-    member_id      BIGINT NOT NULL COMMENT '멤버 식별자',
-    review_id      BIGINT NOT NULL COMMENT '서평 식별자',
+    review_pick_id BIGINT   NOT NULL AUTO_INCREMENT COMMENT '서평픽 식별자',
+    member_id      BIGINT   NOT NULL COMMENT '멤버 식별자',
+    review_id      BIGINT   NOT NULL COMMENT '서평 식별자',
+    created_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '서평픽 생성일',
     PRIMARY KEY (review_pick_id),
     FOREIGN KEY (member_id) REFERENCES members (member_id) ON DELETE CASCADE,
     FOREIGN KEY (review_id) REFERENCES reviews (review_id) ON DELETE CASCADE,
@@ -120,17 +121,17 @@ CREATE TABLE IF NOT EXISTS book_picks
 CREATE TABLE IF NOT EXISTS weekly_featured_books_events
 (
     weekly_featured_books_event_id BIGINT   NOT NULL AUTO_INCREMENT COMMENT '금주도서 이벤트 식별자',
-    started_at                    DATETIME NOT NULL COMMENT '이벤트 시작일',
-    ended_at                      DATETIME NOT NULL COMMENT '이벤트 종료일',
+    started_at                     DATETIME NOT NULL COMMENT '이벤트 시작일',
+    ended_at                       DATETIME NOT NULL COMMENT '이벤트 종료일',
     PRIMARY KEY (weekly_featured_books_event_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='금주도서 이벤트 테이블';
 
 CREATE TABLE IF NOT EXISTS weekly_featured_books
 (
-    weekly_featured_book_id       BIGINT NOT NULL AUTO_INCREMENT COMMENT '금주도서 식별자',
+    weekly_featured_book_id        BIGINT NOT NULL AUTO_INCREMENT COMMENT '금주도서 식별자',
     weekly_featured_books_event_id BIGINT NOT NULL COMMENT '금주도서 이벤트 식별자',
-    book_id                       BIGINT NOT NULL COMMENT '도서 식별자',
+    book_id                        BIGINT NOT NULL COMMENT '도서 식별자',
     PRIMARY KEY (weekly_featured_book_id),
     FOREIGN KEY (weekly_featured_books_event_id)
         REFERENCES weekly_featured_books_events (weekly_featured_books_event_id)

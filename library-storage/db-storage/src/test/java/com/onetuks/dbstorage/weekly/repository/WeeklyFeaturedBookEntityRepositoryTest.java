@@ -34,7 +34,7 @@ class WeeklyFeaturedBookEntityRepositoryTest extends DbStorageIntegrationTest {
             assertThat(result.weeklyFeaturedBooksEvent().weeklyFeaturedBooksEventId()).isNotNull(),
         () ->
             assertThat(result.weeklyFeaturedBooksEvent().startedAt())
-                .isBeforeOrEqualTo(LocalDateTime.now()),
+                .isBeforeOrEqualTo(LocalDateTime.now().toLocalDate().atStartOfDay()),
         () ->
             assertThat(result.weeklyFeaturedBooksEvent().endedAt())
                 .isAfterOrEqualTo(LocalDateTime.now()),

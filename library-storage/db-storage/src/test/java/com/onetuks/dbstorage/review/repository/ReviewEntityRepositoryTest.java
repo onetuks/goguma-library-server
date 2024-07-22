@@ -101,12 +101,24 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
     Pageable pageable = PageRequest.of(0, 10);
     IntStream.range(0, 10)
         .forEach(
-            i ->
-                reviewEntityRepository.create(
-                    ReviewFixture.create(
-                        null,
-                        memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
-                        bookEntityRepository.create(BookFixture.create(null)))));
+            i -> {
+              Review review =
+                  reviewEntityRepository.create(
+                      ReviewFixture.create(
+                          null,
+                          memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
+                          bookEntityRepository.create(BookFixture.create(null))));
+
+              IntStream.range(0, i * 2)
+                  .forEach(
+                      j ->
+                          reviewPickEntityRepository.create(
+                              ReviewPickFixture.create(
+                                  null,
+                                  memberEntityRepository.create(
+                                      MemberFixture.create(null, RoleType.USER)),
+                                  review)));
+            });
 
     // When
     Page<Review> results = reviewEntityRepository.readAll(SortBy.PICK, pageable);
@@ -119,20 +131,66 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
   }
 
   @Test
-  @DisplayName("도서에 대한 서평을 조회한다.")
-  void readAll_OfBook_Test() {
+  @DisplayName("도서에 대한 서평을 최신순으로 조회한다.")
+  void readAll_OfBookOrderByLatest_Test() {
+    // Given
+    int count = 10;
+    Pageable pageable = PageRequest.of(0, 10);
+    Book book = bookEntityRepository.create(BookFixture.create(null));
+    List<Review> reviews =
+        IntStream.range(0, count)
+            .mapToObj(
+                i ->
+                    reviewEntityRepository.create(
+                        ReviewFixture.create(
+                            null,
+                            memberEntityRepository.create(
+                                MemberFixture.create(null, RoleType.USER)),
+                            book)))
+            .toList();
+    reviews.forEach(
+        review ->
+            reviewPickEntityRepository.create(
+                ReviewPickFixture.create(
+                    null,
+                    memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
+                    review)));
+
+    // When
+    Page<Review> results = reviewEntityRepository.readAll(book.bookId(), SortBy.LATEST, pageable);
+
+    // Then
+    assertThat(results)
+        .hasSize(count)
+        .allSatisfy(result -> assertThat(result.book()).isEqualTo(book));
+  }
+
+  @Test
+  @DisplayName("도서에 대한 서평을 서평픽 순으로 조회한다.")
+  void readAll_OfBookOrderByPickCount_Test() {
     // Given
     int count = 10;
     Pageable pageable = PageRequest.of(0, 10);
     Book book = bookEntityRepository.create(BookFixture.create(null));
     IntStream.range(0, count)
         .forEach(
-            i ->
-                reviewEntityRepository.create(
-                    ReviewFixture.create(
-                        null,
-                        memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
-                        book)));
+            i -> {
+              Review review =
+                  reviewEntityRepository.create(
+                      ReviewFixture.create(
+                          null,
+                          memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
+                          book));
+              IntStream.range(0, i * 2)
+                  .forEach(
+                      j ->
+                          reviewPickEntityRepository.create(
+                              ReviewPickFixture.create(
+                                  null,
+                                  memberEntityRepository.create(
+                                      MemberFixture.create(null, RoleType.USER)),
+                                  review)));
+            });
 
     // When
     Page<Review> results = reviewEntityRepository.readAll(book.bookId(), SortBy.PICK, pageable);
