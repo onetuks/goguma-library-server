@@ -52,12 +52,14 @@ public class ReviewEntityRepository implements ReviewRepository {
 
   @Override
   public Page<Review> readAll(SortBy sortBy, Pageable pageable) {
-    return qDslRepository.findAll(sortBy, pageable).map(converter::toModel);
+    return sortBy == SortBy.LATEST
+        ? qDslRepository.findAllOrderByLatest(pageable).map(converter::toModel)
+        : qDslRepository.findAllOrderByPickCountDesc(pageable).map(converter::toModel);
   }
 
   @Override
   public Page<Review> readAll(long bookId, SortBy sortBy, Pageable pageable) {
-    return qDslRepository.findAll(bookId, sortBy, pageable).map(converter::toModel);
+    return qDslRepository.findAllByBookId(bookId, sortBy, pageable).map(converter::toModel);
   }
 
   @Override

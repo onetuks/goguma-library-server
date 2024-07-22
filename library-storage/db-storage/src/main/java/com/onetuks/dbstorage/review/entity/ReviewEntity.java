@@ -1,7 +1,7 @@
 package com.onetuks.dbstorage.review.entity;
 
 import com.onetuks.dbstorage.book.entity.BookEntity;
-import com.onetuks.dbstorage.common.BaseEntity;
+import com.onetuks.dbstorage.common.BaseCreatedAndUpdatedEntity;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
 import com.onetuks.libraryobject.annotation.Generated;
 import jakarta.persistence.Column;
@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "reviews")
-public class ReviewEntity extends BaseEntity {
+public class ReviewEntity extends BaseCreatedAndUpdatedEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

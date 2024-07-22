@@ -1,5 +1,6 @@
 package com.onetuks.dbstorage.review.entity;
 
+import com.onetuks.dbstorage.common.BaseCreatedEntity;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
 import com.onetuks.libraryobject.annotation.Generated;
 import jakarta.persistence.Column;
@@ -26,7 +27,7 @@ import lombok.NoArgsConstructor;
         @UniqueConstraint(
             name = "unq_member_id_review_id",
             columnNames = {"member_id", "review_id"}))
-public class ReviewPickEntity {
+public class ReviewPickEntity extends BaseCreatedEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
