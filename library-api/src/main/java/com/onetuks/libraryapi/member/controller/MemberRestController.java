@@ -1,9 +1,8 @@
 package com.onetuks.libraryapi.member.controller;
 
 import com.onetuks.libraryapi.member.dto.request.MemberPatchRequest;
-import com.onetuks.libraryapi.member.dto.response.MemberGetResponse;
-import com.onetuks.libraryapi.member.dto.response.MemberGetResponses;
-import com.onetuks.libraryapi.member.dto.response.MemberPatchResponse;
+import com.onetuks.libraryapi.member.dto.response.MemberResponse;
+import com.onetuks.libraryapi.member.dto.response.MemberSetResponses;
 import com.onetuks.libraryauth.util.LoginId;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.member.service.MemberFacadeService;
@@ -46,7 +45,7 @@ public class MemberRestController {
       path = "/{member-id}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<MemberPatchResponse> patchMemberProfile(
+  public ResponseEntity<MemberResponse> patchMemberProfile(
       @LoginId Long loginId,
       @PathVariable(name = "member-id") Long memberId,
       @RequestPart(name = "request") @Valid MemberPatchRequest request,
@@ -56,7 +55,7 @@ public class MemberRestController {
     Member result =
         memberService.editProfile(
             loginId, memberId, request.to(), profileImage, profileBackgroundImage);
-    MemberPatchResponse response = MemberPatchResponse.from(result);
+    MemberResponse response = MemberResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
@@ -68,10 +67,10 @@ public class MemberRestController {
    * @return : 조회된 멤버의 프로필 정보
    */
   @GetMapping(path = "/{member-id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<MemberGetResponse> getMemberProfile(
+  public ResponseEntity<MemberResponse> getMemberProfile(
       @PathVariable(name = "member-id") Long memberId) {
     Member result = memberService.search(memberId);
-    MemberGetResponse response = MemberGetResponse.from(result);
+    MemberResponse response = MemberResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
@@ -82,9 +81,9 @@ public class MemberRestController {
    * @return : 추천 멤버 프로필 목록
    */
   @GetMapping(path = "/recommend", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<MemberGetResponses> getRecommendedMemberProfiles() {
+  public ResponseEntity<MemberSetResponses> getRecommendedMemberProfiles() {
     Set<Member> results = memberFacadeService.searchAllForRecommend();
-    MemberGetResponses responses = MemberGetResponses.from(results);
+    MemberSetResponses responses = MemberSetResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);
   }
