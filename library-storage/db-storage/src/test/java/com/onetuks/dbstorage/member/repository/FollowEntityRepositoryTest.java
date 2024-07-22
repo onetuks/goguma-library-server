@@ -7,9 +7,14 @@ import com.onetuks.dbstorage.DbStorageIntegrationTest;
 import com.onetuks.librarydomain.FollowFixture;
 import com.onetuks.librarydomain.MemberFixture;
 import com.onetuks.librarydomain.member.model.Follow;
+import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.libraryobject.enums.RoleType;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 class FollowEntityRepositoryTest extends DbStorageIntegrationTest {
 
@@ -72,6 +77,52 @@ class FollowEntityRepositoryTest extends DbStorageIntegrationTest {
 
     // Then
     assertThat(result).isTrue();
+  }
+
+  @Test
+  @DisplayName("팔로워를 조회한다.")
+  void readAllFollowers_Test() {
+    // Given
+    int count = 5;
+    Pageable pageable = PageRequest.of(0, 10);
+    Member followee = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
+    IntStream.range(0, count)
+        .forEach(
+            i ->
+                followEntityRepository.create(
+                    FollowFixture.create(
+                        null,
+                        memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
+                        followee)));
+
+    // When
+    Page<Member> results = followEntityRepository.readAllFollowers(followee.memberId(), pageable);
+
+    // Then
+    assertThat(results).hasSize(Math.min(count, pageable.getPageSize()));
+  }
+
+  @Test
+  @DisplayName("팔로잉을 조회한다.")
+  void readAllFollowings_Test() {
+    // Given
+    int count = 5;
+    Pageable pageable = PageRequest.of(0, 10);
+    Member follower = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
+    IntStream.range(0, count)
+        .forEach(
+            i ->
+                followEntityRepository.create(
+                    FollowFixture.create(
+                        null,
+                        follower,
+                        memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)))));
+
+    // When
+    Page<Member> results = followEntityRepository.readAllFollowings(follower.memberId(), pageable);
+
+    // Then
+    assertThat(results).hasSize(Math.min(count, pageable.getPageSize()));
   }
 
   @Test
