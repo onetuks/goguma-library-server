@@ -1,7 +1,6 @@
 package com.onetuks.librarydomain.member.service;
 
 import com.onetuks.librarydomain.member.model.FollowShip;
-import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.member.repository.FollowShipRepository;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
@@ -22,10 +21,12 @@ public class FollowShipService {
 
   @Transactional
   public FollowShip register(long loginId, long followeeId) {
-    Member follower = memberRepository.read(loginId).increaseFollowingCountStatics();
-    Member followee = memberRepository.read(followeeId).increaseFollowerCountStatics();
-
-    return followShipRepository.create(new FollowShip(null, follower, followee));
+    return followShipRepository.create(
+        new FollowShip(
+            null,
+            memberRepository.update(memberRepository.read(loginId).increaseFollowingCountStatics()),
+            memberRepository.update(
+                memberRepository.read(followeeId).increaseFollowerCountStatics())));
   }
 
   @Transactional
@@ -36,8 +37,8 @@ public class FollowShipService {
       throw new ApiAccessDeniedException("해당 팔로우십에 대한 권한이 없는 멤버입니다.");
     }
 
-    followShip.follower().decreaseFollowingCountStatics();
-    followShip.followee().decreaseFollowerCountStatics();
+    memberRepository.update(followShip.follower().decreaseFollowingCountStatics());
+    memberRepository.update(followShip.followee().decreaseFollowerCountStatics());
 
     followShipRepository.delete(followShipId);
   }

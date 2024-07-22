@@ -4,9 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.times;
 import static org.mockito.BDDMockito.verify;
+import static org.mockito.Mockito.never;
 
 import com.onetuks.librarydomain.DomainIntegrationTest;
 import com.onetuks.librarydomain.FollowShipFixture;
@@ -26,10 +28,15 @@ class FollowShipServiceTest extends DomainIntegrationTest {
     // Given
     Member member = MemberFixture.create(101L, RoleType.USER);
     Member followee = MemberFixture.create(102L, RoleType.USER);
-    FollowShip followShip = FollowShipFixture.create(101L, member, followee);
+    Member expectedFollower = member.increaseFollowingCountStatics();
+    Member expectedFollowee = followee.increaseFollowerCountStatics();
+
+    FollowShip followShip = FollowShipFixture.create(101L, expectedFollower, expectedFollowee);
 
     given(memberRepository.read(member.memberId())).willReturn(member);
+    given(memberRepository.update(any(Member.class))).willReturn(expectedFollower);
     given(memberRepository.read(followee.memberId())).willReturn(followee);
+    given(memberRepository.update(any(Member.class))).willReturn(expectedFollowee);
     given(followShipRepository.create(any(FollowShip.class))).willReturn(followShip);
 
     // When
@@ -39,7 +46,13 @@ class FollowShipServiceTest extends DomainIntegrationTest {
     assertAll(
         () -> assertThat(result.followShipId()).isNotNull(),
         () -> assertThat(result.follower().memberId()).isEqualTo(member.memberId()),
-        () -> assertThat(result.followee().memberId()).isEqualTo(followee.memberId()));
+        () -> assertThat(result.followee().memberId()).isEqualTo(followee.memberId()),
+        () ->
+            assertThat(result.follower().memberStatics().followingCounts())
+                .isEqualTo(expectedFollower.memberStatics().followingCounts()),
+        () ->
+            assertThat(result.followee().memberStatics().followerCounts())
+                .isEqualTo(expectedFollowee.memberStatics().followerCounts()));
   }
 
   @Test
@@ -57,6 +70,7 @@ class FollowShipServiceTest extends DomainIntegrationTest {
     followShipService.remove(member.memberId(), followShip.followShipId());
 
     // Then
+    verify(memberRepository, times(2)).update(any(Member.class));
     verify(followShipRepository, times(1)).delete(followShip.followShipId());
   }
 
@@ -75,5 +89,8 @@ class FollowShipServiceTest extends DomainIntegrationTest {
     // When & Then
     assertThatThrownBy(() -> followShipService.remove(notAuthMemberId, followShip.followShipId()))
         .isInstanceOf(ApiAccessDeniedException.class);
+
+    verify(memberRepository, never()).update(any(Member.class));
+    verify(followShipRepository, never()).delete(anyLong());
   }
 }
