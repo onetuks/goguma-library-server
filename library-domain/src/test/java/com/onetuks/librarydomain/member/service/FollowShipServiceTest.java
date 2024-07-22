@@ -27,7 +27,7 @@ class FollowShipServiceTest extends DomainIntegrationTest {
   void register_Test() {
     // Given
     Member member = MemberFixture.create(101L, RoleType.USER);
-    Member followee = MemberFixture.create(102L, RoleType.USER);
+    Member followee = MemberFixture.create(201L, RoleType.USER);
     Member expectedFollower = member.increaseFollowingCountStatics();
     Member expectedFollowee = followee.increaseFollowerCountStatics();
 
@@ -59,9 +59,9 @@ class FollowShipServiceTest extends DomainIntegrationTest {
   @DisplayName("팔로우를 취소한다.")
   void remove_Test() {
     // Given
-    Member member = MemberFixture.create(101L, RoleType.USER);
-    Member followee = MemberFixture.create(102L, RoleType.USER);
-    FollowShip followShip = FollowShipFixture.create(101L, member, followee);
+    Member member = MemberFixture.create(102L, RoleType.USER);
+    Member followee = MemberFixture.create(202L, RoleType.USER);
+    FollowShip followShip = FollowShipFixture.create(102L, member, followee);
 
     given(memberRepository.read(member.memberId())).willReturn(member);
     given(followShipRepository.read(followShip.followShipId())).willReturn(followShip);
@@ -79,9 +79,9 @@ class FollowShipServiceTest extends DomainIntegrationTest {
   void remove_NotAuth_ExceptionThrown() {
     // Given
     long notAuthMemberId = 999L;
-    Member member = MemberFixture.create(101L, RoleType.USER);
-    Member followee = MemberFixture.create(102L, RoleType.USER);
-    FollowShip followShip = FollowShipFixture.create(101L, member, followee);
+    Member member = MemberFixture.create(103L, RoleType.USER);
+    Member followee = MemberFixture.create(203L, RoleType.USER);
+    FollowShip followShip = FollowShipFixture.create(103L, member, followee);
 
     given(memberRepository.read(member.memberId())).willReturn(member);
     given(followShipRepository.read(followShip.followShipId())).willReturn(followShip);
@@ -92,5 +92,22 @@ class FollowShipServiceTest extends DomainIntegrationTest {
 
     verify(memberRepository, never()).update(any(Member.class));
     verify(followShipRepository, never()).delete(anyLong());
+  }
+
+  @Test
+  @DisplayName("팔로우 여부를 조회한다.")
+  void readExistence_Test() {
+    // Given
+    Member follower = MemberFixture.create(104L, RoleType.USER);
+    Member followee = MemberFixture.create(204L, RoleType.USER);
+
+    given(followShipRepository.readExistence(follower.memberId(), followee.memberId()))
+        .willReturn(true);
+
+    // When
+    boolean result = followShipService.searchExistence(follower.memberId(), followee.memberId());
+
+    // Then
+    assertThat(result).isTrue();
   }
 }

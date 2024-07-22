@@ -42,4 +42,9 @@ public class FollowShipService {
 
     followShipRepository.delete(followShipId);
   }
+
+  @Transactional(readOnly = true)
+  public boolean searchExistence(long loginId, long followeeId) {
+    return followShipRepository.readExistence(loginId, followeeId);
+  }
 }
