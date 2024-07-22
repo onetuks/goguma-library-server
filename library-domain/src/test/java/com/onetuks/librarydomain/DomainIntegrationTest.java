@@ -8,9 +8,9 @@ import com.onetuks.librarydomain.book.service.BookService;
 import com.onetuks.librarydomain.book.service.IsbnSearchService;
 import com.onetuks.librarydomain.global.file.repository.FileRepository;
 import com.onetuks.librarydomain.global.point.service.PointService;
-import com.onetuks.librarydomain.member.repository.FollowShipRepository;
+import com.onetuks.librarydomain.member.repository.FollowRepository;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
-import com.onetuks.librarydomain.member.service.FollowShipService;
+import com.onetuks.librarydomain.member.service.FollowService;
 import com.onetuks.librarydomain.member.service.MemberFacadeService;
 import com.onetuks.librarydomain.member.service.MemberService;
 import com.onetuks.librarydomain.review.repository.ReviewPickRepository;
@@ -41,7 +41,7 @@ public class DomainIntegrationTest {
   @Autowired public IsbnSearchService isbnSearchService;
   @Autowired public WeeklyFeaturedBookService weeklyFeaturedBookService;
   @Autowired public MemberFacadeService memberFacadeService;
-  @Autowired public FollowShipService followShipService;
+  @Autowired public FollowService followService;
 
   @MockBean public FileRepository fileRepository;
   @MockBean public MemberRepository memberRepository;
@@ -50,7 +50,7 @@ public class DomainIntegrationTest {
   @MockBean public ReviewRepository reviewRepository;
   @MockBean public ReviewPickRepository reviewPickRepository;
   @MockBean public WeeklyFeaturedBookRepository weeklyFeaturedBookRepository;
-  @MockBean public FollowShipRepository followShipRepository;
+  @MockBean public FollowRepository followRepository;
 
   @MockBean public PointService pointService;
 

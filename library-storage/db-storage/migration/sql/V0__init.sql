@@ -107,12 +107,12 @@ CREATE TABLE IF NOT EXISTS book_picks
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='북픽 테이블';
 
-CREATE TABLE IF NOT EXISTS follow_ships
+CREATE TABLE IF NOT EXISTS follows
 (
-    follow_ship_id   BIGINT NOT NULL AUTO_INCREMENT COMMENT '팔로우 식별자',
+    follow_id   BIGINT NOT NULL AUTO_INCREMENT COMMENT '팔로우 식별자',
     follower_id BIGINT NOT NULL COMMENT '팔로우한 멤버(팔로워) 식별자',
     followee_id BIGINT NOT NULL COMMENT '팔로우 받은 멤버(팔로이) 식별자',
-    PRIMARY KEY (follow_ship_id),
+    PRIMARY KEY (follow_id),
     FOREIGN KEY (follower_id) REFERENCES members (member_id) ON DELETE CASCADE,
     FOREIGN KEY (followee_id) REFERENCES members (member_id) ON DELETE CASCADE,
     UNIQUE KEY unq_follower_id_followee_id (follower_id, followee_id)

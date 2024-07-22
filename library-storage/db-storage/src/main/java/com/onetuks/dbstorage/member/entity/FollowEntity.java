@@ -20,17 +20,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(
-    name = "follow_ships",
+    name = "follows",
     uniqueConstraints =
         @UniqueConstraint(
             name = "unq_follower_id_followee_id",
             columnNames = {"follower_id", "followee_id"}))
-public class FollowShipEntity {
+public class FollowEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "follow_ship_id", nullable = false)
-  private Long followShipId;
+  @Column(name = "follow_id", nullable = false)
+  private Long followId;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "follower_id", nullable = false)
@@ -40,8 +40,8 @@ public class FollowShipEntity {
   @JoinColumn(name = "followee_id", nullable = false)
   private MemberEntity followee;
 
-  public FollowShipEntity(Long followShipId, MemberEntity follower, MemberEntity followee) {
-    this.followShipId = followShipId;
+  public FollowEntity(Long followId, MemberEntity follower, MemberEntity followee) {
+    this.followId = followId;
     this.follower = follower;
     this.followee = followee;
   }
@@ -55,13 +55,13 @@ public class FollowShipEntity {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    FollowShipEntity that = (FollowShipEntity) o;
-    return Objects.equals(followShipId, that.followShipId);
+    FollowEntity that = (FollowEntity) o;
+    return Objects.equals(followId, that.followId);
   }
 
   @Override
   @Generated
   public int hashCode() {
-    return Objects.hashCode(followShipId);
+    return Objects.hashCode(followId);
   }
 }
