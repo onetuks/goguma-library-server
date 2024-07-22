@@ -31,7 +31,7 @@ public class WeeklyFeaturedBookEntityRepository implements WeeklyFeaturedBookRep
     LocalDateTime thisMondayMidnight = WeeklyFeaturedBooksEvent.getThisMondayMidnight();
 
     return repository
-        .findAllByWeeklyFeaturedBooksEventEntityStartedAtAfter(
+        .findAllByWeeklyFeaturedBooksEventEntityStartedAtGreaterThanEqual(
             thisMondayMidnight, PageRequest.of(0, WEEKLY_FEATURED_BOOKS_COUNT))
         .map(converter::toModel);
   }
