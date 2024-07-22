@@ -83,8 +83,9 @@ class ReviewServiceTest extends DomainIntegrationTest {
         () -> assertThat(result.pickCount()).isZero(),
         () -> assertThat(result.createdAt()).isNotNull(),
         () -> assertThat(result.updatedAt()).isNotNull(),
-        () -> assertThat(result.member().memberStatics().reviewCounts())
-            .isEqualTo(beforeReview.member().memberStatics().reviewCounts() + 1));
+        () ->
+            assertThat(result.member().memberStatics().reviewCounts())
+                .isEqualTo(beforeReview.member().memberStatics().reviewCounts() + 1));
 
     afterMemberStatics.forEach(
         (category, count) -> {

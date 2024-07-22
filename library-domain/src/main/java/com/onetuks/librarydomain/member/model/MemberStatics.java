@@ -55,4 +55,24 @@ public record MemberStatics(
                             ? Math.max(0, entry.getValue() - 1)
                             : entry.getValue())));
   }
+
+  public MemberStatics increaseFollowerCount() {
+    return new MemberStatics(
+        memberStaticsId, reviewCounts, followerCounts + 1, followingCounts, reviewCategoryCounts);
+  }
+
+  public MemberStatics decreaseFollowerCount() {
+    return new MemberStatics(
+        memberStaticsId, reviewCounts, followerCounts - 1, followingCounts, reviewCategoryCounts);
+  }
+
+  public MemberStatics increaseFolloweeCount() {
+    return new MemberStatics(
+        memberStaticsId, reviewCounts, followerCounts, followingCounts + 1, reviewCategoryCounts);
+  }
+
+  public MemberStatics decreaseFolloweeCount() {
+    return new MemberStatics(
+        memberStaticsId, reviewCounts, followerCounts, followingCounts - 1, reviewCategoryCounts);
+  }
 }
