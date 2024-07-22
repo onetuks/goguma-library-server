@@ -41,7 +41,7 @@ public class GlobalExceptionRestHandler {
     logging(e);
 
     final ErrorResponse response =
-        ErrorResponse.of(ErrorCode.UNAUTHORITY_ACCESS_DENIED, e.getMessage());
+        ErrorResponse.of(ErrorCode.AUTHORITY_ACCESS_DENIED, e.getMessage());
 
     return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
   }

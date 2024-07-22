@@ -2,6 +2,7 @@ package com.onetuks.libraryauth.jwt.service;
 
 import com.onetuks.libraryauth.exception.TokenExpiredException;
 import com.onetuks.libraryauth.exception.TokenIsLogoutException;
+import com.onetuks.libraryauth.exception.TokenValidFailedException;
 import com.onetuks.libraryauth.jwt.repository.AuthTokenRepository;
 import com.onetuks.libraryauth.jwt.service.model.AuthToken;
 import com.onetuks.libraryauth.jwt.service.provider.AuthTokenProvider;
@@ -70,10 +71,12 @@ public class AuthTokenService {
     AuthToken accessToken = authTokenProvider.convertToAuthToken(accessTokenValue);
 
     boolean isValidClaim = accessToken.isValidTokenClaims();
-    boolean isNotExpired = authTokenRepository.existsById(accessToken.getToken());
+    boolean isValidExpiration = authTokenRepository.existsById(accessToken.getToken());
 
-    if (!isValidClaim || !isNotExpired) {
+    if (isValidClaim && !isValidExpiration) {
       throw new TokenIsLogoutException(ErrorCode.IS_LOGOUT_TOKEN);
+    } else if (!isValidClaim) {
+      throw new TokenValidFailedException(ErrorCode.AUTH_WITH_OAUTH2_CLIENT);
     }
 
     return accessToken;

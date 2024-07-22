@@ -2,6 +2,7 @@ package com.onetuks.libraryauth.service;
 
 import com.onetuks.libraryauth.jwt.service.AuthTokenService;
 import com.onetuks.libraryauth.jwt.service.model.AuthToken;
+import com.onetuks.libraryauth.jwt.util.AuthHeaderUtil;
 import com.onetuks.libraryauth.oauth.service.OAuth2Service;
 import com.onetuks.libraryauth.oauth.strategy.dto.user_info.UserInfo;
 import com.onetuks.libraryauth.service.dto.LoginResult;
@@ -32,8 +33,10 @@ public class AuthService {
   @Transactional
   public LoginResult loginWithClientAuthToken(
       ClientProvider clientProvider, String authorizationHeader) {
+    String clientAuthToken = authorizationHeader.contains(AuthHeaderUtil.TOKEN_PREFIX)
+        ? authorizationHeader : AuthHeaderUtil.TOKEN_PREFIX + authorizationHeader;
     UserInfo userInfo =
-        oAuth2Service.getUserInfoWithClientAuthToken(clientProvider, authorizationHeader);
+        oAuth2Service.getUserInfoWithClientAuthToken(clientProvider, clientAuthToken);
     MemberAuthResult savedMember = memberService.registerIfNotExists(userInfo.toDomain());
     AuthToken newAuthToken =
         authTokenService.saveAccessToken(
@@ -49,7 +52,7 @@ public class AuthService {
   @Transactional
   public LoginResult loginWithClientAuthCode(
       ClientProvider clientProvider, String authorizationHeader) {
-    String clientAuthCode = authorizationHeader.replace("Bearer ", "");
+    String clientAuthCode = authorizationHeader.replace(AuthHeaderUtil.TOKEN_PREFIX, "");
     UserInfo userInfo = oAuth2Service.getUserInfoWithClientAuthCode(clientProvider, clientAuthCode);
     MemberAuthResult savedMember = memberService.registerIfNotExists(userInfo.toDomain());
     AuthToken newAuthToken =
