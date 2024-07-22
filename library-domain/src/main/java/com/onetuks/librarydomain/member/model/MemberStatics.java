@@ -27,7 +27,7 @@ public record MemberStatics(
   public MemberStatics increaseReviewCategoryCounts(Set<Category> categories) {
     return new MemberStatics(
         memberStaticsId,
-        reviewCounts,
+        reviewCounts + 1,
         followerCounts,
         followingCounts,
         reviewCategoryCounts.entrySet().stream()
@@ -43,7 +43,7 @@ public record MemberStatics(
   public MemberStatics decreaseReviewCategoryCounts(Set<Category> categories) {
     return new MemberStatics(
         memberStaticsId,
-        reviewCounts,
+        reviewCounts - 1,
         followerCounts,
         followingCounts,
         reviewCategoryCounts.entrySet().stream()
