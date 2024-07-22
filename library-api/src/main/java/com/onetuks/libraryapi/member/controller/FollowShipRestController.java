@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,5 +54,20 @@ public class FollowShipRestController {
     followShipService.remove(loginId, followShipId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+  }
+
+  /**
+   * 팔로우 여부 조회
+   * @param loginId : 로그인 아이디
+   * @param followeeId : 팔로우 대상 아이디
+   * @return : 팔로우 여부
+   */
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Boolean> getMyFollowShip(
+      @LoginId Long loginId,
+      @RequestParam(name = "followee-id") Long followeeId) {
+    boolean result = followShipService.searchExistence(loginId, followeeId);
+
+    return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 }
