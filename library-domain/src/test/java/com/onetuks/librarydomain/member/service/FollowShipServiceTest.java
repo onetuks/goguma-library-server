@@ -1,9 +1,12 @@
 package com.onetuks.librarydomain.member.service;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.times;
+import static org.mockito.BDDMockito.verify;
 
 import com.onetuks.librarydomain.DomainIntegrationTest;
 import com.onetuks.librarydomain.FollowShipFixture;
@@ -11,6 +14,7 @@ import com.onetuks.librarydomain.MemberFixture;
 import com.onetuks.librarydomain.member.model.FollowShip;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.libraryobject.enums.RoleType;
+import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -54,5 +58,22 @@ class FollowShipServiceTest extends DomainIntegrationTest {
 
     // Then
     verify(followShipRepository, times(1)).delete(followShip.followShipId());
+  }
+
+  @Test
+  @DisplayName("권한 없는 멤버가 팔로우 취소시 예외를 던진다.")
+  void remove_NotAuth_ExceptionThrown() {
+    // Given
+    long notAuthMemberId = 999L;
+    Member member = MemberFixture.create(101L, RoleType.USER);
+    Member followee = MemberFixture.create(102L, RoleType.USER);
+    FollowShip followShip = FollowShipFixture.create(101L, member, followee);
+
+    given(memberRepository.read(member.memberId())).willReturn(member);
+    given(followShipRepository.read(followShip.followShipId())).willReturn(followShip);
+
+    // When & Then
+    assertThatThrownBy(() -> followShipService.remove(notAuthMemberId, followShip.followShipId()))
+        .isInstanceOf(ApiAccessDeniedException.class);
   }
 }
