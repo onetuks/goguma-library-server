@@ -17,8 +17,13 @@ import com.onetuks.librarydomain.member.model.Follow;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 class FollowServiceTest extends DomainIntegrationTest {
 
@@ -109,5 +114,47 @@ class FollowServiceTest extends DomainIntegrationTest {
 
     // Then
     assertThat(result).isTrue();
+  }
+
+  @Test
+  @DisplayName("해당 멤버의 팔로워 목록을 조회한다.")
+  void searchAllFollowers_Test() {
+    // Given
+    Pageable pageable = PageRequest.of(0, 10);
+    Member member = MemberFixture.create(105L, RoleType.USER);
+    Page<Member> followers =
+        new PageImpl<>(
+            IntStream.range(0, 5)
+                .mapToObj(i -> MemberFixture.create(205L, RoleType.USER))
+                .toList());
+
+    given(followRepository.readAllFollowers(member.memberId(), pageable)).willReturn(followers);
+
+    // When
+    Page<Member> results = followService.searchAllFollowers(member.memberId(), pageable);
+
+    // Then
+    assertThat(results).hasSize(followers.getSize());
+  }
+
+  @Test
+  @DisplayName("해당 멤버의 팔로잉 목록을 조회한다.")
+  void searchAllFollowings_Test() {
+    // Given
+    Pageable pageable = PageRequest.of(0, 10);
+    Member member = MemberFixture.create(105L, RoleType.USER);
+    Page<Member> followings =
+        new PageImpl<>(
+            IntStream.range(0, 5)
+                .mapToObj(i -> MemberFixture.create(205L, RoleType.USER))
+                .toList());
+
+    given(followRepository.readAllFollowings(member.memberId(), pageable)).willReturn(followings);
+
+    // When
+    Page<Member> results = followService.searchAllFollowings(member.memberId(), pageable);
+
+    // Then
+    assertThat(results).hasSize(followings.getSize());
   }
 }
