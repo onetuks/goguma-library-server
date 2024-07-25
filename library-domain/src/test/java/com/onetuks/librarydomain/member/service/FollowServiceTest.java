@@ -45,7 +45,7 @@ class FollowServiceTest extends DomainIntegrationTest {
     given(followRepository.create(any(Follow.class))).willReturn(follow);
 
     // When
-    Follow result = followService.register(member.memberId(), follow.followId());
+    Follow result = followService.register(member.memberId(), followee.memberId());
 
     // Then
     assertAll(
@@ -58,6 +58,17 @@ class FollowServiceTest extends DomainIntegrationTest {
         () ->
             assertThat(result.followee().memberStatics().followerCounts())
                 .isEqualTo(expectedFollowee.memberStatics().followerCounts()));
+  }
+
+  @Test
+  @DisplayName("스스로를 팔로우하면 예외를 던진다.")
+  void register_FollowYourSelf_ExceptionThrown() {
+    // Given
+    Member member = MemberFixture.create(101L, RoleType.USER);
+
+    // When & Then
+    assertThatThrownBy(() -> followService.register(member.memberId(), member.memberId()))
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
