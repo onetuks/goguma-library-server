@@ -66,12 +66,12 @@ public record MemberStatics(
         memberStaticsId, reviewCounts, followerCounts - 1, followingCounts, reviewCategoryCounts);
   }
 
-  public MemberStatics increaseFolloweeCount() {
+  public MemberStatics increaseFollowingCount() {
     return new MemberStatics(
         memberStaticsId, reviewCounts, followerCounts, followingCounts + 1, reviewCategoryCounts);
   }
 
-  public MemberStatics decreaseFolloweeCount() {
+  public MemberStatics decreaseFollowingCount() {
     return new MemberStatics(
         memberStaticsId, reviewCounts, followerCounts, followingCounts - 1, reviewCategoryCounts);
   }

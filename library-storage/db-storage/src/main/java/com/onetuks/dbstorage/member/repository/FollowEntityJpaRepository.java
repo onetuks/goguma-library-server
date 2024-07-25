@@ -9,7 +9,7 @@ public interface FollowEntityJpaRepository extends JpaRepository<FollowEntity, L
 
   boolean existsByFollowerMemberIdAndFolloweeMemberId(long followerMemberId, long followeeMemberId);
 
-  Page<FollowEntity> findAllByFolloweeMemberId(long followeeMemberId, Pageable pageable);
+  Page<FollowEntity> findAllByFolloweeMemberId(long followeeId, Pageable pageable);
 
-  Page<FollowEntity> findAllByFollowerMemberId(long followerMemberId, Pageable pageable);
+  Page<FollowEntity> findAllByFollowerMemberId(long followerId, Pageable pageable);
 }

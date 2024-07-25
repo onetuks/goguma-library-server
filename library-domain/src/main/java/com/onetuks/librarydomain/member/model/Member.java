@@ -142,7 +142,7 @@ public record Member(
         points,
         profileImageFile,
         profileBackgroundImageFile,
-        memberStatics.increaseFolloweeCount());
+        memberStatics.increaseFollowingCount());
   }
 
   public Member decreaseFollowingCountStatics() {
@@ -156,7 +156,7 @@ public record Member(
         points,
         profileImageFile,
         profileBackgroundImageFile,
-        memberStatics.decreaseFolloweeCount());
+        memberStatics.decreaseFollowingCount());
   }
 
   private ImageFile getProfileImageFile(MultipartFile profileImage) {

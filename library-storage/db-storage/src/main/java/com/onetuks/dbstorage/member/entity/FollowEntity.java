@@ -33,11 +33,11 @@ public class FollowEntity {
   private Long followId;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "follower_id", nullable = false)
+  @JoinColumn(name = "follower_id", referencedColumnName = "member_id", nullable = false)
   private MemberEntity follower;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "followee_id", nullable = false)
+  @JoinColumn(name = "followee_id", referencedColumnName = "member_id", nullable = false)
   private MemberEntity followee;
 
   public FollowEntity(Long followId, MemberEntity follower, MemberEntity followee) {

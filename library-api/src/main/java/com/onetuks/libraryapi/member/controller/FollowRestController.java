@@ -84,7 +84,7 @@ public class FollowRestController {
   @GetMapping(path = "/members/{member-id}/followers", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<MemberPageResponses> getFollowers(
       @PathVariable(name = "member-id") Long memberId,
-      @PageableDefault(sort = "memberId", direction = Direction.DESC) Pageable pageable) {
+      @PageableDefault(sort = "followId", direction = Direction.DESC) Pageable pageable) {
     Page<Member> results = followService.searchAllFollowers(memberId, pageable);
     MemberPageResponses responses = MemberPageResponses.from(results);
 
@@ -94,7 +94,7 @@ public class FollowRestController {
   @GetMapping(path = "/members/{member-id}/followings", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<MemberPageResponses> getFollowings(
       @PathVariable(name = "member-id") Long memberId,
-      @PageableDefault(sort = "memberId", direction = Direction.DESC) Pageable pageable) {
+      @PageableDefault(sort = "followId", direction = Direction.DESC) Pageable pageable) {
     Page<Member> results = followService.searchAllFollowings(memberId, pageable);
     MemberPageResponses responses = MemberPageResponses.from(results);
 

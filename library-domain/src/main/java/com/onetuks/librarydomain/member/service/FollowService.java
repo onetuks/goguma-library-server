@@ -23,6 +23,10 @@ public class FollowService {
 
   @Transactional
   public Follow register(long loginId, long followeeId) {
+    if (loginId == followeeId) {
+      throw new IllegalArgumentException("자기자신은 팔로우할 수 없습니다.");
+    }
+
     return followRepository.create(
         new Follow(
             null,
