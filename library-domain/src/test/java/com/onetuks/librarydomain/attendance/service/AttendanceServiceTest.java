@@ -5,6 +5,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import com.onetuks.librarydomain.AttendanceFixture;
 import com.onetuks.librarydomain.DomainIntegrationTest;
@@ -26,6 +29,7 @@ class AttendanceServiceTest extends DomainIntegrationTest {
     LocalDate today = LocalDate.now();
     Attendance attendance = AttendanceFixture.create(101L, member, LocalDate.now());
 
+    given(attendanceRepository.readThisMonth(member.memberId())).willReturn(0);
     given(memberRepository.read(member.memberId())).willReturn(member);
     given(attendanceRepository.create(any(Attendance.class))).willReturn(attendance);
 
@@ -37,6 +41,8 @@ class AttendanceServiceTest extends DomainIntegrationTest {
         () -> assertThat(result.attendanceId()).isNotNull(),
         () -> assertThat(result.member().memberId()).isEqualTo(member.memberId()),
         () -> assertThat(result.attendedAt()).isEqualTo(LocalDate.now()));
+
+    verify(pointService, times(1)).creditPointForAttendance(member.memberId(), 1);
   }
 
   @Test
@@ -49,5 +55,8 @@ class AttendanceServiceTest extends DomainIntegrationTest {
     // When & Then
     assertThatThrownBy(() -> attendanceService.register(member.memberId(), notToday))
         .isInstanceOf(IllegalArgumentException.class);
+
+    verify(attendanceRepository, never()).readThisMonth(member.memberId());
+    verify(attendanceRepository, never()).create(any(Attendance.class));
   }
 }

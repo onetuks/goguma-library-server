@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 public interface AttendanceRepository {
 
   Attendance create(Attendance attendance);
+
+  int readThisMonth(long loginId);
 }

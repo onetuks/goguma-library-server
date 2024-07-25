@@ -110,7 +110,7 @@ public class DomainArchitectureTest extends DomainIntegrationTest {
 
     @Test
     @DisplayName("Service 에서는 register, search, edit, remove 로 시작하는 메서드 이름을 사용한다.")
-    void controller_MethodNamePrefix_Test() {
+    void service_MethodNamePrefix_Test() {
       ArchRule rule =
           ArchRuleDefinition.methods()
               .that()

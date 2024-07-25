@@ -9,12 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PointServiceImpl implements PointService {
 
-  private static final long BOOK_REGISTRATION_POINT = 20L;
-  private static final long REVIEW_REGISTRATION_EVENT_POINT = 30L;
-  private static final long REVIEW_REGISTRATION_BASE_POINT = 15L;
-  private static final long REVIEW_PICK_PICKER_POINT = 1L;
-  private static final long REVIEW_PICK_RECEIVER_POINT = 5L;
-
   private final PointRepository pointRepository;
   private final DailyPointLimitRepository dailyPointLimitRepository;
 
@@ -61,5 +55,17 @@ public class PointServiceImpl implements PointService {
       dailyPointLimitRepository.decreaseCreditCount(pickerMemberId);
       pointRepository.debitPoints(pickerMemberId, REVIEW_PICK_PICKER_POINT);
     }
+  }
+
+  @Override
+  public void creditPointForAttendance(long loginId, int attendedCount) {
+    switch (attendedCount) {
+      case 3 -> pointRepository.creditPoints(loginId, ATTENDANCE_3_DAYS_POINT);
+      case 5 -> pointRepository.creditPoints(loginId, ATTENDANCE_5_DAYS_POINT);
+      case 10 -> pointRepository.creditPoints(loginId, ATTENDANCE_10_DAYS_POINT);
+      case 30 -> pointRepository.creditPoints(loginId, ATTENDANCE_30_DAYS_POINT);
+    }
+
+    pointRepository.creditPoints(loginId, ATTENDANCE_DAILY_POINT);
   }
 }

@@ -26,10 +26,14 @@ public class AttendanceRestController {
   }
 
   /**
-   * 출석 정보를 저장한다. 오늘 날짜만 출석 정보로 저장 날짜 형식 : yyyy-MM-dd (ISO.DATE 형식)
+   * 출석 정보를 저장한다.
+   *
+   * <p>오늘 날짜만 출석 정보로 저장
+   *
+   * <p>날짜 형식 : yyyy-MM-dd (ISO.DATE 형식)
    *
    * @param loginId : 로그인 ID
-   * @param date    : 출석 날짜
+   * @param date : 출석 날짜
    * @return : 출석 정보
    */
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
