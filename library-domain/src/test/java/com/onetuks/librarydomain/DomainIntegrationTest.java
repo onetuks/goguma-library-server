@@ -1,6 +1,8 @@
 package com.onetuks.librarydomain;
 
 import com.onetuks.librarydomain.DomainIntegrationTest.DomainConfig;
+import com.onetuks.librarydomain.attendance.repository.AttendanceRepository;
+import com.onetuks.librarydomain.attendance.service.AttendanceService;
 import com.onetuks.librarydomain.book.repository.BookPickRepository;
 import com.onetuks.librarydomain.book.repository.BookRepository;
 import com.onetuks.librarydomain.book.service.BookPickService;
@@ -42,6 +44,7 @@ public class DomainIntegrationTest {
   @Autowired public WeeklyFeaturedBookService weeklyFeaturedBookService;
   @Autowired public MemberFacadeService memberFacadeService;
   @Autowired public FollowService followService;
+  @Autowired public AttendanceService attendanceService;
 
   @MockBean public FileRepository fileRepository;
   @MockBean public MemberRepository memberRepository;
@@ -51,6 +54,7 @@ public class DomainIntegrationTest {
   @MockBean public ReviewPickRepository reviewPickRepository;
   @MockBean public WeeklyFeaturedBookRepository weeklyFeaturedBookRepository;
   @MockBean public FollowRepository followRepository;
+  @MockBean public AttendanceRepository attendanceRepository;
 
   @MockBean public PointService pointService;
 
