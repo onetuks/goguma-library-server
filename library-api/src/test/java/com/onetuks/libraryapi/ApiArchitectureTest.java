@@ -105,15 +105,12 @@ public class ApiArchitectureTest {
               .onlyDependOnClassesThat()
               .resideInAnyPackage(
                   "..service",
-                  "..request",
-                  "..response",
+                  "..dto..",
+                  "..model",
                   "..util..",
                   "..enums..",
-                  "..model",
-                  "..domain..",
-                  "..validation..",
-                  "..web..",
-                  "..http..",
+                  "..springframework..",
+                  "jakarta..",
                   "java..");
 
       rule.check(javaClasses);

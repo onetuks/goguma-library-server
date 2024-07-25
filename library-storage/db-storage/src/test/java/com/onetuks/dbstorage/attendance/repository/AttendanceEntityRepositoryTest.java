@@ -1,6 +1,7 @@
 package com.onetuks.dbstorage.attendance.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.dbstorage.DbStorageIntegrationTest;
@@ -11,6 +12,8 @@ import com.onetuks.libraryobject.enums.RoleType;
 import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.testcontainers.shaded.org.yaml.snakeyaml.constructor.DuplicateKeyException;
 
 class AttendanceEntityRepositoryTest extends DbStorageIntegrationTest {
 
@@ -20,7 +23,9 @@ class AttendanceEntityRepositoryTest extends DbStorageIntegrationTest {
     // Given
     Attendance attendance =
         AttendanceFixture.create(
-            101L, memberEntityRepository.create(MemberFixture.create(101L, RoleType.USER)), null);
+            null,
+            memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
+            LocalDate.now());
 
     // When
     Attendance result = attendanceEntityRepository.create(attendance);
@@ -30,5 +35,22 @@ class AttendanceEntityRepositoryTest extends DbStorageIntegrationTest {
         () -> assertThat(result.attendanceId()).isNotNull(),
         () -> assertThat(result.member().memberId()).isEqualTo(attendance.member().memberId()),
         () -> assertThat(result.attendedAt()).isEqualTo(LocalDate.now()));
+  }
+
+  @Test
+  @DisplayName("중복된 출석 체크 저장 시 예외를 던진다.")
+  void create_DuplicateRecord_ExceptionThrown() {
+    // Given
+    Attendance attendance = attendanceEntityRepository.create(
+        AttendanceFixture.create(
+            null,
+            memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
+            LocalDate.now()));
+    Attendance newAttendance = AttendanceFixture.create(
+        null, attendance.member(), attendance.attendedAt());
+
+    // When & Then
+    assertThatThrownBy(() -> attendanceEntityRepository.create(newAttendance))
+        .isInstanceOf(DataIntegrityViolationException.class);
   }
 }
