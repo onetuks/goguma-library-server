@@ -27,7 +27,7 @@ public record MemberStatics(
   public MemberStatics increaseReviewCategoryCounts(Set<Category> categories) {
     return new MemberStatics(
         memberStaticsId,
-        reviewCounts,
+        reviewCounts + 1,
         followerCounts,
         followingCounts,
         reviewCategoryCounts.entrySet().stream()
@@ -43,7 +43,7 @@ public record MemberStatics(
   public MemberStatics decreaseReviewCategoryCounts(Set<Category> categories) {
     return new MemberStatics(
         memberStaticsId,
-        reviewCounts,
+        reviewCounts - 1,
         followerCounts,
         followingCounts,
         reviewCategoryCounts.entrySet().stream()
@@ -54,5 +54,25 @@ public record MemberStatics(
                         categories.contains(entry.getKey())
                             ? Math.max(0, entry.getValue() - 1)
                             : entry.getValue())));
+  }
+
+  public MemberStatics increaseFollowerCount() {
+    return new MemberStatics(
+        memberStaticsId, reviewCounts, followerCounts + 1, followingCounts, reviewCategoryCounts);
+  }
+
+  public MemberStatics decreaseFollowerCount() {
+    return new MemberStatics(
+        memberStaticsId, reviewCounts, followerCounts - 1, followingCounts, reviewCategoryCounts);
+  }
+
+  public MemberStatics increaseFollowingCount() {
+    return new MemberStatics(
+        memberStaticsId, reviewCounts, followerCounts, followingCounts + 1, reviewCategoryCounts);
+  }
+
+  public MemberStatics decreaseFollowingCount() {
+    return new MemberStatics(
+        memberStaticsId, reviewCounts, followerCounts, followingCounts - 1, reviewCategoryCounts);
   }
 }

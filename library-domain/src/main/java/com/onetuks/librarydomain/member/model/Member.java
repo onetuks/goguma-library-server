@@ -103,6 +103,62 @@ public record Member(
         memberStatics.decreaseReviewCategoryCounts(categories));
   }
 
+  public Member increaseFollowerCountStatics() {
+    return new Member(
+        memberId,
+        authInfo,
+        nickname,
+        introduction,
+        interestedCategories,
+        isAlarmAccepted,
+        points,
+        profileImageFile,
+        profileBackgroundImageFile,
+        memberStatics.increaseFollowerCount());
+  }
+
+  public Member decreaseFollowerCountStatics() {
+    return new Member(
+        memberId,
+        authInfo,
+        nickname,
+        introduction,
+        interestedCategories,
+        isAlarmAccepted,
+        points,
+        profileImageFile,
+        profileBackgroundImageFile,
+        memberStatics.decreaseFollowerCount());
+  }
+
+  public Member increaseFollowingCountStatics() {
+    return new Member(
+        memberId,
+        authInfo,
+        nickname,
+        introduction,
+        interestedCategories,
+        isAlarmAccepted,
+        points,
+        profileImageFile,
+        profileBackgroundImageFile,
+        memberStatics.increaseFollowingCount());
+  }
+
+  public Member decreaseFollowingCountStatics() {
+    return new Member(
+        memberId,
+        authInfo,
+        nickname,
+        introduction,
+        interestedCategories,
+        isAlarmAccepted,
+        points,
+        profileImageFile,
+        profileBackgroundImageFile,
+        memberStatics.decreaseFollowingCount());
+  }
+
   private ImageFile getProfileImageFile(MultipartFile profileImage) {
     return Optional.ofNullable(profileImage)
         .map(

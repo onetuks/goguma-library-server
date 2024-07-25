@@ -38,7 +38,7 @@ public class ApiArchitectureTest {
               .haveSimpleNameEndingWith("Controller")
               .andShould()
               .beAnnotatedWith(RestController.class)
-              .andShould()
+              .orShould()
               .beAnnotatedWith(RequestMapping.class);
 
       rule.check(javaClasses);

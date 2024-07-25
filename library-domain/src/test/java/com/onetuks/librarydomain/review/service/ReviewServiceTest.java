@@ -34,7 +34,7 @@ import org.springframework.data.domain.Pageable;
 class ReviewServiceTest extends DomainIntegrationTest {
 
   @Test
-  @DisplayName("서평을 등록하면 포인트가 지급되며, 서평 카테고리 통계가 업데이트된다.")
+  @DisplayName("서평을 등록하면 포인트가 지급되며, 서평 카테고리 통계와 서평수 통계가 업데이트된다.")
   void register_CreditPointByBook_Test() {
     // Given
     Review beforeReview =
@@ -82,7 +82,10 @@ class ReviewServiceTest extends DomainIntegrationTest {
         () -> assertThat(result.reviewContent()).isEqualTo(beforeReview.reviewContent()),
         () -> assertThat(result.pickCount()).isZero(),
         () -> assertThat(result.createdAt()).isNotNull(),
-        () -> assertThat(result.updatedAt()).isNotNull());
+        () -> assertThat(result.updatedAt()).isNotNull(),
+        () ->
+            assertThat(result.member().memberStatics().reviewCounts())
+                .isEqualTo(beforeReview.member().memberStatics().reviewCounts() + 1));
 
     afterMemberStatics.forEach(
         (category, count) -> {
@@ -151,7 +154,7 @@ class ReviewServiceTest extends DomainIntegrationTest {
   }
 
   @Test
-  @DisplayName("서평을 삭제하면 포인트가 15P 차감되고, 멤버 통계 정보가 업데이트된다.")
+  @DisplayName("서평을 삭제하면 포인트가 15P 차감되고, 서평 카테고리 통계와 서평수 통계가 업데이트된다.")
   void remove_DebitPoint_Test() {
     // Given
     Member picker = MemberFixture.create(102L, RoleType.USER);
