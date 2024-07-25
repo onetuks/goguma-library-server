@@ -141,3 +141,14 @@ CREATE TABLE IF NOT EXISTS weekly_featured_books
     UNIQUE KEY unq_book_id (book_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='금주도서 테이블';
+
+CREATE TABLE IF NOT EXISTS attendances
+(
+    attendance_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '출석 식별자',
+    member_id     BIGINT NOT NULL COMMENT '멤버 식별자',
+    attended_at   DATE   NOT NULL DEFAULT (CURRENT_DATE) COMMENT '출석 일시',
+    PRIMARY KEY (attendance_id),
+    FOREIGN KEY (member_id) REFERENCES members (member_id) ON DELETE CASCADE,
+    UNIQUE KEY unq_member_id_attended_at (member_id, attended_at)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='출석 테이블';

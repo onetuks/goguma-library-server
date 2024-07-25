@@ -57,7 +57,7 @@ class DbStorageArchitectureTest extends DbStorageIntegrationTest {
 
     @Test
     @DisplayName("Repository 에서는 create|read|update|delete|find|credit|exists 로 시작하는 메서드 이름을 사용한다.")
-    void controller_MethodNamePrefix_Test() {
+    void repository_MethodNamePrefix_Test() {
       ArchRule rule =
           ArchRuleDefinition.methods()
               .that()
@@ -66,7 +66,7 @@ class DbStorageArchitectureTest extends DbStorageIntegrationTest {
               .areDeclaredInClassesThat()
               .resideInAPackage("..repository")
               .should()
-              .haveNameMatching("^(create|read|update|delete|find|exists|credit|debit).*");
+              .haveNameMatching("^(create|read|update|delete|find|exists|count|credit|debit).*");
 
       rule.check(javaClasses);
     }
@@ -77,7 +77,7 @@ class DbStorageArchitectureTest extends DbStorageIntegrationTest {
 
     @Test
     @DisplayName("Entity는 오직 Repository와 Converter에 의해서만 의존한다")
-    void model_HaveDependency_Test() {
+    void entity_HaveDependency_Test() {
       ArchRule rule =
           ArchRuleDefinition.classes()
               .that()
@@ -92,7 +92,7 @@ class DbStorageArchitectureTest extends DbStorageIntegrationTest {
 
     @Test
     @DisplayName("Entity 는 entity, vo, enum 이외에 아무것도 의존하지 않는다.")
-    void model_NoDependOn_Test() {
+    void entity_NoDependOn_Test() {
       ArchRule rule =
           ArchRuleDefinition.classes()
               .that()

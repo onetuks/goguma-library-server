@@ -2,6 +2,7 @@ package com.onetuks.dbstorage;
 
 import com.onetuks.dbstorage.DbStorageIntegrationTest.DbStorageConfig;
 import com.onetuks.dbstorage.DbStorageIntegrationTest.DbStorageInitializer;
+import com.onetuks.dbstorage.attendance.repository.AttendanceEntityRepository;
 import com.onetuks.dbstorage.book.repository.BookEntityRepository;
 import com.onetuks.dbstorage.book.repository.BookPickEntityRepository;
 import com.onetuks.dbstorage.member.repository.FollowEntityRepository;
@@ -40,6 +41,7 @@ public class DbStorageIntegrationTest {
   @Autowired public ReviewPickEntityRepository reviewPickEntityRepository;
   @Autowired public WeeklyFeaturedBookEntityRepository weeklyFeaturedBookEntityRepository;
   @Autowired public FollowEntityRepository followEntityRepository;
+  @Autowired public AttendanceEntityRepository attendanceEntityRepository;
 
   @Configuration
   @ComponentScan(basePackages = "com.onetuks.dbstorage", basePackageClasses = TestFileCleaner.class)
