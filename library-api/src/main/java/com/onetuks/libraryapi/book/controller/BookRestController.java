@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping(path = "/books")
+@RequestMapping(path = "/api/books")
 public class BookRestController {
 
   private final BookService bookService;

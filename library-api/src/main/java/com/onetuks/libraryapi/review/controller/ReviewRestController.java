@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "/reviews")
+@RequestMapping(path = "/api/reviews")
 public class ReviewRestController {
 
   private final ReviewService reviewService;

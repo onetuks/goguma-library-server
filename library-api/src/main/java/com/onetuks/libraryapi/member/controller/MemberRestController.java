@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping(path = "/members")
+@RequestMapping(path = "/api/members")
 public class MemberRestController {
 
   private final MemberService memberService;

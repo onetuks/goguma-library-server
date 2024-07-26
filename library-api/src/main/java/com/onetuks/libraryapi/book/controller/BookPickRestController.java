@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "/books/picks")
+@RequestMapping(path = "/api/books/picks")
 public class BookPickRestController {
 
   private final BookPickService bookPickService;
