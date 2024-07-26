@@ -33,8 +33,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       @Nonnull HttpServletResponse response,
       @Nonnull FilterChain filterChain)
       throws ServletException, IOException {
-    String accessToken = AuthHeaderUtil.getAuthorizationHeaderValue(request);
     try {
+      String accessToken = AuthHeaderUtil.getAuthorizationHeaderValue(request);
       AuthToken authToken = authTokenService.readAccessToken(accessToken);
       Authentication authentication = authToken.getAuthentication();
 
