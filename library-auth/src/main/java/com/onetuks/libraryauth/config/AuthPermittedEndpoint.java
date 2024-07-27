@@ -4,7 +4,7 @@ public class AuthPermittedEndpoint {
 
   private AuthPermittedEndpoint() {}
 
-  protected static final String[] ENDPOINTS =
+  public static final String[] ENDPOINTS =
       new String[] {
         "/",
         "/auth/kakao",

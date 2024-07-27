@@ -1,14 +1,17 @@
 package com.onetuks.libraryauth.jwt.filter;
 
+import com.onetuks.libraryauth.config.AuthPermittedEndpoint;
 import com.onetuks.libraryauth.jwt.service.AuthTokenService;
 import com.onetuks.libraryauth.jwt.service.model.AuthToken;
 import com.onetuks.libraryauth.jwt.util.AuthHeaderUtil;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -39,8 +42,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       Authentication authentication = authToken.getAuthentication();
 
       SecurityContextHolder.getContext().setAuthentication(authentication);
-    } catch (Exception e) {
-      log.info("소셜 로그인 인가코드/인증토큰으로 로그인 중입니다. (토큰 자체가 유효하지 않은 경우엔 클라이언트 인증 과정에서 예외가 발생합니다)");
+    } catch (NullPointerException e) {
+      boolean isAuthPermittedAccess = Arrays.stream(AuthPermittedEndpoint.ENDPOINTS)
+          .anyMatch(endpoint -> endpoint.matches(request.getRequestURI()));
+
+      if (isAuthPermittedAccess) {
+        log.info("비인증 API 요청입니다.");
+      } else {
+        log.info("HTTP 요청에 Authentication 헤더가 비어있습니다 - URL: {} / Header: {}",
+            request.getRequestURL(), request.getHeader(AuthHeaderUtil.HEADER_AUTHORIZATION));
+      }
+    } catch (MalformedJwtException e) {
+      log.info("JWT 토큰이 올바르지 않습니다. (소셜 로그인 인가코드/인증토큰으로 로그인 중일 수 있습니다.) - URL: {} / Header: {}",
+          request.getRequestURL(), request.getHeader(AuthHeaderUtil.HEADER_AUTHORIZATION));
+    } catch (RuntimeException e) {
+      log.warn("JWT 토큰 검증 중 오류가 발생했습니다. (비정상적인 접근일 가능성이 있습니다.) - URL: {} / Header: {}",
+          request.getRequestURL(), request.getHeader(AuthHeaderUtil.HEADER_AUTHORIZATION));
     } finally {
       filterChain.doFilter(request, response);
     }
