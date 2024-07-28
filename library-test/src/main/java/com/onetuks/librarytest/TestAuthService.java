@@ -22,7 +22,7 @@ public class TestAuthService {
   }
 
   public LoginResult login(RoleType roleType) {
-    AuthInfo authInfo = MemberFixture.create(null, roleType).authInfo();
+    AuthInfo authInfo = MemberFixture.createWithMockFile(null, roleType).authInfo();
     MemberAuthResult member = memberService.registerIfNotExists(authInfo);
     AuthToken authToken =
         authTokenService.saveAccessToken(authInfo.socialId(), member.memberId(), member.roles());

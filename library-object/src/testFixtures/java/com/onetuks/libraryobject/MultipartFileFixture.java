@@ -2,6 +2,7 @@ package com.onetuks.libraryobject;
 
 import com.onetuks.libraryobject.enums.ImageType;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,6 +20,14 @@ public class MultipartFileFixture {
       }
       byte[] content = Files.readAllBytes(path);
       return new MockMultipartFile(fileName, content);
+    } catch (IOException e) {
+      return null;
+    }
+  }
+
+  public static MultipartFile createMock(ImageType imageType, String fileName) {
+    try {
+      return new MockMultipartFile(fileName, InputStream.nullInputStream());
     } catch (IOException e) {
       return null;
     }

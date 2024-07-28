@@ -49,9 +49,6 @@ public class TestRestController {
     LoginResult result = testAuthService.login(roleType);
     LoginResponse response = LoginResponse.from(result);
 
-    Map<String, String> temp = new HashMap<>();
-    temp.isEmpty();
-
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 }
