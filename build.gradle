@@ -78,4 +78,6 @@ dependencies {
     implementation(project(':library-storage'))
     implementation(project(':library-storage:db-storage'))
     implementation(project(':library-storage:file-storage'))
+
+    implementation(project(':library-test'))
 }

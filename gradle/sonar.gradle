@@ -5,7 +5,7 @@ sonar {
         property("sonar.sourceEncoding", "UTF-8")
         property("sonar.projectKey", "goguma-bookstore")
         property("sonar.projectName", "goguma-bookstore")
-        property("sonar.converage.jacoco.xmlReportPaths",
+        property("sonar.coverage.jacoco.xmlReportPaths",
                 "build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml")
     }
 }

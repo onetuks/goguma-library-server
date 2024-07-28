@@ -7,6 +7,7 @@ ext.coverageExclude = List.of(
         "**/*api/*",
         "**/*auth/*",
         "**/*object/*",
+        "**/library-test/*",
         "**/*Application.class"
 )
 
