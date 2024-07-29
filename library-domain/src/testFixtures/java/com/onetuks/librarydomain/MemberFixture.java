@@ -45,7 +45,8 @@ public class MemberFixture {
         createIsAlarmAccepted(),
         createPoints(),
         ImageFileFixture.createMock(ImageType.PROFILE_IMAGE, UUID.randomUUID().toString()),
-        ImageFileFixture.createMock(ImageType.PROFILE_BACKGROUND_IMAGE, UUID.randomUUID().toString()),
+        ImageFileFixture.createMock(
+            ImageType.PROFILE_BACKGROUND_IMAGE, UUID.randomUUID().toString()),
         null);
   }
 
