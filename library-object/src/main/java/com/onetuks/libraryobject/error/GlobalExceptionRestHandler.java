@@ -7,6 +7,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.NoSuchFileException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -24,8 +25,19 @@ public class GlobalExceptionRestHandler {
 
   /** 유니크 컬럼에 중복된 값을 넣으려고 하는 경우 - members, authors nickname col */
   @ExceptionHandler(UniqueColumnConstraintException.class)
-  protected ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(
+  protected ResponseEntity<ErrorResponse> handleUniqueColumnConstraintException(
       UniqueColumnConstraintException e) {
+    logging(e);
+
+    final ErrorResponse response =
+        ErrorResponse.of(ErrorCode.DUPLICATED_COLUMN_VALUE, e.getMessage());
+
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+  }
+
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  protected ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(
+      DataIntegrityViolationException e) {
     logging(e);
 
     final ErrorResponse response =

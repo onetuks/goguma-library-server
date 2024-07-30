@@ -62,7 +62,8 @@ CREATE TABLE IF NOT EXISTS books
     cover_image_uri VARCHAR(255) NOT NULL DEFAULT 'default-cover.png' COMMENT '책 표지 이미지 URI',
     is_indie        BOOLEAN      NOT NULL DEFAULT FALSE COMMENT '독립출판물 여부',
     is_permitted    BOOLEAN      NOT NULL DEFAULT FALSE COMMENT '서비스 제공 허가 여부',
-    PRIMARY KEY (book_id)
+    PRIMARY KEY (book_id),
+    UNIQUE KEY unq_isbn (isbn)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='책 테이블';
 
