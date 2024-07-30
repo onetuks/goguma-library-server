@@ -43,7 +43,8 @@ public class TestRestController {
    */
   @OnlyForAdmin
   @PostMapping(path = "/api/test/login", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<LoginResponse> login(@RequestParam(name = "role-type") RoleType roleType) {
+  public ResponseEntity<LoginResponse> login(
+      @RequestParam(name = "role-type", required = false, defaultValue = "USER") RoleType roleType) {
     LoginResult result = testAuthService.login(roleType);
     LoginResponse response = LoginResponse.from(result);
 
