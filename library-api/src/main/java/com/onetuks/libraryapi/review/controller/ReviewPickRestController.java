@@ -45,7 +45,7 @@ public class ReviewPickRestController {
     ReviewPick result = reviewPickService.register(loginId, reviewId);
     ReviewPickResponse response = ReviewPickResponse.from(result);
 
-    return ResponseEntity.status(HttpStatus.OK).body(response);
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
   /**

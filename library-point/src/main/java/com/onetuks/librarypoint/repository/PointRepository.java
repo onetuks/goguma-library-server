@@ -7,5 +7,7 @@ public interface PointRepository {
 
   void creditPoints(long memberId, long creditPoint);
 
+  void creditPointsWithLock(long memberId, long creditPoint);
+
   void debitPoints(long memberId, long debitPoint);
 }

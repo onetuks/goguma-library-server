@@ -37,9 +37,10 @@ public class ReviewPickService {
   @Transactional
   public ReviewPick register(long loginId, long reviewId) {
     Member picker = memberRepository.read(loginId);
-    Review review = reviewRepository.read(reviewId);
+    Review review = reviewRepository.readWithLock(reviewId);
 
     pointService.creditPointForReviewPick(picker.memberId(), review.member().memberId());
+    reviewRepository.update(review.increasePickCount());
 
     return reviewPickRepository.create(new ReviewPick(null, picker, review));
   }
@@ -54,6 +55,7 @@ public class ReviewPickService {
     }
 
     pointService.debitPointForReviewPick(picker.memberId());
+    reviewRepository.update(reviewPick.review().decreasePickCount());
 
     reviewPickRepository.delete(reviewPick.reviewPickId());
   }

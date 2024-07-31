@@ -44,7 +44,7 @@ public class PointServiceImpl implements PointService {
     if (dailyPointLimitRepository.isCreditable(pickerMemberId)) {
       dailyPointLimitRepository.increaseCreditCount(pickerMemberId);
       pointRepository.creditPoints(pickerMemberId, REVIEW_PICK_PICKER_POINT);
-      pointRepository.creditPoints(receiverMemberId, REVIEW_PICK_RECEIVER_POINT);
+      pointRepository.creditPointsWithLock(receiverMemberId, REVIEW_PICK_RECEIVER_POINT);
     }
   }
 

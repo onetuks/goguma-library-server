@@ -22,7 +22,10 @@ import org.hibernate.annotations.Type;
 @Entity
 @Table(
     name = "books",
-    uniqueConstraints = @UniqueConstraint(name = "unq_isbn", columnNames = {"isbn"}))
+    uniqueConstraints =
+        @UniqueConstraint(
+            name = "unq_isbn",
+            columnNames = {"isbn"}))
 public class BookEntity {
 
   @Id
