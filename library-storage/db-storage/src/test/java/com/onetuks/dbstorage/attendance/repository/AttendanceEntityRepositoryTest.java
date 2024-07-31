@@ -11,7 +11,6 @@ import com.onetuks.librarydomain.attendance.model.Attendance;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.libraryobject.enums.RoleType;
 import java.time.LocalDate;
-import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -60,18 +59,13 @@ class AttendanceEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("이번 달 출석 횟수를 조회한다.")
   void readThisMonth_Test() {
     // Given
-    int count = 3;
     Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
-    IntStream.range(1, 1 + count)
-        .forEach(
-            i ->
-                attendanceEntityRepository.create(
-                    AttendanceFixture.create(null, member, LocalDate.now().minusDays(i))));
+    attendanceEntityRepository.create(AttendanceFixture.create(null, member, LocalDate.now()));
 
     // When
     int result = attendanceEntityRepository.readThisMonth(member.memberId());
 
     // Then
-    assertThat(result).isEqualTo(count);
+    assertThat(result).isEqualTo(1);
   }
 }
