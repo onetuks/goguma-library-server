@@ -61,11 +61,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
           request.getRequestURL(),
           request.getHeader(AuthHeaderUtil.HEADER_AUTHORIZATION));
     } catch (RuntimeException e) {
-      log.warn(
-          "JWT 토큰 검증 중 오류가 발생했습니다. (비정상적인 접근일 가능성이 있습니다.) - URL: {} / Header: {} / Exception: {}",
-          request.getRequestURL(),
-          request.getHeader(AuthHeaderUtil.HEADER_AUTHORIZATION),
-          e.getMessage());
+      boolean isActuatorRequest = request.getRequestURL().toString().contains("actuator");
+
+      if (!isActuatorRequest) {
+        log.warn(
+            "JWT 토큰 검증 중 오류가 발생했습니다. (비정상적인 접근일 가능성이 있습니다.) - URL: {} / Header: {} / Exception: {}",
+            request.getRequestURL(),
+            request.getHeader(AuthHeaderUtil.HEADER_AUTHORIZATION),
+            e.getMessage());
+      }
     } finally {
       filterChain.doFilter(request, response);
     }
