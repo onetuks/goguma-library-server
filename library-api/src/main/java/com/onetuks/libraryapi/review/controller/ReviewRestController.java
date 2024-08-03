@@ -105,7 +105,7 @@ public class ReviewRestController {
   }
 
   /**
-   * 서평 다건 조회
+   * 서평 다건 조회 (서평 피드)
    *
    * @param sortBy : 정렬 기준
    * @param pageable : 페이징 정보
@@ -113,7 +113,7 @@ public class ReviewRestController {
    */
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ReviewResponses> getReviews(
-      @RequestParam(name = "sortBy", required = false, defaultValue = "LATEST") SortBy sortBy,
+      @RequestParam(name = "sort", required = false, defaultValue = "LATEST") SortBy sortBy,
       @PageableDefault(sort = "reviewId", direction = Direction.DESC) Pageable pageable) {
     Page<Review> results = reviewService.searchAll(sortBy, pageable);
     ReviewResponses responses = ReviewResponses.from(results);
@@ -132,7 +132,7 @@ public class ReviewRestController {
   @GetMapping(path = "/book/{book-id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ReviewResponses> getReviewsOfBook(
       @PathVariable(name = "book-id") Long bookId,
-      @RequestParam(name = "sortBy", required = false, defaultValue = "LATEST") SortBy sortBy,
+      @RequestParam(name = "sort", required = false, defaultValue = "LATEST") SortBy sortBy,
       @PageableDefault(sort = "reviewId", direction = Direction.DESC) Pageable pageable) {
     Page<Review> results = reviewService.searchAll(bookId, sortBy, pageable);
     ReviewResponses responses = ReviewResponses.from(results);
