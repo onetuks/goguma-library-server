@@ -4,12 +4,12 @@ import lombok.Getter;
 
 @Getter
 public enum CacheType {
-  WEEKLY_FEATURED_BOOKS("weekly_featured_books", 60 * 60 * 24 * 7, 10),
-  RECOMMENDED_MEMBERS("recommended_members", 60 * 60 * 24, 100),
-  REVIEW_FEED("review_feed", 60 * 20, 1_000),
-  BOOK_PICKS("book_picks", 60 * 20, 1_000),
-  REVIEW_PICKS("review_picks", 60 * 20, 1_000),
-  MEMBER_FOLLOWS("member_follows", 60 * 20, 1_000);
+  WEEKLY_FEATURED_BOOKS(CacheName.WEEKLY_FEATURED_BOOKS, 60 * 60 * 24 * 7, 10),
+  RECOMMENDED_MEMBERS(CacheName.RECOMMENDED_MEMBERS, 60 * 60, 100),
+  REVIEW_FEED(CacheName.REVIEW_FEED, 60 * 20, 1_000),
+  BOOK_PICKS(CacheName.BOOK_PICKS, 60 * 20, 1_000),
+  REVIEW_PICKS(CacheName.REVIEW_PICKS, 60 * 20, 1_000),
+  MEMBER_FOLLOWS(CacheName.MEMBER_FOLLOWS, 60 * 20, 1_000);
 
   private final String cacheName;
   private final long expirationAfterWrite;

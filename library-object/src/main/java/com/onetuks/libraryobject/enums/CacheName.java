@@ -1,7 +1,5 @@
 package com.onetuks.libraryobject.enums;
 
-import java.util.List;
-
 public interface CacheName {
   String WEEKLY_FEATURED_BOOKS = "weekly_featured_books";
   String RECOMMENDED_MEMBERS = "recommended_members";
