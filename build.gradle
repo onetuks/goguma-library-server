@@ -47,9 +47,6 @@ allprojects {
     dependencies {
         // Netty/Resolver/DNS/Native/MacOS
         implementation 'io.netty:netty-resolver-dns-native-macos:4.1.110.Final:osx-aarch_64'
-
-        // Spring Boot Actuator
-        implementation 'org.springframework.boot:spring-boot-starter-actuator'
     }
 }
 
@@ -80,4 +77,5 @@ dependencies {
     implementation(project(':library-storage:file-storage'))
 
     implementation(project(':library-test'))
+    implementation(project(':library-monitoring'))
 }

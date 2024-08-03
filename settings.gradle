@@ -15,3 +15,5 @@ include(':library-storage:db-storage')
 include(':library-storage:file-storage')
 
 include(':library-test')
+
+include(':library-monitoring')
