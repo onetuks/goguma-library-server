@@ -46,7 +46,7 @@ allprojects {
 
     dependencies {
         // Netty/Resolver/DNS/Native/MacOS
-        implementation 'io.netty:netty-resolver-dns-native-macos:4.1.110.Final:osx-aarch_64'
+        implementation('io.netty:netty-resolver-dns-native-macos:4.1.110.Final:osx-aarch_64')
     }
 }
 

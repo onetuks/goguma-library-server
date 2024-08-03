@@ -15,6 +15,6 @@ allprojects {
 
     dependencies {
         // Spring Cloud Client
-        implementation 'org.springframework.cloud:spring-cloud-starter-config'
+        implementation('org.springframework.cloud:spring-cloud-starter-config'
     }
 }

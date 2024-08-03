@@ -9,12 +9,12 @@ dependencies {
     testFixturesImplementation('org.springframework.boot:spring-boot-starter-test')
 
     // Spring Web
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation('org.springframework.boot:spring-boot-starter-web')
 
     // Webflux
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation('org.springframework.boot:spring-boot-starter-webflux')
 
     // REDIS
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    testImplementation 'com.redis.testcontainers:testcontainers-redis-junit:1.6.4'
+    implementation('org.springframework.boot:spring-boot-starter-data-redis')
+    testImplementation('com.redis.testcontainers:testcontainers-redis-junit:1.6.4')
 }
