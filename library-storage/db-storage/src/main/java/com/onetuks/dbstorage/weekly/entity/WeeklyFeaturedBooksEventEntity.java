@@ -1,6 +1,7 @@
 package com.onetuks.dbstorage.weekly.entity;
 
 import com.onetuks.libraryobject.annotation.Generated;
+import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,9 +13,13 @@ import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Cacheable
+@Cache(region = "weekly_featured_books", usage = CacheConcurrencyStrategy.READ_ONLY)
 @Entity
 @Table(name = "weekly_featured_books_events")
 public class WeeklyFeaturedBooksEventEntity {

@@ -5,6 +5,7 @@ import static jakarta.persistence.CascadeType.REMOVE;
 
 import com.onetuks.dbstorage.book.entity.BookEntity;
 import com.onetuks.libraryobject.annotation.Generated;
+import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,9 +20,13 @@ import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Cacheable
+@Cache(region = "weekly_featured_books", usage = CacheConcurrencyStrategy.READ_ONLY)
 @Entity
 @Table(
     name = "weekly_featured_books",
@@ -36,12 +41,14 @@ public class WeeklyFeaturedBookEntity {
   @Column(name = "weekly_featured_book_id", nullable = false)
   private Long weeklyFeaturedBookId;
 
+  @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
   @ManyToOne(
       fetch = FetchType.LAZY,
       cascade = {PERSIST, REMOVE})
   @JoinColumn(name = "weekly_featured_books_event_id", nullable = false)
   private WeeklyFeaturedBooksEventEntity weeklyFeaturedBooksEventEntity;
 
+  @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
   @ManyToOne(
       fetch = FetchType.LAZY,
       cascade = {REMOVE})
