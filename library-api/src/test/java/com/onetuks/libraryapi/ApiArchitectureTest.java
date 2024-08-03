@@ -110,6 +110,7 @@ public class ApiArchitectureTest {
                   "..util..",
                   "..enums..",
                   "..springframework..",
+                  "..slf4j..",
                   "jakarta..",
                   "java..");
 

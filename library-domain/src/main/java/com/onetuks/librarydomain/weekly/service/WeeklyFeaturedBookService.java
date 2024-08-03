@@ -34,7 +34,7 @@ public class WeeklyFeaturedBookService {
 
   @Caching(
       evict = @CacheEvict(value = CacheName.WEEKLY_FEATURED_BOOKS, key = FEATURED_BOOKS_CACHE_KEY),
-      put   = @CachePut  (value = CacheName.WEEKLY_FEATURED_BOOKS, key = FEATURED_BOOKS_CACHE_KEY))
+      put = @CachePut(value = CacheName.WEEKLY_FEATURED_BOOKS, key = FEATURED_BOOKS_CACHE_KEY))
   @Scheduled(cron = "0 0 0 * * MON")
   @Transactional
   public void registerAll() {

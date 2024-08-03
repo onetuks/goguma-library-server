@@ -100,7 +100,8 @@ public class ReviewService {
 
   @Cacheable(
       value = CacheName.REVIEW_FEED,
-      key = "#sortBy.ordinal()" + "-" + "#pageable.getPageNumber()" + "-" + "#pageable.getPageSize()")
+      key =
+          "#sortBy.ordinal()" + "-" + "#pageable.getPageNumber()" + "-" + "#pageable.getPageSize()")
   @Transactional(readOnly = true)
   public Page<Review> searchAll(SortBy sortBy, Pageable pageable) {
     return reviewRepository.readAll(sortBy, pageable);

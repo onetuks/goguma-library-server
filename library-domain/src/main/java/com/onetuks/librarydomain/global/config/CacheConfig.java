@@ -19,15 +19,15 @@ public class CacheConfig {
   @Bean
   public List<CaffeineCache> caffeineCaches() {
     return Arrays.stream(CacheType.values())
-        .map(cacheType ->
-            new CaffeineCache(
-                cacheType.getCacheName(),
-                Caffeine.newBuilder()
-                    .recordStats()
-                    .expireAfterWrite(cacheType.getExpirationAfterWrite(), TimeUnit.SECONDS)
-                    .maximumSize(cacheType.getMaximumCacheSize())
-                    .build()
-            ))
+        .map(
+            cacheType ->
+                new CaffeineCache(
+                    cacheType.getCacheName(),
+                    Caffeine.newBuilder()
+                        .recordStats()
+                        .expireAfterWrite(cacheType.getExpirationAfterWrite(), TimeUnit.SECONDS)
+                        .maximumSize(cacheType.getMaximumCacheSize())
+                        .build()))
         .toList();
   }
 
