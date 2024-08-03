@@ -36,7 +36,7 @@ public class WeeklyFeaturedBookService {
 
     featuredBooks.forEach(book -> weeklyFeaturedBookRepository.create(WeeklyFeaturedBook.of(book)));
 
-    log.info("월요일 자정이 되어, 금주도서가 선정되었습니다. : {}", featuredBooks.toArray());
+    log.info("[도서] 금주도서 선정 - featuredBooks: {}", featuredBooks.toArray());
   }
 
   @Transactional(readOnly = true)

@@ -7,6 +7,8 @@ import com.onetuks.libraryauth.util.OnlyForAdmin;
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.book.service.BookService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -27,6 +29,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping(path = "/api/admin/books")
 public class AdminBookRestController {
+
+  private static final Logger log = LoggerFactory.getLogger(AdminBookRestController.class);
 
   private final BookService bookService;
 
@@ -54,6 +58,8 @@ public class AdminBookRestController {
     Book result = bookService.edit(bookId, request.to(), coverImage);
     BookResponse response = BookResponse.from(result);
 
+    log.info("[도서] 도서 정보 수정 - bookId: {}", bookId);
+
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
@@ -67,6 +73,8 @@ public class AdminBookRestController {
   @DeleteMapping(path = "/{book-id}")
   public ResponseEntity<Void> deleteBook(@PathVariable(name = "book-id") Long bookId) {
     bookService.remove(bookId);
+
+    log.info("[도서] 도서 삭제 - bookId: {}", bookId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }

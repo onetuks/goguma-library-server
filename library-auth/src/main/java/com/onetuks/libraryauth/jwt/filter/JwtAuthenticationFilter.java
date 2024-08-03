@@ -48,16 +48,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
               .anyMatch(endpoint -> endpoint.matches(request.getRequestURI()));
 
       if (isAuthPermittedAccess) {
-        log.info("비인증 API 요청입니다.");
+        log.info("[인증] 비인증 API 요청입니다.");
       } else {
         log.info(
-            "HTTP 요청에 Authentication 헤더가 비어있습니다 - URL: {} / Header: {}",
+            "[인증] HTTP 요청에 Authentication 헤더가 비어있습니다 - URL: {} / Header: {}",
             request.getRequestURL(),
             request.getHeader(AuthHeaderUtil.HEADER_AUTHORIZATION));
       }
     } catch (MalformedJwtException e) {
       log.info(
-          "JWT 토큰이 올바르지 않습니다. (소셜 로그인 인가코드/인증토큰으로 로그인 중일 수 있습니다.) - URL: {} / Header: {}",
+          "[인증] JWT 토큰이 올바르지 않습니다. (소셜 로그인 인가코드/인증토큰으로 로그인 중일 수 있습니다.) - URL: {} / Header: {}",
           request.getRequestURL(),
           request.getHeader(AuthHeaderUtil.HEADER_AUTHORIZATION));
     } catch (RuntimeException e) {

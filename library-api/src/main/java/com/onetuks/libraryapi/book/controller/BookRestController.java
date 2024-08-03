@@ -10,6 +10,8 @@ import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.book.service.BookService;
 import com.onetuks.librarydomain.weekly.service.WeeklyFeaturedBookService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -28,6 +30,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping(path = "/api/books")
 public class BookRestController {
+
+  private static final Logger log = LoggerFactory.getLogger(BookRestController.class);
 
   private final BookService bookService;
   private final WeeklyFeaturedBookService weeklyFeaturedBookService;
@@ -68,6 +72,8 @@ public class BookRestController {
       @RequestPart(name = "cover-image", required = false) MultipartFile coverImage) {
     Book result = bookService.register(loginId, request.to(), coverImage);
     BookResponse response = BookResponse.from(result);
+
+    log.info("[도서] 도서가 등록되었습니다 - bookId: {}", result.bookId());
 
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
