@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.util.Objects;
 import java.util.Set;
 import lombok.AccessLevel;
@@ -19,7 +20,12 @@ import org.hibernate.annotations.Type;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "books")
+@Table(
+    name = "books",
+    uniqueConstraints =
+        @UniqueConstraint(
+            name = "unq_isbn",
+            columnNames = {"isbn"}))
 public class BookEntity {
 
   @Id
@@ -36,7 +42,7 @@ public class BookEntity {
   @Column(name = "introduction")
   private String introduction;
 
-  @Column(name = "isbn")
+  @Column(name = "isbn", unique = true)
   private String isbn;
 
   @Column(name = "publisher")

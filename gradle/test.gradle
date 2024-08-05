@@ -1,15 +1,15 @@
 subprojects {
     dependencies {
         // Test
-        testImplementation 'org.springframework.boot:spring-boot-starter-test'
-        testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+        testImplementation('org.springframework.boot:spring-boot-starter-test')
+        testRuntimeOnly('org.junit.platform:junit-platform-launcher')
 
         // Arch-Unit
-        testImplementation 'com.tngtech.archunit:archunit:1.2.2'
+        testImplementation('com.tngtech.archunit:archunit:1.2.2')
 
         // TestContainers
-        testImplementation 'org.springframework.boot:spring-boot-testcontainers'
-        testImplementation 'org.testcontainers:junit-jupiter'
+        testImplementation('org.springframework.boot:spring-boot-testcontainers')
+        testImplementation('org.testcontainers:junit-jupiter')
     }
 
     tasks.named('test') {

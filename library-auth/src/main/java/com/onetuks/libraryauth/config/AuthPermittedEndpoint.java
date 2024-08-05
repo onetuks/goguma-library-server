@@ -6,15 +6,6 @@ public class AuthPermittedEndpoint {
 
   public static final String[] ENDPOINTS =
       new String[] {
-        "/",
-        "/auth/kakao",
-        "/auth/google",
-        "/auth/naver",
-        "/auth/postman/kakao",
-        "/auth/postman/google",
-        "/auth/postman/naver",
-        "/error",
-        "/docs/**",
-        "/actuator/**"
+        "/", "/api/auth/login/**", "/api/test/login", "/error", "/docs/**", "/actuator/**"
       };
 }

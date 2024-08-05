@@ -9,12 +9,12 @@ allprojects {
 
     dependencyManagement {
         imports {
-            mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+            mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
         }
     }
 
     dependencies {
         // Spring Cloud Client
-        implementation 'org.springframework.cloud:spring-cloud-starter-config'
+        implementation('org.springframework.cloud:spring-cloud-starter-config')
     }
 }

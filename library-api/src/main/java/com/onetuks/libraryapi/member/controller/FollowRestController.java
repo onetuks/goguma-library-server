@@ -93,6 +93,13 @@ public class FollowRestController {
     return ResponseEntity.status(HttpStatus.OK).body(responses);
   }
 
+  /**
+   * 팔로잉(내가 팔로우하는 멤버) 목록 조회
+   *
+   * @param memberId : 멤버 식별자
+   * @param pageable : 페이지 정보
+   * @return : 팔로잉 목록
+   */
   @GetMapping(path = "/members/{member-id}/followings", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<MemberPageResponses> getFollowings(
       @PathVariable(name = "member-id") Long memberId,

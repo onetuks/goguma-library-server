@@ -51,6 +51,14 @@ public class ReviewEntityRepository implements ReviewRepository {
   }
 
   @Override
+  public Review readWithLock(long reviewId) {
+    return converter.toModel(
+        repository
+            .findByReviewId(reviewId)
+            .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사람입니다.")));
+  }
+
+  @Override
   public Page<Review> readAll(SortBy sortBy, Pageable pageable) {
     return sortBy == SortBy.LATEST
         ? qDslRepository.findAllOrderByLatest(pageable).map(converter::toModel)

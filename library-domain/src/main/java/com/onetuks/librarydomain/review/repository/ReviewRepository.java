@@ -19,6 +19,8 @@ public interface ReviewRepository {
 
   Review read(long reviewId);
 
+  Review readWithLock(long reviewId);
+
   Page<Review> readAll(SortBy sortBy, Pageable pageable);
 
   Page<Review> readAll(long bookId, SortBy sortBy, Pageable pageable);

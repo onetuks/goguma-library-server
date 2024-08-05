@@ -8,4 +8,8 @@ public class ImageFileFixture {
   public static ImageFile create(ImageType imageType, String uuid) {
     return new ImageFile(imageType, MultipartFileFixture.create(imageType, uuid), uuid);
   }
+
+  public static ImageFile createMock(ImageType imageType, String uuid) {
+    return new ImageFile(imageType, MultipartFileFixture.createMock(imageType, uuid), uuid);
+  }
 }

@@ -6,15 +6,19 @@ import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.librarydomain.review.repository.ReviewRepository;
 import com.onetuks.librarydomain.weekly.model.WeeklyFeaturedBook;
 import com.onetuks.librarydomain.weekly.repository.WeeklyFeaturedBookRepository;
+import com.onetuks.libraryobject.enums.CacheName;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberFacadeService {
+
+  private static final String RECOMMENDED_MEMBERS_CACHE_KEY = "'recommendedMembers'";
 
   private final ReviewRepository reviewRepository;
   private final WeeklyFeaturedBookRepository weeklyFeaturedBookRepository;
@@ -26,6 +30,7 @@ public class MemberFacadeService {
     this.weeklyFeaturedBookRepository = weeklyFeaturedBookRepository;
   }
 
+  @Cacheable(value = CacheName.RECOMMENDED_MEMBERS, key = RECOMMENDED_MEMBERS_CACHE_KEY)
   @Transactional(readOnly = true)
   public Set<Member> searchAllForRecommend() {
     List<Book> thisWeekFeaturedBooks =

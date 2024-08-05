@@ -5,6 +5,7 @@ import com.onetuks.dbstorage.member.repository.MemberEntityJpaRepository;
 import com.onetuks.librarypoint.repository.PointRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
@@ -22,6 +23,17 @@ public class PointRepositoryImpl implements PointRepository {
     validatePointValue(creditPoint);
 
     getMember(memberId).addPoints(creditPoint);
+  }
+
+  @Override
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public void creditPointsWithLock(long memberId, long creditPoint) {
+    validatePointValue(creditPoint);
+
+    repository
+        .findByMemberId(memberId)
+        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."))
+        .addPoints(creditPoint);
   }
 
   @Override

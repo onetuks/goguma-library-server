@@ -13,3 +13,7 @@ include(':library-point')
 include(':library-storage')
 include(':library-storage:db-storage')
 include(':library-storage:file-storage')
+
+include(':library-test')
+
+include(':library-monitoring')

@@ -39,7 +39,8 @@ class ReviewPickServiceTest extends DomainIntegrationTest {
             101L, picker, ReviewFixture.create(101L, receiver, BookFixture.create(101L)));
 
     given(memberRepository.read(picker.memberId())).willReturn(picker);
-    given(reviewRepository.read(reviewPick.review().reviewId())).willReturn(reviewPick.review());
+    given(reviewRepository.readWithLock(reviewPick.review().reviewId()))
+        .willReturn(reviewPick.review());
     given(reviewPickRepository.create(any(ReviewPick.class))).willReturn(reviewPick);
 
     // When

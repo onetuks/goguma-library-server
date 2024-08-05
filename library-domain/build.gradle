@@ -1,5 +1,5 @@
 plugins {
-    id 'java-test-fixtures'
+    id('java-test-fixtures')
 }
 
 dependencies {
@@ -18,8 +18,14 @@ dependencies {
     implementation('org.springframework:spring-tx')
 
     // Spring Data Commons (Page)
-    implementation 'org.springframework.data:spring-data-commons'
+    implementation('org.springframework.data:spring-data-commons')
 
     // Webflux
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation('org.springframework.boot:spring-boot-starter-webflux')
+
+    // Spring Cache
+    implementation('org.springframework.boot:spring-boot-starter-cache')
+
+    // Caffeine Cache
+    implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
 }

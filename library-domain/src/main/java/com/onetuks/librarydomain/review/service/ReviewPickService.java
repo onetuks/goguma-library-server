@@ -7,8 +7,10 @@ import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.librarydomain.review.model.ReviewPick;
 import com.onetuks.librarydomain.review.repository.ReviewPickRepository;
 import com.onetuks.librarydomain.review.repository.ReviewRepository;
+import com.onetuks.libraryobject.enums.CacheName;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
 import java.util.Objects;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -37,9 +39,10 @@ public class ReviewPickService {
   @Transactional
   public ReviewPick register(long loginId, long reviewId) {
     Member picker = memberRepository.read(loginId);
-    Review review = reviewRepository.read(reviewId);
+    Review review = reviewRepository.readWithLock(reviewId);
 
     pointService.creditPointForReviewPick(picker.memberId(), review.member().memberId());
+    reviewRepository.update(review.increasePickCount());
 
     return reviewPickRepository.create(new ReviewPick(null, picker, review));
   }
@@ -54,6 +57,7 @@ public class ReviewPickService {
     }
 
     pointService.debitPointForReviewPick(picker.memberId());
+    reviewRepository.update(reviewPick.review().decreasePickCount());
 
     reviewPickRepository.delete(reviewPick.reviewPickId());
   }
@@ -63,6 +67,7 @@ public class ReviewPickService {
     return reviewPickRepository.readAll(loginId, pageable);
   }
 
+  @Cacheable(value = CacheName.REVIEW_PICKS, key = "#loginId" + "-" + "#reviewId")
   @Transactional(readOnly = true)
   public boolean searchExistence(long loginId, long reviewId) {
     return reviewPickRepository.read(loginId, reviewId);

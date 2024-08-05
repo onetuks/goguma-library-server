@@ -35,6 +35,21 @@ public class MemberFixture {
         null);
   }
 
+  public static Member createWithMockFile(Long memberId, RoleType roleType) {
+    return new Member(
+        memberId,
+        createAuthInfo(roleType),
+        new Nickname(createNickname()),
+        "소개글입니다.",
+        createInterestedCategories(),
+        createIsAlarmAccepted(),
+        createPoints(),
+        ImageFileFixture.createMock(ImageType.PROFILE_IMAGE, UUID.randomUUID().toString()),
+        ImageFileFixture.createMock(
+            ImageType.PROFILE_BACKGROUND_IMAGE, UUID.randomUUID().toString()),
+        null);
+  }
+
   private static AuthInfo createAuthInfo(RoleType roleType) {
     return new AuthInfo(
         UUID.randomUUID().toString(),

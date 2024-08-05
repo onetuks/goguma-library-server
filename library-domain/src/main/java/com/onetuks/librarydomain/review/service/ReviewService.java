@@ -10,10 +10,12 @@ import com.onetuks.librarydomain.review.repository.ReviewRepository;
 import com.onetuks.librarydomain.review.service.dto.param.ReviewParam;
 import com.onetuks.librarydomain.weekly.model.WeeklyFeaturedBook;
 import com.onetuks.librarydomain.weekly.repository.WeeklyFeaturedBookRepository;
+import com.onetuks.libraryobject.enums.CacheName;
 import com.onetuks.libraryobject.enums.SortBy;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -96,6 +98,10 @@ public class ReviewService {
     return reviewRepository.read(reviewId);
   }
 
+  @Cacheable(
+      value = CacheName.REVIEW_FEED,
+      key =
+          "#sortBy.ordinal()" + "-" + "#pageable.getPageNumber()" + "-" + "#pageable.getPageSize()")
   @Transactional(readOnly = true)
   public Page<Review> searchAll(SortBy sortBy, Pageable pageable) {
     return reviewRepository.readAll(sortBy, pageable);

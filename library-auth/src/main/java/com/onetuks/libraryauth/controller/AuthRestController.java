@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "/auth")
+@RequestMapping(path = "/api/auth")
 public class AuthRestController {
 
   private final AuthService authService;
@@ -39,7 +39,7 @@ public class AuthRestController {
    * @param request : 카카오 토큰
    * @return : 로그인 응답
    */
-  @PostMapping(path = "/postman/kakao")
+  @PostMapping(path = "/login/postman/kakao")
   public ResponseEntity<LoginResponse> kakaoLoginWithAuthToken(HttpServletRequest request) {
     LoginResult result =
         authService.loginWithClientAuthToken(
@@ -55,7 +55,7 @@ public class AuthRestController {
    * @param request : 카카오 인가코드
    * @return : 로그인 응답
    */
-  @PostMapping(path = "/kakao")
+  @PostMapping(path = "/login/kakao")
   public ResponseEntity<LoginResponse> kakaoLoginWithAuthCode(HttpServletRequest request) {
     LoginResult result =
         authService.loginWithClientAuthCode(
@@ -70,7 +70,7 @@ public class AuthRestController {
    * @param request : 구글 토큰
    * @return : 로그인 응답
    */
-  @PostMapping(path = "/postman/google")
+  @PostMapping(path = "/login/postman/google")
   public ResponseEntity<LoginResponse> googleLoginWithAuthToken(HttpServletRequest request) {
     LoginResult result =
         authService.loginWithClientAuthToken(
@@ -86,7 +86,7 @@ public class AuthRestController {
    * @param request : 구글 인가코드
    * @return : 로그인 응답
    */
-  @PostMapping(path = "/google")
+  @PostMapping(path = "/login/google")
   public ResponseEntity<LoginResponse> googleLoginWithAuthCode(HttpServletRequest request) {
     LoginResult result =
         authService.loginWithClientAuthCode(
@@ -101,7 +101,7 @@ public class AuthRestController {
    * @param request : 네이버 토큰
    * @return : 로그인 응답
    */
-  @PostMapping(path = "/postman/naver")
+  @PostMapping(path = "/login/postman/naver")
   public ResponseEntity<LoginResponse> naverLoginWithAuthToken(HttpServletRequest request) {
     LoginResult result =
         authService.loginWithClientAuthToken(
@@ -117,7 +117,7 @@ public class AuthRestController {
    * @param request : 네이버 인가코드
    * @return : 로그인 응답
    */
-  @PostMapping(path = "/naver")
+  @PostMapping(path = "/login/naver")
   public ResponseEntity<LoginResponse> naverLoginWithAuthCode(HttpServletRequest request) {
     LoginResult result =
         authService.loginWithClientAuthCode(

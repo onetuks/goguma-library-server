@@ -1,0 +1,6 @@
+dependencies {
+    implementation(project(':library-object'))
+    implementation(project(':library-auth'))
+    implementation(project(':library-domain'))
+    implementation(testFixtures(project(':library-domain')))
+}

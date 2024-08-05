@@ -4,7 +4,9 @@ import com.onetuks.librarydomain.book.model.BookPick;
 import com.onetuks.librarydomain.book.repository.BookPickRepository;
 import com.onetuks.librarydomain.book.repository.BookRepository;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
+import com.onetuks.libraryobject.enums.CacheName;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -48,6 +50,7 @@ public class BookPickService {
     return bookPickRepository.readAll(loginId, pageable);
   }
 
+  @Cacheable(value = CacheName.BOOK_PICKS, key = "#loginId" + "-" + "#bookId")
   @Transactional(readOnly = true)
   public boolean searchExistence(long loginId, long bookId) {
     return bookPickRepository.read(loginId, bookId);

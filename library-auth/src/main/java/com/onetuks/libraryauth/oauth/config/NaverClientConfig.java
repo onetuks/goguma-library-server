@@ -13,7 +13,7 @@ public class NaverClientConfig {
   @Value("${oauth.naver.client-id}")
   private String clientId;
 
-  @Value("${oauth.naver.clien_secret}")
+  @Value("${oauth.naver.client_secret}")
   private String clientSecret;
 
   public ClientRegistration naverClientRegistration() {
