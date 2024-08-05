@@ -62,4 +62,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ secret.APP_NAME }}:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.APP_NAME }}:latest
