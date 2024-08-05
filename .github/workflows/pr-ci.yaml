@@ -7,6 +7,8 @@ on:
       - opened # PR 생성
       - synchronize # PR 브랜치에 새로운 커밋 푸시될 때
       - reopened # PR 재오픈
+    branches-ignore:
+      - main
 
 permissions: read-all
 
