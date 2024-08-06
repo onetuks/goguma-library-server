@@ -22,7 +22,8 @@ public class BookConverter {
         model.categories(),
         model.coverImageFile().fileName(),
         model.isIndie(),
-        model.isPermitted());
+        model.isPermitted(),
+        model.pickCounts());
   }
 
   public List<BookEntity> toEntities(List<Book> models) {
@@ -40,6 +41,8 @@ public class BookConverter {
         entity.getCategories(),
         ImageFile.of(COVER_IMAGE, entity.getCoverImageUri()),
         entity.getIsIndie(),
-        entity.getIsPermitted());
+        entity.getIsPermitted(),
+        entity.getPickCounts(),
+        entity.getCreatedAt());
   }
 }

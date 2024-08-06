@@ -62,6 +62,8 @@ CREATE TABLE IF NOT EXISTS books
     cover_image_uri VARCHAR(255) NOT NULL DEFAULT 'default-cover.png' COMMENT '책 표지 이미지 URI',
     is_indie        BOOLEAN      NOT NULL DEFAULT FALSE COMMENT '독립출판물 여부',
     is_permitted    BOOLEAN      NOT NULL DEFAULT FALSE COMMENT '서비스 제공 허가 여부',
+    pick_counts     BIGINT       NOT NULL DEFAULT 0 COMMENT '도서픽 카운트',
+    created_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '도서 등록일',
     PRIMARY KEY (book_id),
     UNIQUE KEY unq_isbn (isbn)
 ) ENGINE = InnoDB
@@ -74,7 +76,7 @@ CREATE TABLE IF NOT EXISTS reviews
     book_id        BIGINT        NOT NULL COMMENT '책 식별자',
     review_title   VARCHAR(255)  NOT NULL COMMENT '서평 제목',
     review_content VARCHAR(5000) NOT NULL COMMENT '서평 내용',
-    pick_counts    BIGINT        NOT NULL DEFAULT 0 COMMENT '서평 좋아요 수',
+    pick_counts    BIGINT        NOT NULL DEFAULT 0 COMMENT '서평픽 카운트',
     created_at     DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '서평 생성일',
     updated_at     DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '서평 수정일',
     PRIMARY KEY (review_id),

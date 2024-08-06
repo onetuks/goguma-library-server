@@ -4,6 +4,7 @@ import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.libraryobject.ImageFileFixture;
 import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.ImageType;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -30,7 +31,9 @@ public class BookFixture {
         createCategories(),
         ImageFileFixture.create(ImageType.COVER_IMAGE, UUID.randomUUID().toString()),
         createIsIndie(),
-        false);
+        false,
+        0,
+        LocalDateTime.now());
   }
 
   private static String createTitle() {

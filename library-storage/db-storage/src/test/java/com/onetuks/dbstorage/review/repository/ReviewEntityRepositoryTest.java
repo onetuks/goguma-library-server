@@ -45,7 +45,7 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
     assertAll(
         () -> assertThat(result.reviewId()).isPositive(),
         () -> assertThat(result.member()).isEqualTo(review.member()),
-        () -> assertThat(result.book()).isEqualTo(review.book()),
+        () -> assertThat(result.book().bookId()).isEqualTo(review.book().bookId()),
         () -> assertThat(result.reviewTitle()).isEqualTo(review.reviewTitle()),
         () -> assertThat(result.reviewContent()).isEqualTo(review.reviewContent()),
         () -> assertThat(result.pickCount()).isZero());
@@ -162,7 +162,7 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
     // Then
     assertThat(results)
         .hasSize(count)
-        .allSatisfy(result -> assertThat(result.book()).isEqualTo(book));
+        .allSatisfy(result -> assertThat(result.book().bookId()).isEqualTo(book.bookId()));
   }
 
   @Test
@@ -198,7 +198,7 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
     // Then
     assertThat(results)
         .hasSize(count)
-        .allSatisfy(result -> assertThat(result.book()).isEqualTo(book));
+        .allSatisfy(result -> assertThat(result.book().bookId()).isEqualTo(book.bookId()));
   }
 
   @Test
@@ -336,7 +336,7 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
     assertAll(
         () -> assertThat(result.reviewId()).isEqualTo(updatingReview.reviewId()),
         () -> assertThat(result.member()).isEqualTo(updatingReview.member()),
-        () -> assertThat(result.book()).isEqualTo(updatingReview.book()),
+        () -> assertThat(result.book().bookId()).isEqualTo(updatingReview.book().bookId()),
         () -> assertThat(result.reviewTitle()).isEqualTo(updatingReview.reviewTitle()),
         () -> assertThat(result.reviewContent()).isEqualTo(updatingReview.reviewContent()),
         () -> assertThat(result.pickCount()).isEqualTo(updatingReview.pickCount()));

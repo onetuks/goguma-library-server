@@ -38,7 +38,7 @@ class BookPickEntityRepositoryTest extends DbStorageIntegrationTest {
     assertAll(
         () -> assertThat(result.bookPickId()).isPositive(),
         () -> assertThat(result.member()).isEqualTo(bookPick.member()),
-        () -> assertThat(result.book()).isEqualTo(bookPick.book()));
+        () -> assertThat(result.book().bookId()).isEqualTo(bookPick.book().bookId()));
   }
 
   @Test

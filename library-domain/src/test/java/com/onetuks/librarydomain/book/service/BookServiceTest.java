@@ -142,7 +142,9 @@ class BookServiceTest extends DomainIntegrationTest {
             param.categories(),
             book.coverImageFile(),
             param.isIndie(),
-            param.isPermitted());
+            param.isPermitted(),
+            book.pickCounts(),
+            book.createdAt());
 
     given(bookRepository.read(book.bookId())).willReturn(book);
     given(bookRepository.update(any(Book.class))).willReturn(updatedBook);
@@ -192,7 +194,9 @@ class BookServiceTest extends DomainIntegrationTest {
             param.categories(),
             ImageFile.of(ImageType.COVER_IMAGE, coverImage, book.coverImageFile().fileName()),
             param.isIndie(),
-            param.isPermitted());
+            param.isPermitted(),
+            book.pickCounts(),
+            book.createdAt());
 
     given(bookRepository.read(book.bookId())).willReturn(book);
     given(bookRepository.update(any(Book.class))).willReturn(updatedBook);
