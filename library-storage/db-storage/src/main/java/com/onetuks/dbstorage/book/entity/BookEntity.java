@@ -1,5 +1,6 @@
 package com.onetuks.dbstorage.book.entity;
 
+import com.onetuks.dbstorage.common.BaseCreatedEntity;
 import com.onetuks.libraryobject.annotation.Generated;
 import com.onetuks.libraryobject.enums.Category;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
@@ -26,7 +27,7 @@ import org.hibernate.annotations.Type;
         @UniqueConstraint(
             name = "unq_isbn",
             columnNames = {"isbn"}))
-public class BookEntity {
+public class BookEntity extends BaseCreatedEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,6 +62,9 @@ public class BookEntity {
   @Column(name = "is_permitted", nullable = false)
   private Boolean isPermitted;
 
+  @Column(name = "pick_counts", nullable = false)
+  private Long pickCounts;
+
   public BookEntity(
       Long bookId,
       String title,
@@ -71,7 +75,8 @@ public class BookEntity {
       Set<Category> categories,
       String coverImageUri,
       Boolean isIndie,
-      Boolean isPermitted) {
+      Boolean isPermitted,
+      Long pickCounts) {
     this.bookId = bookId;
     this.title = title;
     this.authorName = authorName;
@@ -82,6 +87,7 @@ public class BookEntity {
     this.coverImageUri = coverImageUri;
     this.isIndie = Objects.requireNonNullElse(isIndie, false);
     this.isPermitted = Objects.requireNonNullElse(isPermitted, false);
+    this.pickCounts = pickCounts;
   }
 
   @Override

@@ -3,6 +3,7 @@ package com.onetuks.librarydomain.book.model;
 import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.ImageType;
 import com.onetuks.libraryobject.vo.ImageFile;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -18,7 +19,9 @@ public record Book(
     Set<Category> categories,
     ImageFile coverImageFile,
     boolean isIndie,
-    boolean isPermitted) {
+    boolean isPermitted,
+    long pickCounts,
+    LocalDateTime createdAt) {
 
   public static Book of(
       String title,
@@ -40,7 +43,9 @@ public record Book(
             .map(file -> ImageFile.of(ImageType.COVER_IMAGE, file, UUID.randomUUID().toString()))
             .orElse(ImageFile.of(ImageType.COVER_IMAGE, ImageFile.DEFAULT_COVER_IMAGE_URI)),
         isIndie,
-        false);
+        false,
+        0L,
+        LocalDateTime.now());
   }
 
   public Book changeBookInfo(
@@ -72,6 +77,8 @@ public record Book(
                             : coverImageFile.fileName()))
             .orElse(coverImageFile),
         isIndie,
-        isPermitted);
+        isPermitted,
+        pickCounts,
+        createdAt);
   }
 }
