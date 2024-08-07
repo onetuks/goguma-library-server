@@ -8,7 +8,9 @@ import org.springframework.data.domain.Page;
 public record ReviewResponse(
     long reviewId,
     long memberId,
+    String nickname,
     long bookId,
+    String bookTitle,
     String reviewTitle,
     String reviewContent,
     long pickCount,
@@ -19,7 +21,9 @@ public record ReviewResponse(
     return new ReviewResponse(
         review.reviewId(),
         review.member().memberId(),
+        review.member().nickname().value(),
         review.book().bookId(),
+        review.book().title(),
         review.reviewTitle(),
         review.reviewContent(),
         review.pickCount(),
