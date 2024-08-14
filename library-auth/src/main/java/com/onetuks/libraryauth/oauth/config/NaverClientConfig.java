@@ -21,7 +21,7 @@ public class NaverClientConfig {
         .clientId(clientId)
         .clientSecret(clientSecret)
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-        .redirectUri("http://localhost:8080/login/oauth2/code/naver")
+        .redirectUri("http://localhost:8000/login/oauth2/callback/naver")
         .authorizationUri("https://nid.naver.com/oauth2.0/authorize")
         .tokenUri("https://nid.naver.com/oauth2.0/token")
         .userInfoUri("https://openapi.naver.com/v1/nid/me")
