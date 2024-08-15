@@ -2,13 +2,15 @@ package com.onetuks.libraryapi.review.controller;
 
 import com.onetuks.libraryapi.review.dto.request.ReviewRequest;
 import com.onetuks.libraryapi.review.dto.response.ReviewResponse;
-import com.onetuks.libraryapi.review.dto.response.ReviewResponse.ReviewResponses;
+import com.onetuks.libraryapi.review.dto.response.ReviewResponse.ReviewPageResponses;
+import com.onetuks.libraryapi.review.dto.response.ReviewResponse.ReviewSliceResponses;
 import com.onetuks.libraryauth.util.LoginId;
 import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.librarydomain.review.service.ReviewService;
 import com.onetuks.libraryobject.enums.SortBy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -107,16 +109,18 @@ public class ReviewRestController {
   /**
    * 서평 다건 조회 (서평 피드)
    *
+   * <p>금주도서 기간 대상
+   *
    * @param sortBy : 정렬 기준
    * @param pageable : 페이징 정보
    * @return : 서평 목록
    */
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<ReviewResponses> getReviews(
+  public ResponseEntity<ReviewSliceResponses> getReviews(
       @RequestParam(name = "sort", required = false, defaultValue = "LATEST") SortBy sortBy,
       @PageableDefault(sort = "reviewId", direction = Direction.DESC) Pageable pageable) {
-    Page<Review> results = reviewService.searchAll(sortBy, pageable);
-    ReviewResponses responses = ReviewResponses.from(results);
+    Slice<Review> results = reviewService.searchAll(sortBy, pageable);
+    ReviewSliceResponses responses = ReviewSliceResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);
   }
@@ -130,12 +134,12 @@ public class ReviewRestController {
    * @return : 서평 목록
    */
   @GetMapping(path = "/book/{book-id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<ReviewResponses> getReviewsOfBook(
+  public ResponseEntity<ReviewPageResponses> getReviewsOfBook(
       @PathVariable(name = "book-id") Long bookId,
       @RequestParam(name = "sort", required = false, defaultValue = "LATEST") SortBy sortBy,
       @PageableDefault(sort = "reviewId", direction = Direction.DESC) Pageable pageable) {
     Page<Review> results = reviewService.searchAll(bookId, sortBy, pageable);
-    ReviewResponses responses = ReviewResponses.from(results);
+    ReviewPageResponses responses = ReviewPageResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);
   }
@@ -148,11 +152,28 @@ public class ReviewRestController {
    * @return : 서평 목록
    */
   @GetMapping(path = "/member/{member-id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<ReviewResponses> getReviewsOfMember(
+  public ResponseEntity<ReviewPageResponses> getReviewsOfMember(
       @PathVariable(name = "member-id") Long memberId,
       @PageableDefault(size = 3, sort = "reviewId", direction = Direction.DESC) Pageable pageable) {
     Page<Review> results = reviewService.searchAll(memberId, pageable);
-    ReviewResponses responses = ReviewResponses.from(results);
+    ReviewPageResponses responses = ReviewPageResponses.from(results);
+
+    return ResponseEntity.status(HttpStatus.OK).body(responses);
+  }
+
+  /**
+   * 추천 서평 다건 조회
+   *
+   * @param loginId : 로그인 ID
+   * @param pageable : 페이징 정보
+   * @return : 서평 목록
+   */
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<ReviewPageResponses> getRecommendedReviews(
+      @LoginId Long loginId,
+      @PageableDefault(size = 3, sort = "reviewId", direction = Direction.DESC) Pageable pageable) {
+    Page<Review> results = reviewService.searchAllWithInterestedCategories(loginId, pageable);
+    ReviewPageResponses responses = ReviewPageResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);
   }

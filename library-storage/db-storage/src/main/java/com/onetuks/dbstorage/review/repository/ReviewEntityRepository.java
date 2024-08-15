@@ -1,5 +1,6 @@
 package com.onetuks.dbstorage.review.repository;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onetuks.dbstorage.book.converter.BookConverter;
 import com.onetuks.dbstorage.member.converter.MemberConverter;
 import com.onetuks.dbstorage.review.converter.ReviewConverter;
@@ -73,6 +74,14 @@ public class ReviewEntityRepository implements ReviewRepository {
   @Override
   public Page<Review> readAll(long memberId, Pageable pageable) {
     return repository.findAllByMemberEntityMemberId(memberId, pageable).map(converter::toModel);
+  }
+
+  @Override
+  public Page<Review> readAll(List<Book> thisWeekInterestedCategoriesBooks, Pageable pageable) {
+    return repository
+        .findAllByBookEntityIn(
+            bookConverter.toEntities(thisWeekInterestedCategoriesBooks), pageable)
+        .map(converter::toModel);
   }
 
   @Override

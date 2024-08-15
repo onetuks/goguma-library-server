@@ -4,6 +4,7 @@ import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.librarydomain.review.model.ReviewPick;
 import java.time.LocalDateTime;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 
 public record ReviewResponse(
     long reviewId,
@@ -31,14 +32,21 @@ public record ReviewResponse(
         review.updatedAt());
   }
 
-  public record ReviewResponses(Page<ReviewResponse> responses) {
+  public record ReviewPageResponses(Page<ReviewResponse> responses) {
 
-    public static ReviewResponses from(Page<Review> results) {
-      return new ReviewResponses(results.map(ReviewResponse::from));
+    public static ReviewPageResponses from(Page<Review> results) {
+      return new ReviewPageResponses(results.map(ReviewResponse::from));
     }
 
-    public static ReviewResponses fromPicks(Page<ReviewPick> results) {
-      return new ReviewResponses(results.map(ReviewPick::review).map(ReviewResponse::from));
+    public static ReviewPageResponses fromPicks(Page<ReviewPick> results) {
+      return new ReviewPageResponses(results.map(ReviewPick::review).map(ReviewResponse::from));
+    }
+  }
+
+  public record ReviewSliceResponses(Slice<ReviewResponse> responses) {
+
+    public static ReviewSliceResponses from(Slice<Review> results) {
+      return new ReviewSliceResponses(results.map(ReviewResponse::from));
     }
   }
 }

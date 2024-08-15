@@ -22,14 +22,17 @@ public interface ReviewEntityJpaRepository extends JpaRepository<ReviewEntity, L
   @Query(
       value =
           """
-      select r.memberEntity from ReviewEntity r
-      where r.bookEntity in :thisWeekFeaturedBooks
-      group by r.memberEntity
-      order by count(r.memberEntity) desc
+      SELECT r.memberEntity FROM ReviewEntity r
+        WHERE r.bookEntity IN :thisWeekFeaturedBooks
+        GROUP BY r.memberEntity
+        ORDER BY count(r.memberEntity) DESC
       """)
   Page<MemberEntity> findAllByWeeklyMostCountDesc(
       List<BookEntity> thisWeekFeaturedBooks, Pageable pageable);
 
   @Lock(value = LockModeType.PESSIMISTIC_WRITE)
   Optional<ReviewEntity> findByReviewId(long reviewId);
+
+  Page<ReviewEntity> findAllByBookEntityIn(
+      List<BookEntity> thisWeekInterestedCategoriesBooks, Pageable pageable);
 }
