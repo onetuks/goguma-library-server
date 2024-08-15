@@ -168,7 +168,7 @@ public class ReviewRestController {
    * @param pageable : 페이징 정보
    * @return : 서평 목록
    */
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/recommend", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ReviewPageResponses> getRecommendedReviews(
       @LoginId Long loginId,
       @PageableDefault(size = 3, sort = "reviewId", direction = Direction.DESC) Pageable pageable) {
