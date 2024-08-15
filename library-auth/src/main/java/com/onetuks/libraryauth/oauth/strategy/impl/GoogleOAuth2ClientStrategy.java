@@ -67,8 +67,7 @@ public class GoogleOAuth2ClientStrategy implements OAuth2ClientStrategy {
             .onStatus(
                 HttpStatusCode::is5xxServerError,
                 clientResponse ->
-                    Mono.error(new TokenValidFailedException(
-                        ErrorCode.OAUTH_CLIENT_SERVER_ERROR)))
+                    Mono.error(new TokenValidFailedException(ErrorCode.OAUTH_CLIENT_SERVER_ERROR)))
             .bodyToMono(GoogleUserInfo.class)
             .block();
 

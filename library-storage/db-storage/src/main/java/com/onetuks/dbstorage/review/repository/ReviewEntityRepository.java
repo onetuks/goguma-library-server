@@ -1,6 +1,5 @@
 package com.onetuks.dbstorage.review.repository;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onetuks.dbstorage.book.converter.BookConverter;
 import com.onetuks.dbstorage.member.converter.MemberConverter;
 import com.onetuks.dbstorage.review.converter.ReviewConverter;

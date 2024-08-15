@@ -34,7 +34,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.testcontainers.shaded.com.google.common.primitives.Ints;
 
 class ReviewServiceTest extends DomainIntegrationTest {
 
@@ -274,16 +273,22 @@ class ReviewServiceTest extends DomainIntegrationTest {
     // Given
     Pageable pageable = PageRequest.of(0, 3);
     Member member = MemberFixture.create(126L, RoleType.USER);
-    Page<WeeklyFeaturedBook> thisWeekFeaturedBooks = new PageImpl<>(
-        IntStream.range(0, 10)
-            .mapToObj(i -> WeeklyFeaturedBookFixture.create((long) i, BookFixture.create((long) i)))
-            .toList());
-    PageImpl<Review> reviews = new PageImpl<>(
-        thisWeekFeaturedBooks.getContent().stream()
-            .map(WeeklyFeaturedBook::book)
-            .filter(book -> book.categories().stream().anyMatch(member.interestedCategories()::contains))
-            .map(book -> ReviewFixture.create(book.bookId(), member, book))
-            .toList());
+    Page<WeeklyFeaturedBook> thisWeekFeaturedBooks =
+        new PageImpl<>(
+            IntStream.range(0, 10)
+                .mapToObj(
+                    i -> WeeklyFeaturedBookFixture.create((long) i, BookFixture.create((long) i)))
+                .toList());
+    PageImpl<Review> reviews =
+        new PageImpl<>(
+            thisWeekFeaturedBooks.getContent().stream()
+                .map(WeeklyFeaturedBook::book)
+                .filter(
+                    book ->
+                        book.categories().stream()
+                            .anyMatch(member.interestedCategories()::contains))
+                .map(book -> ReviewFixture.create(book.bookId(), member, book))
+                .toList());
 
     given(memberRepository.read(member.memberId())).willReturn(member);
     given(weeklyFeaturedBookRepository.readAllForThisWeek()).willReturn(thisWeekFeaturedBooks);
@@ -297,7 +302,9 @@ class ReviewServiceTest extends DomainIntegrationTest {
     List<Book> thisWeekInterestedCategoriesBooks =
         thisWeekFeaturedBooks.getContent().stream()
             .map(WeeklyFeaturedBook::book)
-            .filter(book -> book.categories().stream().anyMatch(member.interestedCategories()::contains))
+            .filter(
+                book ->
+                    book.categories().stream().anyMatch(member.interestedCategories()::contains))
             .toList();
 
     assertThat(results).hasSize(thisWeekInterestedCategoriesBooks.size());
