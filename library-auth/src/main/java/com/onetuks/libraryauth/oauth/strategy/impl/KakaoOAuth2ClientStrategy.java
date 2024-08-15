@@ -82,17 +82,18 @@ public class KakaoOAuth2ClientStrategy implements OAuth2ClientStrategy {
         .onStatus(
             HttpStatusCode::is4xxClientError,
             clientResponse ->
-                clientResponse.bodyToMono(String.class)
-                    .flatMap(errorBody -> {
-                      log.warn("카카오 토큰 요청 실패 - errorBody: {}", errorBody);
-                      return Mono.error(
-                          new TokenValidFailedException(ErrorCode.UNAUTHORIZED_TOKEN));
-                    }))
+                clientResponse
+                    .bodyToMono(String.class)
+                    .flatMap(
+                        errorBody -> {
+                          log.warn("카카오 토큰 요청 실패 - errorBody: {}", errorBody);
+                          return Mono.error(
+                              new TokenValidFailedException(ErrorCode.UNAUTHORIZED_TOKEN));
+                        }))
         .onStatus(
             HttpStatusCode::is5xxServerError,
             clientResponse ->
-                Mono.error(
-                    new TokenValidFailedException(ErrorCode.OAUTH_CLIENT_SERVER_ERROR)))
+                Mono.error(new TokenValidFailedException(ErrorCode.OAUTH_CLIENT_SERVER_ERROR)))
         .bodyToMono(KakaoAuthToken.class)
         .block();
   }
