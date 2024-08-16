@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class BookEntityRepository implements BookRepository {
 
-  private final ObjectMapper objectMapper = new ObjectMapper();
+  private static final ObjectMapper objectMapper = new ObjectMapper();
 
   private final BookEntityJpaRepository repository;
   private final BookEntityJpaQueryDslRepository qDslRepository;

@@ -1,5 +1,7 @@
 package com.onetuks.librarydomain.member.service;
 
+import static com.onetuks.libraryobject.enums.CacheName.RECOMMENDED_MEMBERS_CACHE_KEY;
+
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.review.model.Review;
@@ -17,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberFacadeService {
-
-  private static final String RECOMMENDED_MEMBERS_CACHE_KEY = "'recommendedMembers'";
 
   private final ReviewRepository reviewRepository;
   private final WeeklyFeaturedBookRepository weeklyFeaturedBookRepository;

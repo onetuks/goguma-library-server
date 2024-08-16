@@ -1,5 +1,7 @@
 package com.onetuks.librarydomain.weekly.service;
 
+import static com.onetuks.libraryobject.enums.CacheName.FEATURED_BOOKS_CACHE_KEY;
+
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.book.repository.BookRepository;
 import com.onetuks.librarydomain.weekly.model.WeeklyFeaturedBook;
@@ -21,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class WeeklyFeaturedBookService {
 
   private static final Logger log = LoggerFactory.getLogger(WeeklyFeaturedBookService.class);
-  private static final String FEATURED_BOOKS_CACHE_KEY = "'featured_books'";
 
   private final WeeklyFeaturedBookRepository weeklyFeaturedBookRepository;
   private final BookRepository bookRepository;

@@ -12,6 +12,8 @@ import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.error.ErrorCode;
 import java.util.Objects;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
@@ -25,6 +27,7 @@ import reactor.core.publisher.Mono;
 @ComponentScan(basePackageClasses = WebClientConfig.class)
 public class KakaoOAuth2ClientStrategy implements OAuth2ClientStrategy {
 
+  private static final Logger log = LoggerFactory.getLogger(KakaoOAuth2ClientStrategy.class);
   private final WebClient webClient;
   private final KakaoClientConfig kakaoClientConfig;
 
@@ -79,7 +82,14 @@ public class KakaoOAuth2ClientStrategy implements OAuth2ClientStrategy {
         .onStatus(
             HttpStatusCode::is4xxClientError,
             clientResponse ->
-                Mono.error(new TokenValidFailedException(ErrorCode.UNAUTHORIZED_TOKEN)))
+                clientResponse
+                    .bodyToMono(String.class)
+                    .flatMap(
+                        errorBody -> {
+                          log.warn("카카오 토큰 요청 실패 - errorBody: {}", errorBody);
+                          return Mono.error(
+                              new TokenValidFailedException(ErrorCode.UNAUTHORIZED_TOKEN));
+                        }))
         .onStatus(
             HttpStatusCode::is5xxServerError,
             clientResponse ->

@@ -17,6 +17,8 @@ import com.onetuks.libraryobject.enums.SortBy;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -221,6 +223,37 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
     assertThat(results)
         .hasSize(pageable.getPageSize())
         .allSatisfy(result -> assertThat(result.member()).isEqualTo(member));
+  }
+
+  @Test
+  @DisplayName("관심 카테고리에 해당하는 도서에 대한 서평을 조회한다.")
+  void readAll_OfBooks_Test() {
+    // Given
+    Pageable pageable = PageRequest.of(0, 3);
+    List<Book> thisWeekInterestedCategoriesBooks =
+        IntStream.range(0, 3)
+            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null)))
+            .toList();
+    thisWeekInterestedCategoriesBooks.forEach(
+        book ->
+            reviewEntityRepository.create(
+                ReviewFixture.create(
+                    null,
+                    memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
+                    book)));
+
+    // When
+    Page<Review> results =
+        reviewEntityRepository.readAll(thisWeekInterestedCategoriesBooks, pageable);
+
+    // Then
+    Set<Long> thisWeekInterestedCategoriesBookIds =
+        thisWeekInterestedCategoriesBooks.stream().map(Book::bookId).collect(Collectors.toSet());
+
+    assertThat(results)
+        .hasSize(pageable.getPageSize())
+        .allSatisfy(
+            result -> assertThat(result.book().bookId()).isIn(thisWeekInterestedCategoriesBookIds));
   }
 
   @Test

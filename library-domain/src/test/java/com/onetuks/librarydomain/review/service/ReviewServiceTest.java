@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.times;
 import static org.mockito.BDDMockito.verify;
@@ -12,6 +13,7 @@ import com.onetuks.librarydomain.BookFixture;
 import com.onetuks.librarydomain.DomainIntegrationTest;
 import com.onetuks.librarydomain.MemberFixture;
 import com.onetuks.librarydomain.ReviewFixture;
+import com.onetuks.librarydomain.WeeklyFeaturedBookFixture;
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.review.model.Review;
@@ -22,6 +24,7 @@ import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.enums.SortBy;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
@@ -30,6 +33,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 class ReviewServiceTest extends DomainIntegrationTest {
 
@@ -207,7 +211,7 @@ class ReviewServiceTest extends DomainIntegrationTest {
     given(reviewRepository.readAll(sortBy, pageable)).willReturn(reviews);
 
     // When
-    Page<Review> results = reviewService.searchAll(sortBy, pageable);
+    Slice<Review> results = reviewService.searchAll(sortBy, pageable);
 
     // Then
     assertThat(results).hasSize((int) reviews.getTotalElements());
@@ -261,5 +265,48 @@ class ReviewServiceTest extends DomainIntegrationTest {
     assertThat(results)
         .hasSize((int) reviews.getTotalElements())
         .allSatisfy(result -> assertThat(result.member()).isEqualTo(member));
+  }
+
+  @Test
+  @DisplayName("금주도서 중 관심 카테고리에 하나라도 포함되는 모든 도서의 서평을 조회한다.")
+  void searchAllWithInterestedCategories_Test() {
+    // Given
+    Pageable pageable = PageRequest.of(0, 3);
+    Member member = MemberFixture.create(126L, RoleType.USER);
+    Page<WeeklyFeaturedBook> thisWeekFeaturedBooks =
+        new PageImpl<>(
+            IntStream.range(0, 10)
+                .mapToObj(
+                    i -> WeeklyFeaturedBookFixture.create((long) i, BookFixture.create((long) i)))
+                .toList());
+    PageImpl<Review> reviews =
+        new PageImpl<>(
+            thisWeekFeaturedBooks.getContent().stream()
+                .map(WeeklyFeaturedBook::book)
+                .filter(
+                    book ->
+                        book.categories().stream()
+                            .anyMatch(member.interestedCategories()::contains))
+                .map(book -> ReviewFixture.create(book.bookId(), member, book))
+                .toList());
+
+    given(memberRepository.read(member.memberId())).willReturn(member);
+    given(weeklyFeaturedBookRepository.readAllForThisWeek()).willReturn(thisWeekFeaturedBooks);
+    given(reviewRepository.readAll(anyList(), any(Pageable.class))).willReturn(reviews);
+
+    // When
+    Page<Review> results =
+        reviewService.searchAllWithInterestedCategories(member.memberId(), pageable);
+
+    // Then
+    List<Book> thisWeekInterestedCategoriesBooks =
+        thisWeekFeaturedBooks.getContent().stream()
+            .map(WeeklyFeaturedBook::book)
+            .filter(
+                book ->
+                    book.categories().stream().anyMatch(member.interestedCategories()::contains))
+            .toList();
+
+    assertThat(results).hasSize(thisWeekInterestedCategoriesBooks.size());
   }
 }

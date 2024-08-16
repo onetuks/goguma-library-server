@@ -11,13 +11,17 @@ import com.onetuks.librarydomain.review.service.dto.param.ReviewParam;
 import com.onetuks.librarydomain.weekly.model.WeeklyFeaturedBook;
 import com.onetuks.librarydomain.weekly.repository.WeeklyFeaturedBookRepository;
 import com.onetuks.libraryobject.enums.CacheName;
+import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.SortBy;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -103,7 +107,7 @@ public class ReviewService {
       key =
           "#sortBy.ordinal()" + "-" + "#pageable.getPageNumber()" + "-" + "#pageable.getPageSize()")
   @Transactional(readOnly = true)
-  public Page<Review> searchAll(SortBy sortBy, Pageable pageable) {
+  public Slice<Review> searchAll(SortBy sortBy, Pageable pageable) {
     return reviewRepository.readAll(sortBy, pageable);
   }
 
@@ -115,6 +119,18 @@ public class ReviewService {
   @Transactional(readOnly = true)
   public Page<Review> searchAll(long memberId, Pageable pageable) {
     return reviewRepository.readAll(memberId, pageable);
+  }
+
+  @Transactional(readOnly = true)
+  public Page<Review> searchAllWithInterestedCategories(long memberId, Pageable pageable) {
+    Set<Category> interestedCategories = memberRepository.read(memberId).interestedCategories();
+    List<Book> thisWeekInterestedCategoriesBooks =
+        weeklyFeaturedBookRepository.readAllForThisWeek().getContent().stream()
+            .map(WeeklyFeaturedBook::book)
+            .filter(book -> book.categories().stream().anyMatch(interestedCategories::contains))
+            .toList();
+
+    return reviewRepository.readAll(thisWeekInterestedCategoriesBooks, pageable);
   }
 
   private void checkAuthentication(long loginId, Review review) {

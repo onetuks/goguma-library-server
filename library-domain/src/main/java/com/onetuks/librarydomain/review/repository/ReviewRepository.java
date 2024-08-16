@@ -27,6 +27,8 @@ public interface ReviewRepository {
 
   Page<Review> readAll(long memberId, Pageable pageable);
 
+  Page<Review> readAll(List<Book> thisWeekInterestedCategoriesBooks, Pageable pageable);
+
   Page<Review> readAllWeeklyMostPicked(List<Book> thisWeekFeaturedBooks);
 
   Page<Member> readAllWeeklyMostWrite(List<Book> thisWeekFeaturedBooks);

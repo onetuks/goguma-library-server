@@ -76,6 +76,14 @@ public class ReviewEntityRepository implements ReviewRepository {
   }
 
   @Override
+  public Page<Review> readAll(List<Book> thisWeekInterestedCategoriesBooks, Pageable pageable) {
+    return repository
+        .findAllByBookEntityIn(
+            bookConverter.toEntities(thisWeekInterestedCategoriesBooks), pageable)
+        .map(converter::toModel);
+  }
+
+  @Override
   public Page<Review> readAllWeeklyMostPicked(List<Book> thisWeekFeaturedBooks) {
     return repository
         .findAllByBookEntityInOrderByPickCountDesc(
