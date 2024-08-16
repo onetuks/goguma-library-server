@@ -60,7 +60,7 @@ public class GoogleOAuth2ClientStrategy implements OAuth2ClientStrategy {
                         .bodyToMono(String.class)
                         .flatMap(
                             errorBody -> {
-                              log.warn("구글 토큰 요청 실패 - errorBody: {}", errorBody);
+                              log.warn("구글 유저정보 요청 실패 - errorBody: {}", errorBody);
                               return Mono.error(
                                   new TokenValidFailedException(ErrorCode.UNAUTHORIZED_TOKEN));
                             }))
@@ -100,7 +100,14 @@ public class GoogleOAuth2ClientStrategy implements OAuth2ClientStrategy {
         .onStatus(
             HttpStatusCode::is4xxClientError,
             clientResponse ->
-                Mono.error(new TokenValidFailedException(ErrorCode.UNAUTHORIZED_TOKEN)))
+                clientResponse
+                    .bodyToMono(String.class)
+                    .flatMap(
+                        errorBody -> {
+                          log.warn("구글 토큰 요청 실패 - errorBody: {}", errorBody);
+                          return Mono.error(
+                              new TokenValidFailedException(ErrorCode.UNAUTHORIZED_TOKEN));
+                        }))
         .onStatus(
             HttpStatusCode::is5xxServerError,
             clientResponse ->
