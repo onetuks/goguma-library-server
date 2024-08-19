@@ -10,6 +10,7 @@ import com.onetuks.librarydomain.member.model.vo.Nickname;
 import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.vo.ImageFile;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -60,8 +61,11 @@ public record Member(
   public Member changeProfile(
       String nickname,
       String introduction,
+      String instagramUrl,
       Set<Category> interestedCategories,
       boolean isAlarmAccepted,
+      boolean initProfileImageFile,
+      boolean initProfileBackgroundImageFile,
       MultipartFile profileImage,
       MultipartFile profileBackgroundImage) {
     return new Member(
@@ -73,8 +77,8 @@ public record Member(
         interestedCategories,
         isAlarmAccepted,
         points,
-        getProfileImageFile(profileImage),
-        getProfileBackgroundImageFile(profileBackgroundImage),
+        getProfileImageFile(initProfileImageFile, profileImage),
+        getProfileBackgroundImageFile(initProfileBackgroundImageFile, profileBackgroundImage),
         memberStatics);
   }
 
@@ -168,7 +172,11 @@ public record Member(
         memberStatics.decreaseFollowingCount());
   }
 
-  private ImageFile getProfileImageFile(MultipartFile profileImage) {
+  private ImageFile getProfileImageFile(boolean initProfileImageFile, MultipartFile profileImage) {
+    if (initProfileImageFile) {
+      return ImageFile.of(PROFILE_IMAGE, DEFAULT_PROFILE_IMAGE_URI);
+    }
+
     return Optional.ofNullable(profileImage)
         .map(
             file ->
@@ -176,12 +184,18 @@ public record Member(
                     PROFILE_IMAGE,
                     file,
                     profileImageFile.isDefault()
-                        ? UUID.randomUUID().toString()
+                        ? UUID.randomUUID()
+                            + Objects.requireNonNull(file.getContentType()).replace("image/", ".")
                         : profileImageFile.fileName()))
         .orElse(profileImageFile);
   }
 
-  private ImageFile getProfileBackgroundImageFile(MultipartFile profileBackgroundImage) {
+  private ImageFile getProfileBackgroundImageFile(
+      boolean initProfileBackgroundImageFile, MultipartFile profileBackgroundImage) {
+    if (initProfileBackgroundImageFile) {
+      return ImageFile.of(PROFILE_BACKGROUND_IMAGE, DEFAULT_PROFILE_BACKGROUND_IMAGE_URI);
+    }
+
     return Optional.ofNullable(profileBackgroundImage)
         .map(
             file ->
@@ -189,7 +203,8 @@ public record Member(
                     PROFILE_BACKGROUND_IMAGE,
                     file,
                     profileBackgroundImageFile.isDefault()
-                        ? UUID.randomUUID().toString()
+                        ? UUID.randomUUID()
+                            + Objects.requireNonNull(file.getContentType()).replace("image/", ".")
                         : profileBackgroundImageFile.fileName()))
         .orElse(profileBackgroundImageFile);
   }

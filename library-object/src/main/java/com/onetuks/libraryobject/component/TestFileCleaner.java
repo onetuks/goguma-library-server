@@ -62,6 +62,6 @@ public class TestFileCleaner extends SimpleFileVisitor<Path> {
   }
 
   private static Path getTestFilePath(String fileName) {
-    return Paths.get("src/test/resources/static" + fileName);
+    return Paths.get("src/test/resources/static/" + fileName);
   }
 }

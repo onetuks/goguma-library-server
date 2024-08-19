@@ -97,6 +97,8 @@ class MemberServiceTest extends DomainIntegrationTest {
             "introduction",
             "www.instagram.com/onetuks",
             Set.of(Category.CARTOON, Category.NOVEL),
+            true,
+            true,
             true);
     MultipartFile profileImage =
         MultipartFileFixture.create(ImageType.PROFILE_IMAGE, UUID.randomUUID().toString());
@@ -107,8 +109,11 @@ class MemberServiceTest extends DomainIntegrationTest {
         member.changeProfile(
             param.nickname(),
             param.introduction(),
+            param.instagramUrl(),
             param.interestedCategories(),
             param.isAlarmAccepted(),
+            param.initProfileImageFile(),
+            param.initProfileBackgroundImageFile(),
             profileImage,
             profileBackgroundImage);
 

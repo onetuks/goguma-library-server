@@ -14,8 +14,8 @@ public record ImageFile(ImageType imageType, MultipartFile file, String fileName
       "default-profile-background.png";
   public static final String DEFAULT_COVER_IMAGE_URI = "default-cover.png";
 
-  public static ImageFile of(ImageType imageType, MultipartFile file, String uuid) {
-    return new ImageFile(imageType, file, uuid);
+  public static ImageFile of(ImageType imageType, MultipartFile file, String fileName) {
+    return new ImageFile(imageType, file, fileName);
   }
 
   public static ImageFile of(ImageType imageType, String uri) {
@@ -23,11 +23,11 @@ public record ImageFile(ImageType imageType, MultipartFile file, String fileName
   }
 
   public String getKey() {
-    return this.imageType().getDirectoryPath() + fileName();
+    return this.imageType().getDirectoryPath() + "/" + fileName();
   }
 
   public String getUrl() {
-    return AWS_BUCKET_URL + getKey();
+    return AWS_BUCKET_URL + "/" + getKey();
   }
 
   public boolean isDefault() {

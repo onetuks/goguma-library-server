@@ -66,8 +66,11 @@ public class MemberService {
             .changeProfile(
                 param.nickname(),
                 param.introduction(),
+                param.instagramUrl(),
                 param.interestedCategories(),
                 param.isAlarmAccepted(),
+                param.initProfileImageFile(),
+                param.initProfileBackgroundImageFile(),
                 profileImage,
                 profileBackgroundImage);
 

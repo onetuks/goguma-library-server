@@ -21,6 +21,7 @@ import com.onetuks.libraryobject.enums.ImageType;
 import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.vo.ImageFile;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.IntStream;
@@ -192,7 +193,10 @@ class BookServiceTest extends DomainIntegrationTest {
             param.isbn(),
             param.publisher(),
             param.categories(),
-            ImageFile.of(ImageType.COVER_IMAGE, coverImage, book.coverImageFile().fileName()),
+            ImageFile.of(
+                ImageType.COVER_IMAGE,
+                Objects.requireNonNull(coverImage),
+                book.coverImageFile().fileName()),
             param.isIndie(),
             param.isPermitted(),
             book.pickCounts(),
