@@ -11,11 +11,16 @@ import org.hibernate.validator.constraints.Length;
 public record MemberPatchRequest(
     @NotBlank @Length(min = 2, max = 10) String nickname,
     @Length(max = 30) String introduction,
+    String instagramUrl,
     @Size(min = 1, max = 3) Set<Category> interestedCategories,
     @NotNull boolean isAlarmAccepted) {
 
   public MemberProfileParam to() {
     return new MemberProfileParam(
-        this.nickname(), this.introduction(), this.interestedCategories(), this.isAlarmAccepted());
+        this.nickname(),
+        this.introduction(),
+        this.instagramUrl(),
+        this.interestedCategories(),
+        this.isAlarmAccepted());
   }
 }

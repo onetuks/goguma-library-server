@@ -6,5 +6,6 @@ import java.util.Set;
 public record MemberProfileParam(
     String nickname,
     String introduction,
+    String instagramUrl,
     Set<Category> interestedCategories,
     boolean isAlarmAccepted) {}

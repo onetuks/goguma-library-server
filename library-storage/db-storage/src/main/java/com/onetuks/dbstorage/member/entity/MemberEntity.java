@@ -51,6 +51,9 @@ public class MemberEntity {
   @Column(name = "introduction")
   private String introduction;
 
+  @Column(name = "instagram_url")
+  private String instagramUrl;
+
   @Type(JsonType.class)
   @Column(name = "interested_categories", nullable = false)
   private Set<Category> interestedCategories;
@@ -79,6 +82,7 @@ public class MemberEntity {
       AuthInfoEmbeddable authInfoEmbeddable,
       String nickname,
       String introduction,
+      String instagramUrl,
       Set<Category> interestedCategories,
       Boolean isAlarmAccepted,
       Long points,
@@ -89,6 +93,7 @@ public class MemberEntity {
     this.authInfoEmbeddable = authInfoEmbeddable;
     this.nickname = nickname;
     this.introduction = introduction;
+    this.instagramUrl = instagramUrl;
     this.interestedCategories = interestedCategories;
     this.isAlarmAccepted = isAlarmAccepted;
     this.points = points;
