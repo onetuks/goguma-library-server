@@ -30,7 +30,7 @@ public class AttendanceRestController {
   }
 
   /**
-   * 출석 정보를 저장한다.
+   * 출석 등록
    *
    * <p>오늘 날짜만 출석 정보로 저장
    *

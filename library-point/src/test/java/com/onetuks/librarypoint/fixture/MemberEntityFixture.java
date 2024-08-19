@@ -25,6 +25,7 @@ public class MemberEntityFixture {
         createAuthInfoEmbeddable(),
         "테스트 유저 이름",
         "테스트 유저 소개",
+        "테스트 유저 인스타그램",
         Set.of(Category.MAGAZINE, Category.ART_BOOK),
         true,
         initialPoint,

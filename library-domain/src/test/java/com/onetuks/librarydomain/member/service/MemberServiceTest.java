@@ -93,7 +93,11 @@ class MemberServiceTest extends DomainIntegrationTest {
     Member member = MemberFixture.create(123L, USER);
     MemberProfileParam param =
         new MemberProfileParam(
-            "nickname", "introduction", Set.of(Category.CARTOON, Category.NOVEL), true);
+            "nickname",
+            "introduction",
+            "www.instagram.com/onetuks",
+            Set.of(Category.CARTOON, Category.NOVEL),
+            true);
     MultipartFile profileImage =
         MultipartFileFixture.create(ImageType.PROFILE_IMAGE, UUID.randomUUID().toString());
     MultipartFile profileBackgroundImage =
