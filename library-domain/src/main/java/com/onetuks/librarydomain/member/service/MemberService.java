@@ -69,8 +69,8 @@ public class MemberService {
                 param.instagramUrl(),
                 param.interestedCategories(),
                 param.isAlarmAccepted(),
-                param.initProfileImageFile(),
-                param.initProfileBackgroundImageFile(),
+                param.profileImageFilename(),
+                param.profileBackgroundImageFilename(),
                 profileImage,
                 profileBackgroundImage);
 

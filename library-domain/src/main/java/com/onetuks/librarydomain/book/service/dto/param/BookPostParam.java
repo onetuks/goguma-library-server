@@ -9,4 +9,5 @@ public record BookPostParam(
     String isbn,
     String publisher,
     Set<Category> categories,
-    boolean isIndie) {}
+    boolean isIndie,
+    String coverImageFilename) {}

@@ -16,7 +16,8 @@ public record BookPatchRequest(
     @Length(min = 1, max = 30) String publisher,
     @Size(min = 1, max = 3) Set<Category> categories,
     @NotNull boolean isIndie,
-    @NotNull boolean isPermitted) {
+    @NotNull boolean isPermitted,
+    String coverImageFilename) {
 
   public BookPatchParam to() {
     return new BookPatchParam(
@@ -27,6 +28,7 @@ public record BookPatchRequest(
         publisher(),
         categories(),
         isIndie(),
-        isPermitted());
+        isPermitted(),
+        coverImageFilename());
   }
 }

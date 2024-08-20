@@ -9,5 +9,5 @@ public record MemberProfileParam(
     String instagramUrl,
     Set<Category> interestedCategories,
     boolean isAlarmAccepted,
-    boolean initProfileImageFile,
-    boolean initProfileBackgroundImageFile) {}
+    String profileImageFilename,
+    String profileBackgroundImageFilename) {}

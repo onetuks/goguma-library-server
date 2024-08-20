@@ -51,6 +51,7 @@ public class BookService {
             param.publisher(),
             param.categories(),
             param.isIndie(),
+            param.coverImageFilename(),
             coverImage);
 
     pointService.creditPointForBookRegistration(loginId);
@@ -73,6 +74,7 @@ public class BookService {
                 param.categories(),
                 param.isIndie(),
                 param.isPermitted(),
+                param.coverImageFilename(),
                 coverImage));
   }
 

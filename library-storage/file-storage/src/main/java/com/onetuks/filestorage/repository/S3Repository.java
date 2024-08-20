@@ -47,7 +47,7 @@ public class S3Repository implements FileRepository {
 
   @Override
   public void deleteFile(ImageFile imageFile) {
-    if (imageFile.isDefault()) {
+    if (ImageFile.isDefault(imageFile.fileName())) {
       return;
     }
 

@@ -30,6 +30,7 @@ public record Book(
       String publisher,
       Set<Category> categories,
       boolean isIndie,
+      String coverImageFilename,
       MultipartFile coverImage) {
     return new Book(
         null,
@@ -40,7 +41,7 @@ public record Book(
         publisher,
         categories,
         Optional.ofNullable(coverImage)
-            .map(file -> ImageFile.of(ImageType.COVER_IMAGE, file, UUID.randomUUID().toString()))
+            .map(file -> ImageFile.of(ImageType.COVER_IMAGE, file, coverImageFilename))
             .orElse(ImageFile.of(ImageType.COVER_IMAGE, ImageFile.DEFAULT_COVER_IMAGE_URI)),
         isIndie,
         false,
@@ -57,6 +58,7 @@ public record Book(
       Set<Category> categories,
       boolean isIndie,
       boolean isPermitted,
+      String coverImageFilename,
       MultipartFile coverImage) {
     return new Book(
         bookId,
@@ -66,15 +68,11 @@ public record Book(
         isbn,
         publisher,
         categories,
-        Optional.ofNullable(coverImage)
+        Optional.ofNullable(coverImageFilename)
             .map(
-                file ->
-                    ImageFile.of(
-                        ImageType.COVER_IMAGE,
-                        file,
-                        coverImageFile.isDefault()
-                            ? UUID.randomUUID().toString()
-                            : coverImageFile.fileName()))
+                filename -> ImageFile.isDefault(filename)
+                    ? ImageFile.of(ImageType.COVER_IMAGE, ImageFile.DEFAULT_COVER_IMAGE_URI)
+                    : ImageFile.of(ImageType.COVER_IMAGE, coverImage, filename))
             .orElse(coverImageFile),
         isIndie,
         isPermitted,

@@ -22,18 +22,19 @@ public record ImageFile(ImageType imageType, MultipartFile file, String fileName
     return new ImageFile(imageType, null, uri);
   }
 
+  public static boolean isDefault(String fileName) {
+    boolean isDefaultProfileImage = fileName.equals(DEFAULT_PROFILE_IMAGE_URI);
+    boolean isDefaultProfileBackgroundImage = fileName.equals(DEFAULT_PROFILE_BACKGROUND_IMAGE_URI);
+    boolean isDefaultCoverImage = fileName.equals(DEFAULT_COVER_IMAGE_URI);
+    return isDefaultProfileImage || isDefaultProfileBackgroundImage || isDefaultCoverImage;
+  }
+
   public String getKey() {
     return this.imageType().getDirectoryPath() + "/" + fileName();
   }
 
   public String getUrl() {
     return AWS_BUCKET_URL + "/" + getKey();
-  }
-
-  public boolean isDefault() {
-    return DEFAULT_PROFILE_IMAGE_URI.equals(fileName)
-        || DEFAULT_PROFILE_BACKGROUND_IMAGE_URI.equals(fileName)
-        || DEFAULT_COVER_IMAGE_URI.equals(fileName);
   }
 
   @Override
