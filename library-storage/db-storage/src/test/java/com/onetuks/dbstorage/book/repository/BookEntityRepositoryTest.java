@@ -91,6 +91,7 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
                           book.categories(),
                           book.isIndie(),
                           true,
+                          book.coverImageFile().fileName(),
                           book.coverImageFile().file()));
                 })
             .toList();
@@ -175,6 +176,7 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
                       interestedCategories,
                       book.isIndie(),
                       book.isPermitted(),
+                      book.coverImageFile().fileName(),
                       book.coverImageFile().file()));
             });
 
@@ -208,6 +210,7 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
                       interestedCategories,
                       book.isIndie(),
                       book.isPermitted(),
+                      book.coverImageFile().fileName(),
                       book.coverImageFile().file()));
             });
 

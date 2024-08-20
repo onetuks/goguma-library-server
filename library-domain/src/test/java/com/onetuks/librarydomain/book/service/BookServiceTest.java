@@ -48,7 +48,8 @@ class BookServiceTest extends DomainIntegrationTest {
             book.isbn(),
             book.publisher(),
             book.categories(),
-            book.isIndie());
+            book.isIndie(),
+            book.coverImageFile().fileName());
 
     given(bookRepository.create(any(Book.class))).willReturn(book);
 
@@ -84,7 +85,8 @@ class BookServiceTest extends DomainIntegrationTest {
             book.isbn(),
             book.publisher(),
             book.categories(),
-            book.isIndie());
+            book.isIndie(),
+            book.coverImageFile().fileName());
     Book expected =
         Book.of(
             param.title(),
@@ -93,6 +95,7 @@ class BookServiceTest extends DomainIntegrationTest {
             param.publisher(),
             param.categories(),
             param.isIndie(),
+            param.coverImageFilename(),
             null);
 
     given(bookRepository.create(any(Book.class))).willReturn(expected);
@@ -131,7 +134,8 @@ class BookServiceTest extends DomainIntegrationTest {
             "새로운 출판사",
             Set.of(Category.CARTOON, Category.NOVEL),
             true,
-            true);
+            true,
+            book.coverImageFile().fileName());
     Book updatedBook =
         new Book(
             book.bookId(),
@@ -181,7 +185,8 @@ class BookServiceTest extends DomainIntegrationTest {
             "새로운 출판사",
             Set.of(Category.CARTOON, Category.NOVEL),
             true,
-            true);
+            true,
+            book.coverImageFile().fileName());
     MultipartFile coverImage =
         MultipartFileFixture.create(ImageType.COVER_IMAGE, UUID.randomUUID().toString());
     Book updatedBook =

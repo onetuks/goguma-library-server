@@ -63,7 +63,7 @@ public class S3Repository implements FileRepository {
   }
 
   public File getFile(ImageFile imageFile) {
-    File file = new File("src/test/resources/static" + imageFile.getKey());
+    File file = new File("src/test/resources/static/" + imageFile.getKey());
 
     try {
       ResponseInputStream<GetObjectResponse> res =

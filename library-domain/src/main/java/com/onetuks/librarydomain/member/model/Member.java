@@ -172,17 +172,22 @@ public record Member(
 
   private ImageFile getProfileImageFile(String profileImageFilename, MultipartFile profileImage) {
     return Optional.ofNullable(profileImageFilename)
-        .map(filename -> ImageFile.isDefault(filename) ? ImageFile.of(PROFILE_IMAGE,
-            DEFAULT_PROFILE_IMAGE_URI) : ImageFile.of(PROFILE_IMAGE, profileImage, filename))
+        .map(
+            filename ->
+                ImageFile.isDefault(filename)
+                    ? ImageFile.of(PROFILE_IMAGE, DEFAULT_PROFILE_IMAGE_URI)
+                    : ImageFile.of(PROFILE_IMAGE, profileImage, filename))
         .orElse(profileImageFile);
   }
 
   private ImageFile getProfileBackgroundImageFile(
       String profileBackgroundImageFilename, MultipartFile profileBackgroundImage) {
     return Optional.ofNullable(profileBackgroundImageFilename)
-        .map(filename -> ImageFile.isDefault(filename) ? ImageFile.of(PROFILE_BACKGROUND_IMAGE,
-            DEFAULT_PROFILE_BACKGROUND_IMAGE_URI)
-            : ImageFile.of(PROFILE_BACKGROUND_IMAGE, profileBackgroundImage, filename))
+        .map(
+            filename ->
+                ImageFile.isDefault(filename)
+                    ? ImageFile.of(PROFILE_BACKGROUND_IMAGE, DEFAULT_PROFILE_BACKGROUND_IMAGE_URI)
+                    : ImageFile.of(PROFILE_BACKGROUND_IMAGE, profileBackgroundImage, filename))
         .orElse(profileImageFile);
   }
 }

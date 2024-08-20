@@ -6,7 +6,6 @@ import com.onetuks.libraryobject.vo.ImageFile;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
 
 public record Book(
@@ -70,9 +69,10 @@ public record Book(
         categories,
         Optional.ofNullable(coverImageFilename)
             .map(
-                filename -> ImageFile.isDefault(filename)
-                    ? ImageFile.of(ImageType.COVER_IMAGE, ImageFile.DEFAULT_COVER_IMAGE_URI)
-                    : ImageFile.of(ImageType.COVER_IMAGE, coverImage, filename))
+                filename ->
+                    ImageFile.isDefault(filename)
+                        ? ImageFile.of(ImageType.COVER_IMAGE, ImageFile.DEFAULT_COVER_IMAGE_URI)
+                        : ImageFile.of(ImageType.COVER_IMAGE, coverImage, filename))
             .orElse(coverImageFile),
         isIndie,
         isPermitted,

@@ -19,6 +19,7 @@ import com.onetuks.libraryobject.MultipartFileFixture;
 import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.ImageType;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -91,6 +92,10 @@ class MemberServiceTest extends DomainIntegrationTest {
   void editProfileTest() {
     // Given
     Member member = MemberFixture.create(123L, USER);
+    MultipartFile profileImage =
+        MultipartFileFixture.create(ImageType.PROFILE_IMAGE, UUID.randomUUID() + ".png");
+    MultipartFile profileBackgroundImage =
+        MultipartFileFixture.create(ImageType.PROFILE_BACKGROUND_IMAGE, UUID.randomUUID() + ".png");
     MemberProfileParam param =
         new MemberProfileParam(
             "nickname",
@@ -98,13 +103,8 @@ class MemberServiceTest extends DomainIntegrationTest {
             "www.instagram.com/onetuks",
             Set.of(Category.CARTOON, Category.NOVEL),
             true,
-            true,
-            true);
-    MultipartFile profileImage =
-        MultipartFileFixture.create(ImageType.PROFILE_IMAGE, UUID.randomUUID().toString());
-    MultipartFile profileBackgroundImage =
-        MultipartFileFixture.create(
-            ImageType.PROFILE_BACKGROUND_IMAGE, UUID.randomUUID().toString());
+            Objects.requireNonNull(profileImage).getName(),
+            Objects.requireNonNull(profileBackgroundImage).getName());
     Member updatedMember =
         member.changeProfile(
             param.nickname(),
@@ -112,8 +112,8 @@ class MemberServiceTest extends DomainIntegrationTest {
             param.instagramUrl(),
             param.interestedCategories(),
             param.isAlarmAccepted(),
-            param.initProfileImageFile(),
-            param.initProfileBackgroundImageFile(),
+            param.profileImageFilename(),
+            param.profileBackgroundImageFilename(),
             profileImage,
             profileBackgroundImage);
 

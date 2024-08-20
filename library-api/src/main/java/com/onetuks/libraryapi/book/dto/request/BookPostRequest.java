@@ -19,12 +19,6 @@ public record BookPostRequest(
 
   public BookPostParam to() {
     return new BookPostParam(
-        title(),
-        authorName(),
-        isbn(),
-        publisher(),
-        categories(),
-        isIndie(),
-        coverImageFilename());
+        title(), authorName(), isbn(), publisher(), categories(), isIndie(), coverImageFilename());
   }
 }

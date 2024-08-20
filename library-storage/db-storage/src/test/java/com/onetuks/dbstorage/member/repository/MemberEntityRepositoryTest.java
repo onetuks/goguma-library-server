@@ -92,8 +92,8 @@ class MemberEntityRepositoryTest extends DbStorageIntegrationTest {
             "수정된 인스타",
             Set.of(Category.MAGAZINE),
             false,
-            false,
-            false,
+            member.profileImageFile().fileName(),
+            member.profileBackgroundImageFile().fileName(),
             null,
             null);
 
