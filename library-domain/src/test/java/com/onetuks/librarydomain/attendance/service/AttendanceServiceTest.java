@@ -16,6 +16,7 @@ import com.onetuks.librarydomain.attendance.model.Attendance;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.libraryobject.enums.RoleType;
 import java.time.LocalDate;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -58,5 +59,28 @@ class AttendanceServiceTest extends DomainIntegrationTest {
 
     verify(attendanceRepository, never()).readThisMonth(member.memberId());
     verify(attendanceRepository, never()).create(any(Attendance.class));
+  }
+
+  @Test
+  @DisplayName("이번 달 출석 현황을 조회한다.")
+  void searchAllThisMonthAttendances_Test() {
+    // Given
+    Member member = MemberFixture.create(103L, RoleType.USER);
+    LocalDate today = LocalDate.now();
+    Attendance attendance = AttendanceFixture.create(103L, member, LocalDate.now());
+
+    given(
+            attendanceRepository.readAllThisMonth(
+                member.memberId(),
+                today.withDayOfMonth(1),
+                today.withDayOfMonth(today.lengthOfMonth())))
+        .willReturn(List.of(attendance));
+
+    // When
+    List<Attendance> result =
+        attendanceService.searchAllThisMonthAttendances(member.memberId(), today);
+
+    // Then
+    assertThat(result).hasSize(1);
   }
 }

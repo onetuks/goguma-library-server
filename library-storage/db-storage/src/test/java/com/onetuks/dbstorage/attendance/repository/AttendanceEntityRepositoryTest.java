@@ -11,6 +11,8 @@ import com.onetuks.librarydomain.attendance.model.Attendance;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.libraryobject.enums.RoleType;
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -67,5 +69,24 @@ class AttendanceEntityRepositoryTest extends DbStorageIntegrationTest {
 
     // Then
     assertThat(result).isEqualTo(1);
+  }
+
+  @Test
+  @DisplayName("이번 달 출석 현황을 조회한다.")
+  void readAllThisMonth_Test() {
+    // Given
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
+    attendanceEntityRepository.create(AttendanceFixture.create(null, member, LocalDate.now()));
+    LocalDate today = LocalDate.now();
+    YearMonth yearMonth = YearMonth.from(today);
+    LocalDate startOfMonth = yearMonth.atDay(1);
+    LocalDate endOfMonth = yearMonth.atEndOfMonth();
+
+    // When
+    List<Attendance> results =
+        attendanceEntityRepository.readAllThisMonth(member.memberId(), startOfMonth, endOfMonth);
+
+    // Then
+    assertThat(results).hasSize(1);
   }
 }
