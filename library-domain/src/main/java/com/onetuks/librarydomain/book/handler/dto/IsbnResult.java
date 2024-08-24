@@ -38,8 +38,8 @@ public record IsbnResult(
         data.TITLE_URL());
   }
 
-  public static IsbnResult from(CollectionQueryResponse response) {
-    if (response.result().isEmpty()) {
+  public static IsbnResult from(CollectionQueryResponse response) throws IllegalStateException {
+    if (response == null || response.result() == null || response.result().isEmpty()) {
       throw new IllegalStateException("해당 ISBN에 대한 도서 정보가 없습니다.");
     }
 

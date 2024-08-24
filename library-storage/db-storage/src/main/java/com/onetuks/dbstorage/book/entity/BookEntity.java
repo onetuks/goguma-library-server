@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.util.Objects;
@@ -40,6 +41,7 @@ public class BookEntity extends BaseCreatedEntity {
   @Column(name = "author_name", nullable = false)
   private String authorName;
 
+  @Lob
   @Column(name = "introduction")
   private String introduction;
 

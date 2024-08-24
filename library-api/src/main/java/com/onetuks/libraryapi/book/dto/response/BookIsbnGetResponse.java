@@ -7,6 +7,7 @@ import java.util.List;
 public record BookIsbnGetResponse(
     String title,
     String authorName,
+    String introduction,
     String publisher,
     String isbn,
     List<Category> category,
@@ -16,6 +17,7 @@ public record BookIsbnGetResponse(
     return new BookIsbnGetResponse(
         isbnResult.title(),
         isbnResult.authorName(),
+        isbnResult.introduction(),
         isbnResult.publisher(),
         isbnResult.isbn(),
         Category.parseRemainCode(isbnResult.kdc()),

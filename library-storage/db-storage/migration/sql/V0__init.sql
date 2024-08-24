@@ -56,8 +56,8 @@ CREATE TABLE IF NOT EXISTS books
     book_id         BIGINT       NOT NULL AUTO_INCREMENT COMMENT '책 식별자',
     title           VARCHAR(255) NOT NULL COMMENT '책 제목',
     author_name     VARCHAR(100) NOT NULL COMMENT '저자 이름',
-    introduction    VARCHAR(5000) COMMENT '책 소개',
-    isbn            VARCHAR(50) COMMENT '국제 표준 도서 번호', -- 13자
+    introduction    TEXT         COMMENT '책 소개',
+    isbn            VARCHAR(50)  COMMENT '국제 표준 도서 번호', -- 13자
     publisher       VARCHAR(255) COMMENT '출판사',
     categories      JSON         NOT NULL COMMENT '카테고리',
     cover_image_uri VARCHAR(255) NOT NULL DEFAULT 'default-cover.png' COMMENT '책 표지 이미지 URI',
