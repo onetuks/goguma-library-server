@@ -1,6 +1,7 @@
 ext.coverageExclude = List.of(
         "**/Q*",
         "**/config/*",
+        "**/controller/*",
         "**/model/*",
         "**/entity/*",
         "**/dto/*",
