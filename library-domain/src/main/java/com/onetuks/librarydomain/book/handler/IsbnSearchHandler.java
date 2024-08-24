@@ -21,13 +21,14 @@ public class IsbnSearchHandler {
 
   public IsbnResult handle(String isbn) {
     return strategies.stream()
-        .map(strategy -> {
-          try {
-            return strategy.process(isbn);
-          } catch (IllegalStateException e) {
-            return null;
-          }
-        })
+        .map(
+            strategy -> {
+              try {
+                return strategy.process(isbn);
+              } catch (IllegalStateException e) {
+                return null;
+              }
+            })
         .filter(Objects::nonNull)
         .reduce(IsbnResult.init(), IsbnResult::update);
   }

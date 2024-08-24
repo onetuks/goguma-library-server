@@ -27,15 +27,14 @@ class ReviewPickEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("서평픽을 등록한다.")
   void create() {
     // Given
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     ReviewPick reviewPick =
         ReviewPickFixture.create(
             null,
             memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
             reviewEntityRepository.create(
                 ReviewFixture.create(
-                    null,
-                    memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
-                    bookEntityRepository.create(BookFixture.create(null)))));
+                    null, member, bookEntityRepository.create(BookFixture.create(null, member)))));
 
     // When
     ReviewPick result = reviewPickEntityRepository.create(reviewPick);
@@ -51,6 +50,7 @@ class ReviewPickEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("중복된 서평픽 등록 시 예외를 던진다.")
   void create_Duplicated_ExceptionThrown() {
     // Given
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     ReviewPick originReviewPick =
         reviewPickEntityRepository.create(
             ReviewPickFixture.create(
@@ -59,8 +59,8 @@ class ReviewPickEntityRepositoryTest extends DbStorageIntegrationTest {
                 reviewEntityRepository.create(
                     ReviewFixture.create(
                         null,
-                        memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
-                        bookEntityRepository.create(BookFixture.create(null))))));
+                        member,
+                        bookEntityRepository.create(BookFixture.create(null, member))))));
     ReviewPick reviewPick =
         new ReviewPick(null, originReviewPick.member(), originReviewPick.review());
 
@@ -73,6 +73,7 @@ class ReviewPickEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("서평픽을 조회한다.")
   void read() {
     // Given
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     ReviewPick reviewPick =
         reviewPickEntityRepository.create(
             ReviewPickFixture.create(
@@ -81,8 +82,8 @@ class ReviewPickEntityRepositoryTest extends DbStorageIntegrationTest {
                 reviewEntityRepository.create(
                     ReviewFixture.create(
                         null,
-                        memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
-                        bookEntityRepository.create(BookFixture.create(null))))));
+                        member,
+                        bookEntityRepository.create(BookFixture.create(null, member))))));
 
     // When
     ReviewPick result = reviewPickEntityRepository.read(reviewPick.reviewPickId());
@@ -102,17 +103,19 @@ class ReviewPickEntityRepositoryTest extends DbStorageIntegrationTest {
     Member picker = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     IntStream.range(0, 15)
         .forEach(
-            i ->
-                reviewPickEntityRepository.create(
-                    ReviewPickFixture.create(
-                        null,
-                        picker,
-                        reviewEntityRepository.create(
-                            ReviewFixture.create(
-                                null,
-                                memberEntityRepository.create(
-                                    MemberFixture.create(null, RoleType.USER)),
-                                bookEntityRepository.create(BookFixture.create(null)))))));
+            i -> {
+              Member member =
+                  memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
+              reviewPickEntityRepository.create(
+                  ReviewPickFixture.create(
+                      null,
+                      picker,
+                      reviewEntityRepository.create(
+                          ReviewFixture.create(
+                              null,
+                              member,
+                              bookEntityRepository.create(BookFixture.create(null, member))))));
+            });
 
     // When
     Page<ReviewPick> results = reviewPickEntityRepository.readAll(picker.memberId(), pageable);
@@ -127,6 +130,7 @@ class ReviewPickEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("서평픽 등록 여부를 조회한다.")
   void read_Existence_test() {
     // Given
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     ReviewPick reviewPick =
         reviewPickEntityRepository.create(
             ReviewPickFixture.create(
@@ -135,8 +139,8 @@ class ReviewPickEntityRepositoryTest extends DbStorageIntegrationTest {
                 reviewEntityRepository.create(
                     ReviewFixture.create(
                         null,
-                        memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
-                        bookEntityRepository.create(BookFixture.create(null))))));
+                        member,
+                        bookEntityRepository.create(BookFixture.create(null, member))))));
 
     // When
     boolean result =
@@ -151,6 +155,7 @@ class ReviewPickEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("서평픽을 삭제한다.")
   void delete() {
     // Given
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     ReviewPick reviewPick =
         reviewPickEntityRepository.create(
             ReviewPickFixture.create(
@@ -159,8 +164,8 @@ class ReviewPickEntityRepositoryTest extends DbStorageIntegrationTest {
                 reviewEntityRepository.create(
                     ReviewFixture.create(
                         null,
-                        memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
-                        bookEntityRepository.create(BookFixture.create(null))))));
+                        member,
+                        bookEntityRepository.create(BookFixture.create(null, member))))));
 
     // When
     reviewPickEntityRepository.delete(reviewPick.reviewPickId());

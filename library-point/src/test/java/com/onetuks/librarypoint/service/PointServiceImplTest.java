@@ -11,11 +11,15 @@ import com.onetuks.dbstorage.member.entity.MemberEntity;
 import com.onetuks.librarypoint.CorePointIntegrationTest;
 import com.onetuks.librarypoint.fixture.MemberEntityFixture;
 import com.onetuks.librarypoint.repository.entity.DailyPointLimit;
+import com.onetuks.librarypoint.service.model.PointHistory;
 import com.onetuks.librarypoint.service.model.vo.Activity;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 class PointServiceImplTest extends CorePointIntegrationTest {
 
@@ -300,5 +304,22 @@ class PointServiceImplTest extends CorePointIntegrationTest {
         memberEntityJpaRepository.findById(memberEntity.getMemberId()).orElseThrow().getPoints();
 
     assertThat(result).isEqualTo(expectedPoint);
+  }
+
+  @Test
+  @DisplayName("모든 포인트 내역을 조회한다.")
+  void searchAllPointHistory_Test() {
+    // Given
+    Pageable pageable = PageRequest.of(0, 10);
+    MemberEntity member = memberEntityJpaRepository.save(MemberEntityFixture.create());
+    IntStream.range(0, pageable.getPageSize())
+        .forEach(i -> pointService.creditPointForBookRegistration(member.getMemberId()));
+
+    // When
+    Page<PointHistory> results =
+        pointService.searchAllPointHistories(member.getMemberId(), pageable);
+
+    // Then
+    assertThat(results).hasSize(pageable.getPageSize());
   }
 }

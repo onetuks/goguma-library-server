@@ -37,25 +37,20 @@ public class PointRepositoryImpl implements PointRepository {
     memberEntity.addPoints(activity.getPoints());
     pointHistoryEntityJpaRepository.save(
         new PointHistoryEntity(
-            null,
-            memberEntity,
-            activity.getDescription(),
-            activity.getPoints()));
+            null, memberEntity, activity.getDescription(), activity.getPoints()));
   }
 
   @Override
   @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void creditPointsWithLock(long memberId, Activity activity) {
-    MemberEntity memberEntity = memberEntityJpaRepository
-        .findByMemberId(memberId)
-        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
+    MemberEntity memberEntity =
+        memberEntityJpaRepository
+            .findByMemberId(memberId)
+            .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
     memberEntity.addPoints(activity.getPoints());
     pointHistoryEntityJpaRepository.save(
         new PointHistoryEntity(
-            null,
-            memberEntity,
-            activity.getDescription(),
-            activity.getPoints()));
+            null, memberEntity, activity.getDescription(), activity.getPoints()));
   }
 
   @Override
@@ -65,10 +60,7 @@ public class PointRepositoryImpl implements PointRepository {
     memberEntity.minusPoints(activity.getPoints());
     pointHistoryEntityJpaRepository.save(
         new PointHistoryEntity(
-            null,
-            memberEntity,
-            activity.getNegativeDescription(),
-            activity.getNegativePoints()));
+            null, memberEntity, activity.getNegativeDescription(), activity.getNegativePoints()));
   }
 
   @Override

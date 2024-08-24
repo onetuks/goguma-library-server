@@ -5,12 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.data.domain.Page;
 
 public record PointHistoryResponse(
-    long pointHistoryId,
-    long memberId,
-    String activity,
-    long points,
-    LocalDateTime createdAt
-) {
+    long pointHistoryId, long memberId, String activity, long points, LocalDateTime createdAt) {
 
   public static PointHistoryResponse from(PointHistory model) {
     return new PointHistoryResponse(
@@ -18,8 +13,7 @@ public record PointHistoryResponse(
         model.member().memberId(),
         model.activity(),
         model.points(),
-        model.createdAt()
-    );
+        model.createdAt());
   }
 
   public record PointHistoryResponses(Page<PointHistoryResponse> responses) {

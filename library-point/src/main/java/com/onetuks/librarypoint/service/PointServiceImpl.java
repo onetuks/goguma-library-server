@@ -15,7 +15,6 @@ import com.onetuks.librarydomain.global.point.service.PointService;
 import com.onetuks.librarypoint.repository.DailyPointLimitRepository;
 import com.onetuks.librarypoint.repository.PointRepository;
 import com.onetuks.librarypoint.service.model.PointHistory;
-import com.onetuks.librarypoint.service.model.vo.Activity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,8 +27,7 @@ public class PointServiceImpl implements PointService {
   private final DailyPointLimitRepository dailyPointLimitRepository;
 
   public PointServiceImpl(
-      PointRepository pointRepository,
-      DailyPointLimitRepository dailyPointLimitRepository) {
+      PointRepository pointRepository, DailyPointLimitRepository dailyPointLimitRepository) {
     this.pointRepository = pointRepository;
     this.dailyPointLimitRepository = dailyPointLimitRepository;
   }

@@ -29,7 +29,9 @@ public class PointHistoryEntity extends BaseCreatedEntity {
   @Column(name = "point_history_id", nullable = false)
   private Long pointHistoryId;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+  @ManyToOne(
+      fetch = FetchType.LAZY,
+      cascade = {CascadeType.REMOVE})
   @JoinColumn(name = "member_id", nullable = false)
   private MemberEntity memberEntity;
 
@@ -40,10 +42,7 @@ public class PointHistoryEntity extends BaseCreatedEntity {
   private Long points;
 
   public PointHistoryEntity(
-      Long pointHistoryId,
-      MemberEntity memberEntity,
-      String activity,
-      Long points) {
+      Long pointHistoryId, MemberEntity memberEntity, String activity, Long points) {
     this.pointHistoryId = pointHistoryId;
     this.memberEntity = memberEntity;
     this.activity = activity;

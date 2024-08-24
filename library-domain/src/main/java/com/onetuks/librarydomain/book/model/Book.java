@@ -1,5 +1,6 @@
 package com.onetuks.librarydomain.book.model;
 
+import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.ImageType;
 import com.onetuks.libraryobject.vo.ImageFile;
@@ -10,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public record Book(
     Long bookId,
+    Member member,
     String title,
     String authorName,
     String introduction,
@@ -23,6 +25,7 @@ public record Book(
     LocalDateTime createdAt) {
 
   public static Book of(
+      Member member,
       String title,
       String authorName,
       String introduction,
@@ -34,6 +37,7 @@ public record Book(
       MultipartFile coverImage) {
     return new Book(
         null,
+        member,
         title,
         authorName,
         introduction,
@@ -61,7 +65,8 @@ public record Book(
       String coverImageFilename,
       MultipartFile coverImage) {
     return new Book(
-        bookId,
+        bookId(),
+        member(),
         title,
         authorName,
         introduction,
@@ -74,10 +79,10 @@ public record Book(
                     ImageFile.isDefault(filename)
                         ? ImageFile.of(ImageType.COVER_IMAGE, ImageFile.DEFAULT_COVER_IMAGE_URI)
                         : ImageFile.of(ImageType.COVER_IMAGE, coverImage, filename))
-            .orElse(coverImageFile),
+            .orElse(coverImageFile()),
         isIndie,
         isPermitted,
-        pickCounts,
-        createdAt);
+        pickCounts(),
+        createdAt());
   }
 }

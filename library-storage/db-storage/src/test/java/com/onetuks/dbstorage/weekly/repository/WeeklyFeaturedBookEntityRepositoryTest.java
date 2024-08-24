@@ -5,9 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.dbstorage.DbStorageIntegrationTest;
 import com.onetuks.librarydomain.BookFixture;
+import com.onetuks.librarydomain.MemberFixture;
 import com.onetuks.librarydomain.WeeklyFeaturedBookFixture;
 import com.onetuks.librarydomain.book.model.Book;
+import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.weekly.model.WeeklyFeaturedBook;
+import com.onetuks.libraryobject.enums.RoleType;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -21,7 +24,8 @@ class WeeklyFeaturedBookEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("금주도서를 등록한다.")
   void create_Test() {
     // Given
-    Book featuredBook = bookEntityRepository.create(BookFixture.create(null));
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
+    Book featuredBook = bookEntityRepository.create(BookFixture.create(null, member));
     WeeklyFeaturedBook weeklyFeaturedBook = WeeklyFeaturedBookFixture.create(null, featuredBook);
 
     // When
@@ -46,11 +50,13 @@ class WeeklyFeaturedBookEntityRepositoryTest extends DbStorageIntegrationTest {
   void readAll_ForThisWeek_OnlyThisWeek_Test() {
     // Given
     int count = 3;
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     IntStream.range(0, count)
         .forEach(
             i ->
                 weeklyFeaturedBookEntityRepository.create(
-                    WeeklyFeaturedBook.of(bookEntityRepository.create(BookFixture.create(null)))));
+                    WeeklyFeaturedBook.of(
+                        bookEntityRepository.create(BookFixture.create(null, member)))));
 
     // When
     Page<WeeklyFeaturedBook> results = weeklyFeaturedBookEntityRepository.readAllForThisWeek();
@@ -72,8 +78,9 @@ class WeeklyFeaturedBookEntityRepositoryTest extends DbStorageIntegrationTest {
   void readAll_ForThisWeek_Test() {
     // Given
     int count = 10;
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     IntStream.range(0, count)
-        .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null)))
+        .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null, member)))
         .forEach(
             featuredBook ->
                 weeklyFeaturedBookEntityRepository.create(WeeklyFeaturedBook.of(featuredBook)));

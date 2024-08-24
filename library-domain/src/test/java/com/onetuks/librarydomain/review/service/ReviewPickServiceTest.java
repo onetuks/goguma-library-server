@@ -36,7 +36,7 @@ class ReviewPickServiceTest extends DomainIntegrationTest {
     Member receiver = MemberFixture.create(201L, RoleType.USER);
     ReviewPick reviewPick =
         ReviewPickFixture.create(
-            101L, picker, ReviewFixture.create(101L, receiver, BookFixture.create(101L)));
+            101L, picker, ReviewFixture.create(101L, receiver, BookFixture.create(101L, picker)));
 
     given(memberRepository.read(picker.memberId())).willReturn(picker);
     given(reviewRepository.readWithLock(reviewPick.review().reviewId()))
@@ -66,7 +66,7 @@ class ReviewPickServiceTest extends DomainIntegrationTest {
             103L,
             picker,
             ReviewFixture.create(
-                103L, MemberFixture.create(203L, RoleType.USER), BookFixture.create(103L)));
+                103L, MemberFixture.create(203L, RoleType.USER), BookFixture.create(103L, picker)));
 
     given(memberRepository.read(picker.memberId())).willReturn(picker);
     given(reviewPickRepository.read(reviewPick.reviewPickId())).willReturn(reviewPick);
@@ -89,7 +89,9 @@ class ReviewPickServiceTest extends DomainIntegrationTest {
             103L,
             MemberFixture.create(303L, RoleType.USER),
             ReviewFixture.create(
-                103L, MemberFixture.create(203L, RoleType.USER), BookFixture.create(103L)));
+                103L,
+                MemberFixture.create(203L, RoleType.USER),
+                BookFixture.create(103L, notPicker)));
 
     given(memberRepository.read(notPicker.memberId())).willReturn(notPicker);
     given(reviewPickRepository.read(reviewPick.reviewPickId())).willReturn(reviewPick);
@@ -120,7 +122,7 @@ class ReviewPickServiceTest extends DomainIntegrationTest {
                             ReviewFixture.create(
                                 103L,
                                 MemberFixture.create(203L, RoleType.USER),
-                                BookFixture.create(103L))))
+                                BookFixture.create(103L, picker))))
                 .toList());
 
     given(reviewPickRepository.readAll(picker.memberId(), pageable)).willReturn(reviewPicks);
@@ -144,7 +146,7 @@ class ReviewPickServiceTest extends DomainIntegrationTest {
             104L,
             picker,
             ReviewFixture.create(
-                104L, MemberFixture.create(204L, RoleType.USER), BookFixture.create(104L)));
+                104L, MemberFixture.create(204L, RoleType.USER), BookFixture.create(104L, picker)));
 
     given(reviewPickRepository.read(picker.memberId(), reviewPick.review().reviewId()))
         .willReturn(true);

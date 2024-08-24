@@ -1,7 +1,6 @@
 package com.onetuks.librarypoint.controller;
 
 import com.onetuks.libraryauth.util.LoginId;
-import com.onetuks.librarydomain.global.point.service.PointService;
 import com.onetuks.librarypoint.controller.dto.response.PointHistoryResponse.PointHistoryResponses;
 import com.onetuks.librarypoint.service.PointServiceImpl;
 import com.onetuks.librarypoint.service.model.PointHistory;
@@ -28,14 +27,13 @@ public class PointRestController {
   /**
    * 포인트 내역 다건 조회
    *
-   * @param loginId  : 로그인 ID
+   * @param loginId : 로그인 ID
    * @param pageable : 페이지 정보
    * @return 포인트 내역 응답
    */
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<PointHistoryResponses> getPointHistories(
-      @LoginId Long loginId,
-      @PageableDefault(sort = "createdAt") Pageable pageable) {
+      @LoginId Long loginId, @PageableDefault(sort = "createdAt") Pageable pageable) {
     Page<PointHistory> results = pointService.searchAllPointHistories(loginId, pageable);
     PointHistoryResponses responses = PointHistoryResponses.from(results);
 

@@ -14,22 +14,12 @@ public class PointHistoryConverter {
     this.memberConverter = memberConverter;
   }
 
-  public PointHistoryEntity toEntity(PointHistory model) {
-    return new PointHistoryEntity(
-        model.pointHistoryId(),
-        memberConverter.toEntity(model.member()),
-        model.activity(),
-        model.points()
-    );
-  }
-
   public PointHistory toModel(PointHistoryEntity entity) {
     return new PointHistory(
         entity.getPointHistoryId(),
         memberConverter.toModel(entity.getMemberEntity()),
         entity.getActivity(),
         entity.getPoints(),
-        entity.getCreatedAt()
-    );
+        entity.getCreatedAt());
   }
 }

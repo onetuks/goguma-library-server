@@ -30,9 +30,8 @@ class BookPickServiceTest extends DomainIntegrationTest {
   @DisplayName("북픽을 등록한다.")
   void registerTest() {
     // Given
-    BookPick bookPick =
-        BookPickFixture.create(
-            102L, MemberFixture.create(102L, RoleType.USER), BookFixture.create(102L));
+    Member member = MemberFixture.create(102L, RoleType.USER);
+    BookPick bookPick = BookPickFixture.create(102L, member, BookFixture.create(102L, member));
 
     given(memberRepository.read(bookPick.member().memberId())).willReturn(bookPick.member());
     given(bookRepository.read(bookPick.book().bookId())).willReturn(bookPick.book());
@@ -53,9 +52,8 @@ class BookPickServiceTest extends DomainIntegrationTest {
   @DisplayName("북픽을 삭제한다.")
   void removeTest() {
     // Given
-    BookPick bookPick =
-        BookPickFixture.create(
-            103L, MemberFixture.create(103L, RoleType.USER), BookFixture.create(103L));
+    Member member = MemberFixture.create(103L, RoleType.USER);
+    BookPick bookPick = BookPickFixture.create(103L, member, BookFixture.create(103L, member));
 
     given(bookPickRepository.read(bookPick.bookPickId())).willReturn(bookPick);
 
@@ -71,9 +69,8 @@ class BookPickServiceTest extends DomainIntegrationTest {
   void remove_NotAuthMember_Exception() {
     // Given
     long notAuthMemberId = 1L;
-    BookPick bookPick =
-        BookPickFixture.create(
-            103L, MemberFixture.create(103L, RoleType.USER), BookFixture.create(103L));
+    Member member = MemberFixture.create(103L, RoleType.USER);
+    BookPick bookPick = BookPickFixture.create(103L, member, BookFixture.create(103L, member));
 
     given(bookPickRepository.read(bookPick.bookPickId())).willReturn(bookPick);
 
@@ -95,7 +92,9 @@ class BookPickServiceTest extends DomainIntegrationTest {
         new PageImpl<>(
             IntStream.range(0, 5)
                 .mapToObj(
-                    i -> BookPickFixture.create((long) i, member, BookFixture.create((long) i)))
+                    i ->
+                        BookPickFixture.create(
+                            (long) i, member, BookFixture.create((long) i, member)))
                 .toList());
     Page<BookPick> expected =
         new PageImpl<>(
@@ -116,9 +115,8 @@ class BookPickServiceTest extends DomainIntegrationTest {
   @DisplayName("해당 멤버가 북픽한 도서라면 true를 반환한다.")
   void searchExistenceTest() {
     // Given
-    BookPick bookPick =
-        BookPickFixture.create(
-            101L, MemberFixture.create(101L, RoleType.USER), BookFixture.create(101L));
+    Member member = MemberFixture.create(101L, RoleType.USER);
+    BookPick bookPick = BookPickFixture.create(101L, member, BookFixture.create(101L, member));
 
     given(bookPickRepository.read(bookPick.member().memberId(), bookPick.book().bookId()))
         .willReturn(true);

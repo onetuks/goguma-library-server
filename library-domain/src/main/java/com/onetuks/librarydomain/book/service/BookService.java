@@ -45,6 +45,7 @@ public class BookService {
   public Book register(long loginId, BookPostParam param, MultipartFile coverImage) {
     Book book =
         Book.of(
+            memberRepository.read(loginId),
             param.title(),
             param.authorName(),
             param.introduction(),
@@ -84,6 +85,8 @@ public class BookService {
     Book book = bookRepository.read(bookId);
 
     fileRepository.deleteFile(book.coverImageFile());
+    pointService.debitPointForBookRemoval(book.member().memberId());
+
     bookRepository.delete(bookId);
   }
 
