@@ -2,7 +2,7 @@ package com.onetuks.librarydomain.book.handler.dto.vo;
 
 public record CoverImageUrlData(String value) implements IsbnResultData {
 
-  private static final String KOLIS_COVER_IMAGE_URL_PREFIX = "http://cover.nl.go.kr/";
+  private static final String KOLIS_COVER_IMAGE_URL_PREFIX = "https://cover.nl.go.kr/";
 
   @Override
   public String filterDataValue(String newValue) {
@@ -10,6 +10,6 @@ public record CoverImageUrlData(String value) implements IsbnResultData {
   }
 
   private String regulateValue(String value) {
-    return value.contains("http:") ? value : KOLIS_COVER_IMAGE_URL_PREFIX + value;
+    return value.contains("https://") ? value : KOLIS_COVER_IMAGE_URL_PREFIX + value;
   }
 }

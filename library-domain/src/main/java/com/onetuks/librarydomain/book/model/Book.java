@@ -25,6 +25,7 @@ public record Book(
   public static Book of(
       String title,
       String authorName,
+      String introduction,
       String isbn,
       String publisher,
       Set<Category> categories,
@@ -35,7 +36,7 @@ public record Book(
         null,
         title,
         authorName,
-        null,
+        introduction,
         isbn,
         publisher,
         categories,

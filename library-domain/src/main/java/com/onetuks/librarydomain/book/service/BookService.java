@@ -47,6 +47,7 @@ public class BookService {
         Book.of(
             param.title(),
             param.authorName(),
+            param.introduction(),
             param.isbn(),
             param.publisher(),
             param.categories(),

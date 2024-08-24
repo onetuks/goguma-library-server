@@ -11,6 +11,12 @@ public record AuthorNameData(String value) implements IsbnResultData {
   }
 
   private String regulateValue(String value) {
-    return value.replace(":", "").replace("지음", "").replace("지은이", "").replace("저자", "").trim();
+    return value
+        .replace(":", "")
+        .replace("지음", "")
+        .replace("지은이", "")
+        .replace("저자", "")
+        .replace("글: ", "")
+        .trim();
   }
 }

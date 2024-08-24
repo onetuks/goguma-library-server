@@ -6,6 +6,7 @@ import java.util.Set;
 public record BookPostParam(
     String title,
     String authorName,
+    String introduction,
     String isbn,
     String publisher,
     Set<Category> categories,

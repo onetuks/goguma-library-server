@@ -45,6 +45,7 @@ class BookServiceTest extends DomainIntegrationTest {
         new BookPostParam(
             book.title(),
             book.authorName(),
+            book.introduction(),
             book.isbn(),
             book.publisher(),
             book.categories(),
@@ -82,6 +83,7 @@ class BookServiceTest extends DomainIntegrationTest {
         new BookPostParam(
             book.title(),
             book.authorName(),
+            book.introduction(),
             book.isbn(),
             book.publisher(),
             book.categories(),
@@ -91,6 +93,7 @@ class BookServiceTest extends DomainIntegrationTest {
         Book.of(
             param.title(),
             param.authorName(),
+            param.introduction(),
             param.isbn(),
             param.publisher(),
             param.categories(),
@@ -107,7 +110,7 @@ class BookServiceTest extends DomainIntegrationTest {
     assertAll(
         () -> assertThat(result.title()).isEqualTo(book.title()),
         () -> assertThat(result.authorName()).isEqualTo(book.authorName()),
-        () -> assertThat(result.introduction()).isNull(),
+        () -> assertThat(result.introduction()).isEqualTo(book.introduction()),
         () ->
             assertThat(result.categories()).containsExactlyInAnyOrderElementsOf(book.categories()),
         () -> assertThat(result.isIndie()).isEqualTo(book.isIndie()),
