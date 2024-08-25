@@ -3,6 +3,7 @@ package com.onetuks.dbstorage.book.repository;
 import com.onetuks.dbstorage.book.converter.BookPickConverter;
 import com.onetuks.librarydomain.book.model.BookPick;
 import com.onetuks.librarydomain.book.repository.BookPickRepository;
+import com.onetuks.libraryobject.exception.NoSuchEntityException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +31,7 @@ public class BookPickEntityRepository implements BookPickRepository {
     return converter.toModel(
         repository
             .findById(bookPickId)
-            .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 북픽입니다.")));
+            .orElseThrow(() -> new NoSuchEntityException("존재하지 않는 북픽입니다.")));
   }
 
   @Override
@@ -38,7 +39,7 @@ public class BookPickEntityRepository implements BookPickRepository {
     return converter.toModel(
         repository
             .findByMemberEntityMemberIdAndBookEntityBookId(memberId, bookId)
-            .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 북픽입니다.")));
+            .orElseThrow(() -> new NoSuchEntityException("존재하지 않는 북픽입니다.")));
   }
 
   @Override
