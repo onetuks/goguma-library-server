@@ -137,7 +137,7 @@ public class ReviewRestController {
   public ResponseEntity<ReviewPageResponses> getReviewsOfBook(
       @PathVariable(name = "book-id") Long bookId,
       @RequestParam(name = "sort", required = false, defaultValue = "LATEST") SortBy sortBy,
-      @PageableDefault(sort = "reviewId", direction = Direction.DESC) Pageable pageable) {
+      @PageableDefault(size = 3, sort = "reviewId", direction = Direction.DESC) Pageable pageable) {
     Page<Review> results = reviewService.searchAll(bookId, sortBy, pageable);
     ReviewPageResponses responses = ReviewPageResponses.from(results);
 
