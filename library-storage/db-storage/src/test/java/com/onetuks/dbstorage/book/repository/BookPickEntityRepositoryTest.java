@@ -18,6 +18,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 class BookPickEntityRepositoryTest extends DbStorageIntegrationTest {
 
@@ -87,16 +88,17 @@ class BookPickEntityRepositoryTest extends DbStorageIntegrationTest {
     BookPick bookPick =
         bookPickEntityRepository.create(
             BookPickFixture.create(
-                null,
-                memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
-                bookEntityRepository.create(BookFixture.create(null, member))));
+                null, member, bookEntityRepository.create(BookFixture.create(null, member))));
 
     // When
-    boolean result =
+    BookPick result =
         bookPickEntityRepository.read(bookPick.member().memberId(), bookPick.book().bookId());
 
     // Then
-    assertThat(result).isTrue();
+    assertAll(
+        () -> assertThat(result.bookPickId()).isNotNull(),
+        () -> assertThat(result.member().memberId()).isEqualTo(member.memberId()),
+        () -> assertThat(result.book().bookId()).isEqualTo(bookPick.book().bookId()));
   }
 
   @Test
@@ -131,17 +133,16 @@ class BookPickEntityRepositoryTest extends DbStorageIntegrationTest {
     BookPick bookPick =
         bookPickEntityRepository.create(
             BookPickFixture.create(
-                null,
-                memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
-                bookEntityRepository.create(BookFixture.create(null, member))));
+                null, member, bookEntityRepository.create(BookFixture.create(null, member))));
 
     // When
     bookPickEntityRepository.delete(bookPick.bookPickId());
 
     // Then
-    boolean result =
-        bookPickEntityRepository.read(bookPick.member().memberId(), bookPick.book().bookId());
-
-    assertThat(result).isFalse();
+    assertThatThrownBy(
+            () ->
+                bookPickEntityRepository.read(
+                    bookPick.member().memberId(), bookPick.book().bookId()))
+        .isInstanceOf(JpaObjectRetrievalFailureException.class);
   }
 }

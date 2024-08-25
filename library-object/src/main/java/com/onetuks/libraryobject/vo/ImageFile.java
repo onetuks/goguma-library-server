@@ -30,11 +30,21 @@ public record ImageFile(ImageType imageType, MultipartFile file, String fileName
   }
 
   public String getKey() {
+    if (isExternalUrl()) {
+      return fileName();
+    }
     return this.imageType().getDirectoryPath() + "/" + fileName();
   }
 
   public String getUrl() {
+    if (isExternalUrl()) {
+      return fileName();
+    }
     return AWS_BUCKET_URL + "/" + getKey();
+  }
+
+  private boolean isExternalUrl() {
+    return fileName().contains("https://");
   }
 
   @Override

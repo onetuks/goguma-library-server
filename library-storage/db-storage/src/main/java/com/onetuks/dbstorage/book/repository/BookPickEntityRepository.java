@@ -34,8 +34,11 @@ public class BookPickEntityRepository implements BookPickRepository {
   }
 
   @Override
-  public boolean read(long memberId, long bookId) {
-    return repository.existsByMemberEntityMemberIdAndBookEntityBookId(memberId, bookId);
+  public BookPick read(long memberId, long bookId) {
+    return converter.toModel(
+        repository
+            .findByMemberEntityMemberIdAndBookEntityBookId(memberId, bookId)
+            .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 북픽입니다.")));
   }
 
   @Override

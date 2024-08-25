@@ -119,13 +119,16 @@ class BookPickServiceTest extends DomainIntegrationTest {
     BookPick bookPick = BookPickFixture.create(101L, member, BookFixture.create(101L, member));
 
     given(bookPickRepository.read(bookPick.member().memberId(), bookPick.book().bookId()))
-        .willReturn(true);
+        .willReturn(bookPick);
 
     // When
-    boolean result =
+    BookPick result =
         bookPickService.searchExistence(bookPick.member().memberId(), bookPick.book().bookId());
 
     // Then
-    assertThat(result).isTrue();
+    assertAll(
+        () -> assertThat(result.bookPickId()).isEqualTo(bookPick.bookPickId()),
+        () -> assertThat(result.member()).isEqualTo(bookPick.member()),
+        () -> assertThat(result.book()).isEqualTo(bookPick.book()));
   }
 }

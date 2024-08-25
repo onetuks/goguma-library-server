@@ -74,7 +74,7 @@ class BookServiceTest extends DomainIntegrationTest {
   }
 
   @Test
-  @DisplayName("표지 이미지 없이 도서 등록하면 기본 표지 이미지로 할당되어 등록된다.")
+  @DisplayName("표지 이미지와 표지 이미지 파일명 없이 도서 등록하면 기본 표지 이미지로 할당되어 등록된다.")
   void register_WithOutCoverImage_Test() {
     // Given
     long loginId = 123L;
@@ -88,7 +88,7 @@ class BookServiceTest extends DomainIntegrationTest {
             book.publisher(),
             book.categories(),
             book.isIndie(),
-            book.coverImageFile().fileName());
+            null);
     Book expected =
         Book.of(
             book.member(),

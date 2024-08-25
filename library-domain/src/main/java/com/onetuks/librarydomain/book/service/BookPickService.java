@@ -52,7 +52,7 @@ public class BookPickService {
 
   @Cacheable(value = CacheName.BOOK_PICKS, key = "#loginId" + "-" + "#bookId")
   @Transactional(readOnly = true)
-  public boolean searchExistence(long loginId, long bookId) {
+  public BookPick searchExistence(long loginId, long bookId) {
     return bookPickRepository.read(loginId, bookId);
   }
 }
