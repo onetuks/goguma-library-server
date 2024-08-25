@@ -46,7 +46,10 @@ public record Book(
         categories,
         Optional.ofNullable(coverImage)
             .map(file -> ImageFile.of(ImageType.COVER_IMAGE, file, coverImageFilename))
-            .orElse(ImageFile.of(ImageType.COVER_IMAGE, ImageFile.DEFAULT_COVER_IMAGE_URI)),
+            .orElse(
+                coverImageFilename != null
+                    ? ImageFile.of(ImageType.COVER_IMAGE, coverImageFilename)
+                    : ImageFile.of(ImageType.COVER_IMAGE, ImageFile.DEFAULT_COVER_IMAGE_URI)),
         isIndie,
         false,
         0L,
