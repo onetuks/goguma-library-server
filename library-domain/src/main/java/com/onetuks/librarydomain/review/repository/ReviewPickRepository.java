@@ -16,5 +16,7 @@ public interface ReviewPickRepository {
 
   ReviewPick read(long memberId, long reviewId);
 
+  Long readCount(long loginId, long reviewId);
+
   void delete(long reviewPickId);
 }

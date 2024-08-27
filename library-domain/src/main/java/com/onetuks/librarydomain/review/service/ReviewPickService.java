@@ -74,4 +74,9 @@ public class ReviewPickService {
   public ReviewPick searchExistence(long loginId, long reviewId) {
     return reviewPickRepository.read(loginId, reviewId);
   }
+
+  @Transactional(readOnly = true)
+  public Long searchCount(long loginId, long reviewId) {
+    return reviewPickRepository.readCount(loginId, reviewId);
+  }
 }

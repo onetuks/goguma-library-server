@@ -15,6 +15,7 @@ import com.onetuks.librarydomain.MemberFixture;
 import com.onetuks.librarydomain.ReviewFixture;
 import com.onetuks.librarydomain.ReviewPickFixture;
 import com.onetuks.librarydomain.member.model.Member;
+import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.librarydomain.review.model.ReviewPick;
 import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
@@ -160,5 +161,21 @@ class ReviewPickServiceTest extends DomainIntegrationTest {
         () -> assertThat(result.reviewPickId()).isNotNull(),
         () -> assertThat(result.member().memberId()).isEqualTo(picker.memberId()),
         () -> assertThat(result.review().reviewId()).isEqualTo(reviewPick.review().reviewId()));
+  }
+
+  @Test
+  @DisplayName("해당 서평의 서평픽 개수를 조회한다.")
+  void searchCount_Test() {
+    // Given
+    Member member = MemberFixture.create(105L, RoleType.USER);
+    Review review = ReviewFixture.create(105L, member, BookFixture.create(105L, member));
+
+    given(reviewPickRepository.readCount(member.memberId(), review.reviewId())).willReturn(1L);
+
+    // When
+    Long result = reviewPickService.searchCount(member.memberId(), review.reviewId());
+
+    // Then
+    assertThat(result).isOne();
   }
 }

@@ -10,6 +10,7 @@ import com.onetuks.librarydomain.MemberFixture;
 import com.onetuks.librarydomain.ReviewFixture;
 import com.onetuks.librarydomain.ReviewPickFixture;
 import com.onetuks.librarydomain.member.model.Member;
+import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.librarydomain.review.model.ReviewPick;
 import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.exception.NoSuchEntityException;
@@ -152,6 +153,30 @@ class ReviewPickEntityRepositoryTest extends DbStorageIntegrationTest {
         () -> assertThat(result.reviewPickId()).isNotNull(),
         () -> assertThat(result.member().memberId()).isEqualTo(reviewPick.member().memberId()),
         () -> assertThat(result.review().reviewId()).isEqualTo(reviewPick.review().reviewId()));
+  }
+
+  @Test
+  @DisplayName("해당 서평의 서평픽 개수를 조회한다.")
+  void readCount() {
+    // Given
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
+    Review review =
+        reviewEntityRepository.create(
+            ReviewFixture.create(
+                null,
+                memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
+                bookEntityRepository.create(
+                    BookFixture.create(
+                        null,
+                        memberEntityRepository.create(
+                            MemberFixture.create(null, RoleType.USER))))));
+    reviewPickEntityRepository.create(ReviewPickFixture.create(null, member, review));
+
+    // When
+    Long result = reviewPickEntityRepository.readCount(member.memberId(), review.reviewId());
+
+    // Then
+    assertThat(result).isOne();
   }
 
   @Test

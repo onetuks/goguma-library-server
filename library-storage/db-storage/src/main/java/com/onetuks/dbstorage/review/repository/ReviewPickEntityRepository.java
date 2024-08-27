@@ -47,6 +47,11 @@ public class ReviewPickEntityRepository implements ReviewPickRepository {
   }
 
   @Override
+  public Long readCount(long loginId, long reviewId) {
+    return repository.countByMemberEntityMemberIdAndReviewEntityReviewId(loginId, reviewId);
+  }
+
+  @Override
   public void delete(long reviewPickId) {
     repository.deleteById(reviewPickId);
   }

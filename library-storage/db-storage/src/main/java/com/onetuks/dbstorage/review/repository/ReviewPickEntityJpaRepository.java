@@ -12,4 +12,6 @@ public interface ReviewPickEntityJpaRepository extends JpaRepository<ReviewPickE
 
   Optional<ReviewPickEntity> findByMemberEntityMemberIdAndReviewEntityReviewId(
       long memberId, long reviewId);
+
+  Long countByMemberEntityMemberIdAndReviewEntityReviewId(long loginId, long reviewId);
 }
