@@ -229,10 +229,10 @@ class ReviewServiceTest extends DomainIntegrationTest {
                             (long) i, MemberFixture.create((long) i, RoleType.USER), book))
                 .toList());
 
-    given(reviewRepository.readAll(book.bookId(), sortBy, pageable)).willReturn(reviews);
+    given(reviewRepository.readAllByBook(book.bookId(), sortBy, pageable)).willReturn(reviews);
 
     // When
-    Page<Review> results = reviewService.searchAll(book.bookId(), sortBy, pageable);
+    Page<Review> results = reviewService.searchAllOfBook(book.bookId(), sortBy, pageable);
 
     // Then
     assertThat(results)
@@ -245,6 +245,7 @@ class ReviewServiceTest extends DomainIntegrationTest {
   void searchAll_OfMember_Test() {
     // Given
     Pageable pageable = PageRequest.of(0, 10);
+    SortBy sortBy = SortBy.PICK;
     Member member = MemberFixture.create(125L, RoleType.USER);
     Page<Review> reviews =
         new PageImpl<>(
@@ -255,10 +256,11 @@ class ReviewServiceTest extends DomainIntegrationTest {
                             (long) i, member, BookFixture.create((long) i, member)))
                 .toList());
 
-    given(reviewRepository.readAll(member.memberId(), pageable)).willReturn(reviews);
+    given(reviewRepository.readAllByMember(member.memberId(), sortBy, pageable))
+        .willReturn(reviews);
 
     // When
-    Page<Review> results = reviewService.searchAll(member.memberId(), pageable);
+    Page<Review> results = reviewService.searchAllOfMember(member.memberId(), sortBy, pageable);
 
     // Then
     assertThat(results)

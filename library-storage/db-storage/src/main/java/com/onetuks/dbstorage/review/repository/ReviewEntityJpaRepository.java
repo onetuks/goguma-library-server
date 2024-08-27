@@ -14,8 +14,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ReviewEntityJpaRepository extends JpaRepository<ReviewEntity, Long> {
 
-  Page<ReviewEntity> findAllByMemberEntityMemberId(long memberId, Pageable pageable);
-
   Page<ReviewEntity> findAllByBookEntityInOrderByPickCountDesc(
       List<BookEntity> thisWeekFeaturedBooks, Pageable pageable);
 

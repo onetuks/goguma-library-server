@@ -23,9 +23,9 @@ public interface ReviewRepository {
 
   Page<Review> readAll(SortBy sortBy, Pageable pageable);
 
-  Page<Review> readAll(long bookId, SortBy sortBy, Pageable pageable);
+  Page<Review> readAllByBook(long bookId, SortBy sortBy, Pageable pageable);
 
-  Page<Review> readAll(long memberId, Pageable pageable);
+  Page<Review> readAllByMember(long memberId, SortBy sortBy, Pageable pageable);
 
   Page<Review> readAll(List<Book> thisWeekInterestedCategoriesBooks, Pageable pageable);
 

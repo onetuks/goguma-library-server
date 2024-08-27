@@ -161,7 +161,8 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
                     review)));
 
     // When
-    Page<Review> results = reviewEntityRepository.readAll(book.bookId(), SortBy.LATEST, pageable);
+    Page<Review> results =
+        reviewEntityRepository.readAllByBook(book.bookId(), SortBy.LATEST, pageable);
 
     // Then
     assertThat(results)
@@ -198,7 +199,8 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
             });
 
     // When
-    Page<Review> results = reviewEntityRepository.readAll(book.bookId(), SortBy.PICK, pageable);
+    Page<Review> results =
+        reviewEntityRepository.readAllByBook(book.bookId(), SortBy.PICK, pageable);
 
     // Then
     assertThat(results)
@@ -211,6 +213,7 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
   void readAll_OfMember_Test() {
     // Given
     Pageable pageable = PageRequest.of(0, 3);
+    SortBy sortBy = SortBy.LATEST;
     Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     IntStream.range(0, 5)
         .forEach(
@@ -222,7 +225,8 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
                         bookEntityRepository.create(BookFixture.create(null, member)))));
 
     // When
-    Page<Review> results = reviewEntityRepository.readAll(member.memberId(), pageable);
+    Page<Review> results =
+        reviewEntityRepository.readAllByMember(member.memberId(), sortBy, pageable);
 
     // Then
     assertThat(results)
@@ -312,6 +316,7 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
   void readAllWeeklyMostWrite_OnlyWeeklyFeaturedBookReview_OrderByWriteCount_Test() {
     // Given
     int count = 3;
+    SortBy sortBy = SortBy.LATEST;
     Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     List<Book> thisWeekFeaturedBooks =
         IntStream.range(0, 3)
@@ -346,11 +351,11 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
 
     long firstMemberReviewCount =
         reviewEntityRepository
-            .readAll(firstMember.memberId(), PageRequest.of(0, 1_000))
+            .readAllByMember(firstMember.memberId(), sortBy, PageRequest.of(0, 1_000))
             .getTotalElements();
     long lastMemberReviewCount =
         reviewEntityRepository
-            .readAll(lastMember.memberId(), PageRequest.of(0, 1_000))
+            .readAllByMember(lastMember.memberId(), sortBy, PageRequest.of(0, 1_000))
             .getTotalElements();
 
     assertAll(
