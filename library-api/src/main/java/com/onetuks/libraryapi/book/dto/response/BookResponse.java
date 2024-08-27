@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 
 public record BookResponse(
     long bookId,
+    long memberId,
     String title,
     String authorName,
     String introduction,
@@ -24,6 +25,7 @@ public record BookResponse(
   public static BookResponse from(Book book) {
     return new BookResponse(
         book.bookId(),
+        book.member().memberId(),
         book.title(),
         book.authorName(),
         book.introduction(),
