@@ -149,13 +149,16 @@ class ReviewPickServiceTest extends DomainIntegrationTest {
                 104L, MemberFixture.create(204L, RoleType.USER), BookFixture.create(104L, picker)));
 
     given(reviewPickRepository.read(picker.memberId(), reviewPick.review().reviewId()))
-        .willReturn(true);
+        .willReturn(reviewPick);
 
     // When
-    boolean result =
+    ReviewPick result =
         reviewPickService.searchExistence(picker.memberId(), reviewPick.review().reviewId());
 
     // Then
-    assertThat(result).isTrue();
+    assertAll(
+        () -> assertThat(result.reviewPickId()).isNotNull(),
+        () -> assertThat(result.member().memberId()).isEqualTo(picker.memberId()),
+        () -> assertThat(result.review().reviewId()).isEqualTo(reviewPick.review().reviewId()));
   }
 }

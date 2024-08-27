@@ -88,10 +88,11 @@ public class ReviewPickRestController {
    * @return : 서평픽 여부
    */
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Boolean> getMyReviewPick(
+  public ResponseEntity<ReviewPickResponse> getMyReviewPick(
       @LoginId Long loginId, @RequestParam(name = "review-id") Long reviewId) {
-    boolean result = reviewPickService.searchExistence(loginId, reviewId);
+    ReviewPick result = reviewPickService.searchExistence(loginId, reviewId);
+    ReviewPickResponse response = ReviewPickResponse.from(result);
 
-    return ResponseEntity.status(HttpStatus.OK).body(result);
+    return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 }

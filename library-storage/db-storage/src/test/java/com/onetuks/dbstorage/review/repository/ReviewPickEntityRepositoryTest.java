@@ -12,6 +12,7 @@ import com.onetuks.librarydomain.ReviewPickFixture;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.review.model.ReviewPick;
 import com.onetuks.libraryobject.enums.RoleType;
+import com.onetuks.libraryobject.exception.NoSuchEntityException;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 class ReviewPickEntityRepositoryTest extends DbStorageIntegrationTest {
 
@@ -130,7 +130,7 @@ class ReviewPickEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("서평픽 등록 여부를 조회한다.")
   void read_Existence_test() {
     // Given
-    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
+    Member reviewer = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     ReviewPick reviewPick =
         reviewPickEntityRepository.create(
             ReviewPickFixture.create(
@@ -139,16 +139,19 @@ class ReviewPickEntityRepositoryTest extends DbStorageIntegrationTest {
                 reviewEntityRepository.create(
                     ReviewFixture.create(
                         null,
-                        member,
-                        bookEntityRepository.create(BookFixture.create(null, member))))));
+                        reviewer,
+                        bookEntityRepository.create(BookFixture.create(null, reviewer))))));
 
     // When
-    boolean result =
+    ReviewPick result =
         reviewPickEntityRepository.read(
             reviewPick.member().memberId(), reviewPick.review().reviewId());
 
     // Then
-    assertThat(result).isTrue();
+    assertAll(
+        () -> assertThat(result.reviewPickId()).isNotNull(),
+        () -> assertThat(result.member().memberId()).isEqualTo(reviewPick.member().memberId()),
+        () -> assertThat(result.review().reviewId()).isEqualTo(reviewPick.review().reviewId()));
   }
 
   @Test
@@ -172,6 +175,6 @@ class ReviewPickEntityRepositoryTest extends DbStorageIntegrationTest {
 
     // Then
     assertThatThrownBy(() -> reviewPickEntityRepository.read(reviewPick.reviewPickId()))
-        .isInstanceOf(JpaObjectRetrievalFailureException.class);
+        .isInstanceOf(NoSuchEntityException.class);
   }
 }

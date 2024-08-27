@@ -3,7 +3,7 @@ package com.onetuks.dbstorage.review.repository;
 import com.onetuks.dbstorage.review.converter.ReviewPickConverter;
 import com.onetuks.librarydomain.review.model.ReviewPick;
 import com.onetuks.librarydomain.review.repository.ReviewPickRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.onetuks.libraryobject.exception.NoSuchEntityException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -30,7 +30,7 @@ public class ReviewPickEntityRepository implements ReviewPickRepository {
     return converter.toModel(
         repository
             .findById(reviewPickId)
-            .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 서평픽입니다.")));
+            .orElseThrow(() -> new NoSuchEntityException("존재하지 않는 서평픽입니다.")));
   }
 
   @Override
@@ -39,8 +39,11 @@ public class ReviewPickEntityRepository implements ReviewPickRepository {
   }
 
   @Override
-  public boolean read(long memberId, long reviewId) {
-    return repository.existsByMemberEntityMemberIdAndReviewEntityReviewId(memberId, reviewId);
+  public ReviewPick read(long memberId, long reviewId) {
+    return converter.toModel(
+        repository
+            .findByMemberEntityMemberIdAndReviewEntityReviewId(memberId, reviewId)
+            .orElseThrow(() -> new NoSuchEntityException("존재하지 않는 서평픽입니다.")));
   }
 
   @Override
