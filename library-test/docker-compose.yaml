@@ -1,0 +1,31 @@
+services:
+  grafana:
+    image: grafana/grafana:main
+    container_name: performance-grafana
+    ports:
+      - '3030:3030'
+    volumes:
+      - ./grafana-provisioning:/etc/grafana/provisioning
+      - ./grafana-dashboard:/dashboard
+
+  prometheus:
+    image: prom/prometheus:main
+    container_name: performance-prometheus
+    ports:
+      - '9099:9099'
+    command:
+      - --web.enable-remote-write-receiver
+      - --enable-feature=native-histograms
+      - --config.file=/etc/prometheus/prometheus.yml
+
+  k6:
+    image: grafana/k6:latest
+    container_name: performance-k6
+    volumes:
+      - ./scripts:/scripts
+    command: run -o experimental-prometheus-rw /scripts/PostReviewPickConcurrencyTest.js
+    environment:
+      - K6_PROMETHEUS_RW_SERVER_URL=http://prometheus:9099/api/v1/write
+      - K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM=true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
