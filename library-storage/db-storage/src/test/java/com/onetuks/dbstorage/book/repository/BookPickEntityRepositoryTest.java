@@ -11,6 +11,7 @@ import com.onetuks.librarydomain.MemberFixture;
 import com.onetuks.librarydomain.book.model.BookPick;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.libraryobject.enums.RoleType;
+import com.onetuks.libraryobject.exception.NoSuchEntityException;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 class BookPickEntityRepositoryTest extends DbStorageIntegrationTest {
 
@@ -143,6 +143,6 @@ class BookPickEntityRepositoryTest extends DbStorageIntegrationTest {
             () ->
                 bookPickEntityRepository.read(
                     bookPick.member().memberId(), bookPick.book().bookId()))
-        .isInstanceOf(JpaObjectRetrievalFailureException.class);
+        .isInstanceOf(NoSuchEntityException.class);
   }
 }

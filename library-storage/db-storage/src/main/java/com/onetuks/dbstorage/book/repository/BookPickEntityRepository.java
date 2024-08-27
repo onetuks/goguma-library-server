@@ -4,7 +4,6 @@ import com.onetuks.dbstorage.book.converter.BookPickConverter;
 import com.onetuks.librarydomain.book.model.BookPick;
 import com.onetuks.librarydomain.book.repository.BookPickRepository;
 import com.onetuks.libraryobject.exception.NoSuchEntityException;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
