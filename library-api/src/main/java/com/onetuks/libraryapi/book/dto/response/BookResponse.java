@@ -3,6 +3,7 @@ package com.onetuks.libraryapi.book.dto.response;
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.book.model.BookPick;
 import com.onetuks.libraryobject.enums.Category;
+import java.time.LocalDateTime;
 import java.util.Set;
 import org.springframework.data.domain.Page;
 
@@ -16,7 +17,9 @@ public record BookResponse(
     Set<Category> categories,
     String coverImageUrl,
     boolean isIndie,
-    boolean isPermitted) {
+    boolean isPermitted,
+    long pickCounts,
+    LocalDateTime createdAt) {
 
   public static BookResponse from(Book book) {
     return new BookResponse(
@@ -29,7 +32,9 @@ public record BookResponse(
         book.categories(),
         book.coverImageFile().getUrl(),
         book.isIndie(),
-        book.isPermitted());
+        book.isPermitted(),
+        book.pickCounts(),
+        book.createdAt());
   }
 
   public record BookResponses(Page<BookResponse> responses) {

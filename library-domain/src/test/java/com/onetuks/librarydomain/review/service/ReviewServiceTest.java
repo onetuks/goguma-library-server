@@ -41,9 +41,8 @@ class ReviewServiceTest extends DomainIntegrationTest {
   @DisplayName("서평을 등록하면 포인트가 지급되며, 서평 카테고리 통계와 서평수 통계가 업데이트된다.")
   void register_CreditPointByBook_Test() {
     // Given
-    Review beforeReview =
-        ReviewFixture.create(
-            101L, MemberFixture.create(101L, RoleType.USER), BookFixture.create(101L));
+    Member member = MemberFixture.create(101L, RoleType.USER);
+    Review beforeReview = ReviewFixture.create(101L, member, BookFixture.create(101L, member));
     ReviewParam param = new ReviewParam("서평제목", "서평본문");
     Member picker =
         beforeReview.member().increaseReviewCategoryStatics(beforeReview.book().categories());
@@ -107,9 +106,8 @@ class ReviewServiceTest extends DomainIntegrationTest {
   @DisplayName("서평을 수정한다.")
   void edit_Test() {
     // Given
-    Review before =
-        ReviewFixture.create(
-            102L, MemberFixture.create(102L, RoleType.USER), BookFixture.create(102L));
+    Member member = MemberFixture.create(102L, RoleType.USER);
+    Review before = ReviewFixture.create(102L, member, BookFixture.create(102L, member));
     ReviewParam param = new ReviewParam("수정된 서평제목", "수정된 서평본문");
     Review after =
         new Review(
@@ -145,9 +143,8 @@ class ReviewServiceTest extends DomainIntegrationTest {
   void edit_NotAuth_Exception() {
     // Given
     long notAuthLoginId = 1L;
-    Review review =
-        ReviewFixture.create(
-            102L, MemberFixture.create(102L, RoleType.USER), BookFixture.create(102L));
+    Member member = MemberFixture.create(103L, RoleType.USER);
+    Review review = ReviewFixture.create(103L, member, BookFixture.create(103L, member));
     ReviewParam param = new ReviewParam("수정된 서평제목", "수정된 서평본문");
 
     given(reviewRepository.read(review.reviewId())).willReturn(review);
@@ -161,8 +158,8 @@ class ReviewServiceTest extends DomainIntegrationTest {
   @DisplayName("서평을 삭제하면 포인트가 15P 차감되고, 서평 카테고리 통계와 서평수 통계가 업데이트된다.")
   void remove_DebitPoint_Test() {
     // Given
-    Member picker = MemberFixture.create(102L, RoleType.USER);
-    Review review = ReviewFixture.create(102L, picker, BookFixture.create(102L));
+    Member picker = MemberFixture.create(104L, RoleType.USER);
+    Review review = ReviewFixture.create(104L, picker, BookFixture.create(104L, picker));
 
     given(reviewRepository.read(review.reviewId())).willReturn(review);
 
@@ -178,9 +175,8 @@ class ReviewServiceTest extends DomainIntegrationTest {
   @DisplayName("서평을 조회한다.")
   void search_Test() {
     // Given
-    Review review =
-        ReviewFixture.create(
-            103L, MemberFixture.create(103L, RoleType.USER), BookFixture.create(103L));
+    Member member = MemberFixture.create(105L, RoleType.USER);
+    Review review = ReviewFixture.create(105L, member, BookFixture.create(105L, member));
 
     given(reviewRepository.read(review.reviewId())).willReturn(review);
 
@@ -201,11 +197,11 @@ class ReviewServiceTest extends DomainIntegrationTest {
         new PageImpl<>(
             IntStream.range(0, 10)
                 .mapToObj(
-                    i ->
-                        ReviewFixture.create(
-                            (long) i,
-                            MemberFixture.create((long) i, RoleType.USER),
-                            BookFixture.create((long) i)))
+                    i -> {
+                      Member member = MemberFixture.create((long) i, RoleType.USER);
+                      return ReviewFixture.create(
+                          (long) i, member, BookFixture.create((long) i, member));
+                    })
                 .toList());
 
     given(reviewRepository.readAll(sortBy, pageable)).willReturn(reviews);
@@ -223,7 +219,7 @@ class ReviewServiceTest extends DomainIntegrationTest {
     // Given
     Pageable pageable = PageRequest.of(0, 10);
     SortBy sortBy = SortBy.PICK;
-    Book book = BookFixture.create(123L);
+    Book book = BookFixture.create(123L, MemberFixture.create(123L, RoleType.USER));
     Page<Review> reviews =
         new PageImpl<>(
             IntStream.range(0, 10)
@@ -253,7 +249,10 @@ class ReviewServiceTest extends DomainIntegrationTest {
     Page<Review> reviews =
         new PageImpl<>(
             IntStream.range(0, 10)
-                .mapToObj(i -> ReviewFixture.create((long) i, member, BookFixture.create((long) i)))
+                .mapToObj(
+                    i ->
+                        ReviewFixture.create(
+                            (long) i, member, BookFixture.create((long) i, member)))
                 .toList());
 
     given(reviewRepository.readAll(member.memberId(), pageable)).willReturn(reviews);
@@ -277,7 +276,9 @@ class ReviewServiceTest extends DomainIntegrationTest {
         new PageImpl<>(
             IntStream.range(0, 10)
                 .mapToObj(
-                    i -> WeeklyFeaturedBookFixture.create((long) i, BookFixture.create((long) i)))
+                    i ->
+                        WeeklyFeaturedBookFixture.create(
+                            (long) i, BookFixture.create((long) i, member)))
                 .toList());
     PageImpl<Review> reviews =
         new PageImpl<>(

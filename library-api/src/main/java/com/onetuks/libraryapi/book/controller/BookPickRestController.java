@@ -69,11 +69,12 @@ public class BookPickRestController {
    * @return : 북픽 여부
    */
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Boolean> getMyBookPick(
+  public ResponseEntity<BookPickResponse> getMyBookPick(
       @LoginId Long loginId, @RequestParam(name = "book-id") Long bookId) {
-    boolean result = bookPickService.searchExistence(loginId, bookId);
+    BookPick result = bookPickService.searchExistence(loginId, bookId);
+    BookPickResponse response = BookPickResponse.from(result);
 
-    return ResponseEntity.status(HttpStatus.OK).body(result);
+    return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
   /**

@@ -9,9 +9,11 @@ import static org.mockito.BDDMockito.verify;
 
 import com.onetuks.librarydomain.BookFixture;
 import com.onetuks.librarydomain.DomainIntegrationTest;
+import com.onetuks.librarydomain.MemberFixture;
 import com.onetuks.librarydomain.WeeklyFeaturedBookFixture;
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.weekly.model.WeeklyFeaturedBook;
+import com.onetuks.libraryobject.enums.RoleType;
 import java.util.List;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +31,9 @@ class WeeklyFeaturedBookServiceTest extends DomainIntegrationTest {
     // Given
     Pageable pageable = PageRequest.of(0, 3);
     List<Book> allBooks =
-        IntStream.range(0, 10).mapToObj(i -> BookFixture.create((long) i)).toList();
+        IntStream.range(0, 10)
+            .mapToObj(i -> BookFixture.create((long) i, MemberFixture.create(123L, RoleType.USER)))
+            .toList();
     List<WeeklyFeaturedBook> allWeeklyFeaturedBooks =
         IntStream.range(0, 5)
             .mapToObj(i -> WeeklyFeaturedBookFixture.create(101L, allBooks.get(i)))
@@ -57,7 +61,11 @@ class WeeklyFeaturedBookServiceTest extends DomainIntegrationTest {
         new PageImpl<>(
             IntStream.range(0, count)
                 .mapToObj(
-                    i -> WeeklyFeaturedBookFixture.create((long) i, BookFixture.create((long) i)))
+                    i ->
+                        WeeklyFeaturedBookFixture.create(
+                            (long) i,
+                            BookFixture.create(
+                                (long) i, MemberFixture.create(123L, RoleType.USER))))
                 .toList());
 
     given(weeklyFeaturedBookRepository.readAllForThisWeek()).willReturn(weeklyFeaturedBooks);

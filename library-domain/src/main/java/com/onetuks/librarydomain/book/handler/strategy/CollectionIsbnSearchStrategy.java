@@ -35,7 +35,7 @@ public class CollectionIsbnSearchStrategy implements IsbnSearchStrategy {
       "https://www.nl.go.kr/NL/search/openApi/search.do";
 
   @Override
-  public IsbnResult process(String isbn) {
+  public IsbnResult process(String isbn) throws IllegalStateException {
     return webClient
         .get()
         .uri(uriBuilder.buildUri(COLLECTION_QUERY_URL, buildMultiValueMap(isbn)))

@@ -1,10 +1,12 @@
 package com.onetuks.libraryapi.attendance.controller;
 
 import com.onetuks.libraryapi.attendance.dto.response.AttendanceResponse;
+import com.onetuks.libraryapi.attendance.dto.response.AttendanceResponse.AttendanceResponses;
 import com.onetuks.libraryauth.util.LoginId;
 import com.onetuks.librarydomain.attendance.model.Attendance;
 import com.onetuks.librarydomain.attendance.service.AttendanceService;
 import java.time.LocalDate;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,6 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,5 +53,15 @@ public class AttendanceRestController {
     log.info("[출석] 출석 등록 - memberId: {}, date: {}", loginId, date);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
+  }
+
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<AttendanceResponses> getThisMonthAttendances(
+      @LoginId Long loginId,
+      @RequestParam(name = "date") @DateTimeFormat(iso = ISO.DATE) LocalDate date) {
+    List<Attendance> results = attendanceService.searchAllThisMonthAttendances(loginId, date);
+    AttendanceResponses responses = AttendanceResponses.from(results);
+
+    return ResponseEntity.ok(responses);
   }
 }

@@ -1,5 +1,6 @@
 dependencies {
     // Module
+    compileOnly(project(':library-auth'))
     compileOnly(project(':library-domain'))
     implementation(project(':library-storage:db-storage'))
     implementation(project(':library-object'))

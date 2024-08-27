@@ -45,12 +45,15 @@ public class BookService {
   public Book register(long loginId, BookPostParam param, MultipartFile coverImage) {
     Book book =
         Book.of(
+            memberRepository.read(loginId),
             param.title(),
             param.authorName(),
+            param.introduction(),
             param.isbn(),
             param.publisher(),
             param.categories(),
             param.isIndie(),
+            param.coverImageFilename(),
             coverImage);
 
     pointService.creditPointForBookRegistration(loginId);
@@ -73,6 +76,7 @@ public class BookService {
                 param.categories(),
                 param.isIndie(),
                 param.isPermitted(),
+                param.coverImageFilename(),
                 coverImage));
   }
 
@@ -81,6 +85,8 @@ public class BookService {
     Book book = bookRepository.read(bookId);
 
     fileRepository.deleteFile(book.coverImageFile());
+    pointService.debitPointForBookRemoval(book.member().memberId());
+
     bookRepository.delete(bookId);
   }
 

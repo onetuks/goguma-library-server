@@ -31,7 +31,11 @@ class MemberFacadeServiceTest extends DomainIntegrationTest {
         new PageImpl<>(
             IntStream.range(0, count)
                 .mapToObj(
-                    i -> WeeklyFeaturedBookFixture.create((long) i, BookFixture.create((long) i)))
+                    i ->
+                        WeeklyFeaturedBookFixture.create(
+                            (long) i,
+                            BookFixture.create(
+                                (long) i, MemberFixture.create((long) i, RoleType.USER))))
                 .toList());
     Page<Review> weeklyMostPickedReviews =
         new PageImpl<>(

@@ -13,7 +13,7 @@ public interface FollowRepository {
 
   Follow read(long followId);
 
-  boolean readExistence(long followerId, long followeeId);
+  Follow readExistence(long followerId, long followeeId);
 
   Page<Member> readAllFollowers(long memberId, Pageable pageable);
 

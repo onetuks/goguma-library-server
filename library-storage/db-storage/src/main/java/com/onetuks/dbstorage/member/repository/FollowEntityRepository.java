@@ -6,7 +6,7 @@ import com.onetuks.dbstorage.member.entity.FollowEntity;
 import com.onetuks.librarydomain.member.model.Follow;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.member.repository.FollowRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.onetuks.libraryobject.exception.NoSuchEntityException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -37,12 +37,15 @@ public class FollowEntityRepository implements FollowRepository {
     return followConverter.toModel(
         repository
             .findById(followId)
-            .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 팔로우십입니다.")));
+            .orElseThrow(() -> new NoSuchEntityException("존재하지 않는 팔로우십입니다.")));
   }
 
   @Override
-  public boolean readExistence(long followerId, long followeeId) {
-    return repository.existsByFollowerMemberIdAndFolloweeMemberId(followerId, followeeId);
+  public Follow readExistence(long followerId, long followeeId) {
+    return followConverter.toModel(
+        repository
+            .findByFollowerMemberIdAndFolloweeMemberId(followerId, followeeId)
+            .orElseThrow(() -> new NoSuchEntityException("존재하지 않는 팔로우입니다.")));
   }
 
   @Override

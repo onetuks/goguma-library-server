@@ -10,6 +10,7 @@ import com.onetuks.librarydomain.review.repository.ReviewRepository;
 import com.onetuks.libraryobject.enums.CacheName;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
 import java.util.Objects;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,6 +48,7 @@ public class ReviewPickService {
     return reviewPickRepository.create(new ReviewPick(null, picker, review));
   }
 
+  @CacheEvict(value = CacheName.REVIEW_PICKS, allEntries = true)
   @Transactional
   public void remove(long loginId, long reviewPickId) {
     Member picker = memberRepository.read(loginId);
@@ -69,7 +71,12 @@ public class ReviewPickService {
 
   @Cacheable(value = CacheName.REVIEW_PICKS, key = "#loginId" + "-" + "#reviewId")
   @Transactional(readOnly = true)
-  public boolean searchExistence(long loginId, long reviewId) {
+  public ReviewPick searchExistence(long loginId, long reviewId) {
     return reviewPickRepository.read(loginId, reviewId);
+  }
+
+  @Transactional(readOnly = true)
+  public Long searchCount(long loginId, long reviewId) {
+    return reviewPickRepository.readCount(loginId, reviewId);
   }
 }

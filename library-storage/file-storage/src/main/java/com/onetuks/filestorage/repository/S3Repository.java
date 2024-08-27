@@ -47,7 +47,7 @@ public class S3Repository implements FileRepository {
 
   @Override
   public void deleteFile(ImageFile imageFile) {
-    if (imageFile.isDefault()) {
+    if (ImageFile.isDefault(imageFile.fileName())) {
       return;
     }
 
@@ -63,7 +63,7 @@ public class S3Repository implements FileRepository {
   }
 
   public File getFile(ImageFile imageFile) {
-    File file = new File("src/test/resources/static" + imageFile.getKey());
+    File file = new File("src/test/resources/static/" + imageFile.getKey());
 
     try {
       ResponseInputStream<GetObjectResponse> res =

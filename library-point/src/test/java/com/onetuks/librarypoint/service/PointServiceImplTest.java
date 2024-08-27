@@ -1,21 +1,25 @@
 package com.onetuks.librarypoint.service;
 
-import static com.onetuks.librarydomain.global.point.service.PointService.ATTENDANCE_10_DAYS_POINT;
-import static com.onetuks.librarydomain.global.point.service.PointService.ATTENDANCE_30_DAYS_POINT;
-import static com.onetuks.librarydomain.global.point.service.PointService.ATTENDANCE_3_DAYS_POINT;
-import static com.onetuks.librarydomain.global.point.service.PointService.ATTENDANCE_5_DAYS_POINT;
-import static com.onetuks.librarydomain.global.point.service.PointService.ATTENDANCE_DAILY_POINT;
+import static com.onetuks.librarypoint.service.model.vo.Activity.ACTIVITY_10_DAYS;
+import static com.onetuks.librarypoint.service.model.vo.Activity.ACTIVITY_30_DAYS;
+import static com.onetuks.librarypoint.service.model.vo.Activity.ATTENDANCE_3_DAYS;
+import static com.onetuks.librarypoint.service.model.vo.Activity.ATTENDANCE_5_DAYS;
+import static com.onetuks.librarypoint.service.model.vo.Activity.ATTENDANCE_DAILY;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.onetuks.dbstorage.member.entity.MemberEntity;
-import com.onetuks.librarydomain.global.point.service.PointService;
 import com.onetuks.librarypoint.CorePointIntegrationTest;
 import com.onetuks.librarypoint.fixture.MemberEntityFixture;
 import com.onetuks.librarypoint.repository.entity.DailyPointLimit;
+import com.onetuks.librarypoint.service.model.PointHistory;
+import com.onetuks.librarypoint.service.model.vo.Activity;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 class PointServiceImplTest extends CorePointIntegrationTest {
 
@@ -30,10 +34,26 @@ class PointServiceImplTest extends CorePointIntegrationTest {
   @DisplayName("도서 등록 시 20포인트를 지급한다.")
   void creditPointForBookRegistration_Credit20Point_Test() {
     // Given
-    long expected = memberEntity.getPoints() + PointService.BOOK_REGISTRATION_POINT;
+    long expected = memberEntity.getPoints() + Activity.BOOK_REGISTRATION.getPoints();
 
     // When
     pointService.creditPointForBookRegistration(memberEntity.getMemberId());
+
+    // Then
+    long result =
+        memberEntityJpaRepository.findById(memberEntity.getMemberId()).orElseThrow().getPoints();
+
+    assertThat(result).isEqualTo(expected);
+  }
+
+  @Test
+  @DisplayName("도서 등록이 취소되면 20포인트를 차감한다.")
+  void debitPointForBookRemoval_Debit20Point_Test() {
+    // Given
+    long expected = memberEntity.getPoints() + Activity.BOOK_REGISTRATION.getNegativePoints();
+
+    // When
+    pointService.debitPointForBookRemoval(memberEntity.getMemberId());
 
     // Then
     long result =
@@ -47,7 +67,7 @@ class PointServiceImplTest extends CorePointIntegrationTest {
   void creditPointForReviewRegistration_IsNotWeeklyFeaturedBookCredit15Point_Test() {
     // Given
     boolean isWeeklyFeaturedBook = false;
-    long expected = memberEntity.getPoints() + PointService.REVIEW_REGISTRATION_BASE_POINT;
+    long expected = memberEntity.getPoints() + Activity.REVIEW_REGISTRATION_BASE.getPoints();
 
     // When
     pointService.creditPointForReviewRegistration(memberEntity.getMemberId(), isWeeklyFeaturedBook);
@@ -64,7 +84,7 @@ class PointServiceImplTest extends CorePointIntegrationTest {
   void creditPointForReviewRegistration_IsWeeklyFeaturedBookCredit30Point_Test() {
     // Given
     boolean isWeeklyFeaturedBook = true;
-    long expected = memberEntity.getPoints() + PointService.REVIEW_REGISTRATION_EVENT_POINT;
+    long expected = memberEntity.getPoints() + Activity.REVIEW_REGISTRATION_EVENT.getPoints();
 
     // When
     pointService.creditPointForReviewRegistration(memberEntity.getMemberId(), isWeeklyFeaturedBook);
@@ -80,7 +100,8 @@ class PointServiceImplTest extends CorePointIntegrationTest {
   @DisplayName("서평 삭제 시 15포인트를 차감한다.")
   void debitPointForReviewRemoval_Debit15Point_Test() {
     // Given
-    long expected = memberEntity.getPoints() - PointService.REVIEW_REGISTRATION_BASE_POINT;
+    long expected =
+        memberEntity.getPoints() + Activity.REVIEW_REGISTRATION_BASE.getNegativePoints();
 
     // When
     pointService.debitPointForReviewRemoval(memberEntity.getMemberId());
@@ -99,8 +120,8 @@ class PointServiceImplTest extends CorePointIntegrationTest {
     MemberEntity picker = memberEntityJpaRepository.save(MemberEntityFixture.create());
     MemberEntity receiver = memberEntityJpaRepository.save(MemberEntityFixture.create());
 
-    long expectedPickerPoint = picker.getPoints() + PointService.REVIEW_PICK_PICKER_POINT;
-    long expectedReceiverPoint = receiver.getPoints() + PointService.REVIEW_PICK_RECEIVER_POINT;
+    long expectedPickerPoint = picker.getPoints() + Activity.REVIEW_PICK_PICKER.getPoints();
+    long expectedReceiverPoint = receiver.getPoints() + Activity.REVIEW_PICK_RECEIVER.getPoints();
     int expectedPickerCreditCount = 1;
 
     // When
@@ -155,7 +176,7 @@ class PointServiceImplTest extends CorePointIntegrationTest {
     // Given
     MemberEntity picker = memberEntityJpaRepository.save(MemberEntityFixture.create());
 
-    long expectedPoint = picker.getPoints() - PointService.REVIEW_PICK_PICKER_POINT;
+    long expectedPoint = picker.getPoints() + Activity.REVIEW_PICK_PICKER.getNegativePoints();
     int expectedCount = 2;
 
     dailyPointLimitRepository.save(new DailyPointLimit(picker.getMemberId(), expectedCount + 1));
@@ -201,7 +222,7 @@ class PointServiceImplTest extends CorePointIntegrationTest {
   @DisplayName("누적 출석일이 없는 경우 기본 1포인트만 지급한다.")
   void creditPointForAttendance_Daily1Point_Test() {
     // Given
-    long expectedPoint = memberEntity.getPoints() + ATTENDANCE_DAILY_POINT;
+    long expectedPoint = memberEntity.getPoints() + ATTENDANCE_DAILY.getPoints();
 
     // When
     pointService.creditPointForAttendance(memberEntity.getMemberId(), 1);
@@ -218,11 +239,11 @@ class PointServiceImplTest extends CorePointIntegrationTest {
   void creditPointForAttendance_3Days_Test() {
     // Given
     long expectedPoint =
-        memberEntity.getPoints() + ATTENDANCE_DAILY_POINT + ATTENDANCE_3_DAYS_POINT;
+        memberEntity.getPoints() + ATTENDANCE_DAILY.getPoints() + ATTENDANCE_3_DAYS.getPoints();
 
     // When
     pointService.creditPointForAttendance(
-        memberEntity.getMemberId(), (int) ATTENDANCE_3_DAYS_POINT);
+        memberEntity.getMemberId(), (int) ATTENDANCE_3_DAYS.getPoints());
 
     // Then
     long result =
@@ -236,11 +257,11 @@ class PointServiceImplTest extends CorePointIntegrationTest {
   void creditPointForAttendance_5Days_Test() {
     // Given
     long expectedPoint =
-        memberEntity.getPoints() + ATTENDANCE_DAILY_POINT + ATTENDANCE_5_DAYS_POINT;
+        memberEntity.getPoints() + ATTENDANCE_DAILY.getPoints() + ATTENDANCE_5_DAYS.getPoints();
 
     // When
     pointService.creditPointForAttendance(
-        memberEntity.getMemberId(), (int) ATTENDANCE_5_DAYS_POINT);
+        memberEntity.getMemberId(), (int) ATTENDANCE_5_DAYS.getPoints());
 
     // Then
     long result =
@@ -254,11 +275,11 @@ class PointServiceImplTest extends CorePointIntegrationTest {
   void creditPointForAttendance_10Days_Test() {
     // Given
     long expectedPoint =
-        memberEntity.getPoints() + ATTENDANCE_DAILY_POINT + ATTENDANCE_10_DAYS_POINT;
+        memberEntity.getPoints() + ATTENDANCE_DAILY.getPoints() + ACTIVITY_10_DAYS.getPoints();
 
     // When
     pointService.creditPointForAttendance(
-        memberEntity.getMemberId(), (int) ATTENDANCE_10_DAYS_POINT);
+        memberEntity.getMemberId(), (int) ACTIVITY_10_DAYS.getPoints());
 
     // Then
     long result =
@@ -272,16 +293,33 @@ class PointServiceImplTest extends CorePointIntegrationTest {
   void creditPointForAttendance_30Days_Test() {
     // Given
     long expectedPoint =
-        memberEntity.getPoints() + ATTENDANCE_DAILY_POINT + ATTENDANCE_30_DAYS_POINT;
+        memberEntity.getPoints() + ATTENDANCE_DAILY.getPoints() + ACTIVITY_30_DAYS.getPoints();
 
     // When
     pointService.creditPointForAttendance(
-        memberEntity.getMemberId(), (int) ATTENDANCE_30_DAYS_POINT);
+        memberEntity.getMemberId(), (int) ACTIVITY_30_DAYS.getPoints());
 
     // Then
     long result =
         memberEntityJpaRepository.findById(memberEntity.getMemberId()).orElseThrow().getPoints();
 
     assertThat(result).isEqualTo(expectedPoint);
+  }
+
+  @Test
+  @DisplayName("모든 포인트 내역을 조회한다.")
+  void searchAllPointHistory_Test() {
+    // Given
+    Pageable pageable = PageRequest.of(0, 10);
+    MemberEntity member = memberEntityJpaRepository.save(MemberEntityFixture.create());
+    IntStream.range(0, pageable.getPageSize())
+        .forEach(i -> pointService.creditPointForBookRegistration(member.getMemberId()));
+
+    // When
+    Page<PointHistory> results =
+        pointService.searchAllPointHistories(member.getMemberId(), pageable);
+
+    // Then
+    assertThat(results).hasSize(pageable.getPageSize());
   }
 }

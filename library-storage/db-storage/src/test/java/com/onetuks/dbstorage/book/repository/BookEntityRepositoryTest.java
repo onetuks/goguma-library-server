@@ -8,6 +8,7 @@ import com.onetuks.dbstorage.DbStorageIntegrationTest;
 import com.onetuks.librarydomain.BookFixture;
 import com.onetuks.librarydomain.MemberFixture;
 import com.onetuks.librarydomain.book.model.Book;
+import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.RoleType;
 import java.util.List;
@@ -26,7 +27,8 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("도서 엔티티를 생성한다.")
   void create() {
     // Given
-    Book book = BookFixture.create(null);
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
+    Book book = BookFixture.create(null, member);
 
     // When
     Book result = bookEntityRepository.create(book);
@@ -39,7 +41,8 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("도서 엔티티를 조회한다.")
   void read() {
     // Given
-    Book book = bookEntityRepository.create(BookFixture.create(null));
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
+    Book book = bookEntityRepository.create(BookFixture.create(null, member));
 
     // When
     Book result = bookEntityRepository.read(book.bookId());
@@ -54,9 +57,10 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
     // Given
     boolean inspectionMode = false;
     Pageable pageable = PageRequest.of(0, 10);
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     List<Book> books =
         IntStream.range(0, 10)
-            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null)))
+            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null, member)))
             .toList();
 
     // When
@@ -72,9 +76,10 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
     // Given
     boolean inspectionMode = true;
     Pageable pageable = PageRequest.of(0, 10);
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     List<Book> books =
         IntStream.range(0, 10)
-            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null)))
+            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null, member)))
             .toList();
     List<Book> permittedBooks =
         IntStream.range(0, 3)
@@ -91,6 +96,7 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
                           book.categories(),
                           book.isIndie(),
                           true,
+                          book.coverImageFile().fileName(),
                           book.coverImageFile().file()));
                 })
             .toList();
@@ -107,9 +113,10 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("키워드가 주어진 경우, 키워드를 포함하는 제목|저자|출판사를 가진 데이터를 모두 조회한다.")
   void readAll_WithKeyword_FindContainsTest() {
     // Given
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     List<Book> books =
         IntStream.range(0, 5)
-            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null)))
+            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null, member)))
             .toList();
     String keyword = books.getFirst().title();
     Pageable pageable = PageRequest.of(0, 10);
@@ -140,9 +147,10 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
   void readAll_WithOutKeyword_FindAllTest() {
     // Given
     Pageable pageable = PageRequest.of(0, 10);
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     List<Book> books =
         IntStream.range(0, 5)
-            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null)))
+            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null, member)))
             .toList();
 
     // When
@@ -164,7 +172,9 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
     IntStream.range(0, 5)
         .forEach(
             i -> {
-              Book book = BookFixture.create(null);
+              Member member =
+                  memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
+              Book book = BookFixture.create(null, member);
               bookEntityRepository.create(
                   book.changeBookInfo(
                       book.title(),
@@ -175,6 +185,7 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
                       interestedCategories,
                       book.isIndie(),
                       book.isPermitted(),
+                      book.coverImageFile().fileName(),
                       book.coverImageFile().file()));
             });
 
@@ -197,7 +208,9 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
     IntStream.range(0, 5)
         .forEach(
             i -> {
-              Book book = BookFixture.create(null);
+              Member member =
+                  memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
+              Book book = BookFixture.create(null, member);
               bookEntityRepository.create(
                   book.changeBookInfo(
                       book.title(),
@@ -208,6 +221,7 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
                       interestedCategories,
                       book.isIndie(),
                       book.isPermitted(),
+                      book.coverImageFile().fileName(),
                       book.coverImageFile().file()));
             });
 
@@ -223,9 +237,10 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
   void readAllNotIn_ExcludedPastFeaturedBooks_Test() {
     // Given
     int count = 3;
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     List<Book> allBooks =
         IntStream.range(0, 10)
-            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null)))
+            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null, member)))
             .toList();
     List<Book> pastFeaturedBooks = allBooks.subList(0, 5);
 
@@ -244,8 +259,9 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("도서 엔티티를 수정한다.")
   void update() {
     // Given
-    Book book = bookEntityRepository.create(BookFixture.create(null));
-    Book expected = BookFixture.create(book.bookId());
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
+    Book book = bookEntityRepository.create(BookFixture.create(null, member));
+    Book expected = BookFixture.create(book.bookId(), member);
 
     // When
     Book result = bookEntityRepository.update(expected);
@@ -270,7 +286,8 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("도서 엔티티를 제거한다.")
   void delete() {
     // Given
-    Book book = bookEntityRepository.create(BookFixture.create(null));
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
+    Book book = bookEntityRepository.create(BookFixture.create(null, member));
 
     // When
     bookEntityRepository.delete(book.bookId());

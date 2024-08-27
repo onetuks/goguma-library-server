@@ -1,6 +1,7 @@
 package com.onetuks.librarydomain;
 
 import com.onetuks.librarydomain.book.model.Book;
+import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.libraryobject.ImageFileFixture;
 import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.ImageType;
@@ -20,9 +21,10 @@ public class BookFixture {
   private static final List<String> AUTHOR_NAMES =
       List.of("빠니보틀", "곽튜브", "침착맨", "허니콤보", "김용명", "궤도", "셜록현준", "조승연", "별별역사");
 
-  public static Book create(Long bookId) {
+  public static Book create(Long bookId, Member member) {
     return new Book(
         bookId,
+        member,
         createTitle(),
         createAuthorName(),
         "소개글입니다.",

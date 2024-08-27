@@ -34,6 +34,6 @@ public class MultipartFileFixture {
   }
 
   private static Path getTestFilePath(ImageType imageType, String fileName) {
-    return Paths.get("src/test/resources/static" + imageType.getDirectoryPath() + fileName);
+    return Paths.get("src/test/resources/static/" + imageType.getDirectoryPath() + "/" + fileName);
   }
 }

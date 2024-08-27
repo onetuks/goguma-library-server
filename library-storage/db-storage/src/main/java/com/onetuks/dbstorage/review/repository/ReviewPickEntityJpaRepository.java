@@ -1,6 +1,7 @@
 package com.onetuks.dbstorage.review.repository;
 
 import com.onetuks.dbstorage.review.entity.ReviewPickEntity;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,5 +10,8 @@ public interface ReviewPickEntityJpaRepository extends JpaRepository<ReviewPickE
 
   Page<ReviewPickEntity> findAllByMemberEntityMemberId(long memberId, Pageable pageable);
 
-  boolean existsByMemberEntityMemberIdAndReviewEntityReviewId(long memberId, long reviewId);
+  Optional<ReviewPickEntity> findByMemberEntityMemberIdAndReviewEntityReviewId(
+      long memberId, long reviewId);
+
+  Long countByMemberEntityMemberIdAndReviewEntityReviewId(long loginId, long reviewId);
 }

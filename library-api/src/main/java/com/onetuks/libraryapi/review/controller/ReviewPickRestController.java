@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "/api/reviews/picks")
+@RequestMapping(path = "/api/reviews")
 public class ReviewPickRestController {
 
   private final ReviewPickService reviewPickService;
@@ -39,7 +39,7 @@ public class ReviewPickRestController {
    * @param reviewId : 서평 ID
    * @return : 서평픽 응답
    */
-  @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "/picks", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ReviewPickResponse> postNewReviewPick(
       @LoginId Long loginId, @RequestParam(name = "review-id") Long reviewId) {
     ReviewPick result = reviewPickService.register(loginId, reviewId);
@@ -55,7 +55,7 @@ public class ReviewPickRestController {
    * @param reviewPickId : 서평픽 ID
    * @return : 응답
    */
-  @DeleteMapping(path = "/{review-pick-id}")
+  @DeleteMapping(path = "/picks/{review-pick-id}")
   public ResponseEntity<Void> deleteReviewPick(
       @LoginId Long loginId, @PathVariable(name = "review-pick-id") Long reviewPickId) {
     reviewPickService.remove(loginId, reviewPickId);
@@ -70,7 +70,7 @@ public class ReviewPickRestController {
    * @param pageable : 페이지 정보
    * @return : 서평픽 목록
    */
-  @GetMapping(path = "/my-picks", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/picks/my-picks", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ReviewPageResponses> getMyReviewPicks(
       @LoginId Long loginId,
       @PageableDefault(sort = "reviewPickId", direction = Direction.DESC) Pageable pageable) {
@@ -87,10 +87,26 @@ public class ReviewPickRestController {
    * @param reviewId : 서평 ID
    * @return : 서평픽 여부
    */
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Boolean> getMyReviewPick(
-      @LoginId Long loginId, @RequestParam(name = "review-id") Long reviewId) {
-    boolean result = reviewPickService.searchExistence(loginId, reviewId);
+  @GetMapping(path = "/{review-id}/picks", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<ReviewPickResponse> getMyReviewPick(
+      @LoginId Long loginId, @PathVariable(name = "review-id") Long reviewId) {
+    ReviewPick result = reviewPickService.searchExistence(loginId, reviewId);
+    ReviewPickResponse response = ReviewPickResponse.from(result);
+
+    return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  /**
+   * 서평픽 카운트 조회
+   *
+   * @param loginId : 로그인 ID
+   * @param reviewId : 서평 ID
+   * @return : 서평픽 카운트
+   */
+  @GetMapping(path = "/{review-id}/picks/count", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Long> getMyReviewPickCount(
+      @LoginId Long loginId, @PathVariable(name = "review-id") Long reviewId) {
+    Long result = reviewPickService.searchCount(loginId, reviewId);
 
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }

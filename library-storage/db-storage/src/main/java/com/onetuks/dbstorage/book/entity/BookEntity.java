@@ -1,14 +1,19 @@
 package com.onetuks.dbstorage.book.entity;
 
 import com.onetuks.dbstorage.common.BaseCreatedEntity;
+import com.onetuks.dbstorage.member.entity.MemberEntity;
 import com.onetuks.libraryobject.annotation.Generated;
 import com.onetuks.libraryobject.enums.Category;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.util.Objects;
@@ -34,12 +39,17 @@ public class BookEntity extends BaseCreatedEntity {
   @Column(name = "book_id", nullable = false)
   private Long bookId;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "member_id", nullable = false)
+  private MemberEntity memberEntity;
+
   @Column(name = "title", nullable = false)
   private String title;
 
   @Column(name = "author_name", nullable = false)
   private String authorName;
 
+  @Lob
   @Column(name = "introduction")
   private String introduction;
 
@@ -67,6 +77,7 @@ public class BookEntity extends BaseCreatedEntity {
 
   public BookEntity(
       Long bookId,
+      MemberEntity memberEntity,
       String title,
       String authorName,
       String introduction,
@@ -78,6 +89,7 @@ public class BookEntity extends BaseCreatedEntity {
       Boolean isPermitted,
       Long pickCounts) {
     this.bookId = bookId;
+    this.memberEntity = memberEntity;
     this.title = title;
     this.authorName = authorName;
     this.introduction = introduction;

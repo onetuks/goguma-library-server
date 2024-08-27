@@ -21,6 +21,7 @@ import com.onetuks.libraryobject.enums.ImageType;
 import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.vo.ImageFile;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.IntStream;
@@ -39,15 +40,17 @@ class BookServiceTest extends DomainIntegrationTest {
   void register_WithCoverImage_Test() {
     // Given
     long loginId = 123L;
-    Book book = BookFixture.create(123L);
+    Book book = BookFixture.create(123L, MemberFixture.create(123L, RoleType.USER));
     BookPostParam param =
         new BookPostParam(
             book.title(),
             book.authorName(),
+            book.introduction(),
             book.isbn(),
             book.publisher(),
             book.categories(),
-            book.isIndie());
+            book.isIndie(),
+            book.coverImageFile().fileName());
 
     given(bookRepository.create(any(Book.class))).willReturn(book);
 
@@ -71,27 +74,32 @@ class BookServiceTest extends DomainIntegrationTest {
   }
 
   @Test
-  @DisplayName("표지 이미지 없이 도서 등록하면 기본 표지 이미지로 할당되어 등록된다.")
+  @DisplayName("표지 이미지와 표지 이미지 파일명 없이 도서 등록하면 기본 표지 이미지로 할당되어 등록된다.")
   void register_WithOutCoverImage_Test() {
     // Given
     long loginId = 123L;
-    Book book = BookFixture.create(123L);
+    Book book = BookFixture.create(123L, MemberFixture.create(123L, RoleType.USER));
     BookPostParam param =
         new BookPostParam(
             book.title(),
             book.authorName(),
+            book.introduction(),
             book.isbn(),
             book.publisher(),
             book.categories(),
-            book.isIndie());
+            book.isIndie(),
+            null);
     Book expected =
         Book.of(
+            book.member(),
             param.title(),
             param.authorName(),
+            param.introduction(),
             param.isbn(),
             param.publisher(),
             param.categories(),
             param.isIndie(),
+            param.coverImageFilename(),
             null);
 
     given(bookRepository.create(any(Book.class))).willReturn(expected);
@@ -103,7 +111,7 @@ class BookServiceTest extends DomainIntegrationTest {
     assertAll(
         () -> assertThat(result.title()).isEqualTo(book.title()),
         () -> assertThat(result.authorName()).isEqualTo(book.authorName()),
-        () -> assertThat(result.introduction()).isNull(),
+        () -> assertThat(result.introduction()).isEqualTo(book.introduction()),
         () ->
             assertThat(result.categories()).containsExactlyInAnyOrderElementsOf(book.categories()),
         () -> assertThat(result.isIndie()).isEqualTo(book.isIndie()),
@@ -120,7 +128,7 @@ class BookServiceTest extends DomainIntegrationTest {
   @DisplayName("커버 이미지 없이 도서 정보를 수정하면 커버 이미지 제외한 정보만 수정된다.")
   void edit_WithOutCoverImage_Test() {
     // Given
-    Book book = BookFixture.create(124L);
+    Book book = BookFixture.create(124L, MemberFixture.create(124L, RoleType.USER));
     BookPatchParam param =
         new BookPatchParam(
             "새로운 제목",
@@ -130,10 +138,12 @@ class BookServiceTest extends DomainIntegrationTest {
             "새로운 출판사",
             Set.of(Category.CARTOON, Category.NOVEL),
             true,
-            true);
+            true,
+            book.coverImageFile().fileName());
     Book updatedBook =
         new Book(
             book.bookId(),
+            book.member(),
             param.title(),
             param.authorName(),
             param.introduction(),
@@ -170,7 +180,7 @@ class BookServiceTest extends DomainIntegrationTest {
   @DisplayName("커버 이미지와 함께 수정하면 커버 이미지도 변경된다.")
   void edit_WithCoverImage_Test() {
     // Given
-    Book book = BookFixture.create(124L);
+    Book book = BookFixture.create(124L, MemberFixture.create(124L, RoleType.USER));
     BookPatchParam param =
         new BookPatchParam(
             "새로운 제목",
@@ -180,19 +190,24 @@ class BookServiceTest extends DomainIntegrationTest {
             "새로운 출판사",
             Set.of(Category.CARTOON, Category.NOVEL),
             true,
-            true);
+            true,
+            book.coverImageFile().fileName());
     MultipartFile coverImage =
         MultipartFileFixture.create(ImageType.COVER_IMAGE, UUID.randomUUID().toString());
     Book updatedBook =
         new Book(
             book.bookId(),
+            book.member(),
             param.title(),
             param.authorName(),
             param.introduction(),
             param.isbn(),
             param.publisher(),
             param.categories(),
-            ImageFile.of(ImageType.COVER_IMAGE, coverImage, book.coverImageFile().fileName()),
+            ImageFile.of(
+                ImageType.COVER_IMAGE,
+                Objects.requireNonNull(coverImage),
+                book.coverImageFile().fileName()),
             param.isIndie(),
             param.isPermitted(),
             book.pickCounts(),
@@ -223,7 +238,7 @@ class BookServiceTest extends DomainIntegrationTest {
   @DisplayName("도서를 삭제하면 커버 이미지도 함께 삭제된다. 기본 이미지면 삭제되지 않는다.")
   void removeTest() {
     // Given
-    Book book = BookFixture.create(125L);
+    Book book = BookFixture.create(125L, MemberFixture.create(123L, RoleType.USER));
 
     given(bookRepository.read(book.bookId())).willReturn(book);
 
@@ -244,7 +259,10 @@ class BookServiceTest extends DomainIntegrationTest {
     Pageable pageable = PageRequest.of(0, 10);
     Page<Book> books =
         new PageImpl<>(
-            IntStream.range(0, counts).mapToObj(i -> BookFixture.create((long) i)).toList());
+            IntStream.range(0, counts)
+                .mapToObj(
+                    i -> BookFixture.create((long) i, MemberFixture.create(123L, RoleType.USER)))
+                .toList());
 
     given(bookRepository.readAll(inspectionMode, pageable)).willReturn(books);
 
@@ -259,7 +277,7 @@ class BookServiceTest extends DomainIntegrationTest {
   @DisplayName("도서 ID로 도서를 조회한다.")
   void findTest() {
     // Given
-    Book book = BookFixture.create(126L);
+    Book book = BookFixture.create(126L, MemberFixture.create(123L, RoleType.USER));
 
     given(bookRepository.read(book.bookId())).willReturn(book);
 
@@ -277,7 +295,11 @@ class BookServiceTest extends DomainIntegrationTest {
   void findAll_WithKeyword_Test() {
     // Given
     Page<Book> books =
-        new PageImpl<>(IntStream.range(0, 5).mapToObj(i -> BookFixture.create((long) i)).toList());
+        new PageImpl<>(
+            IntStream.range(0, 5)
+                .mapToObj(
+                    i -> BookFixture.create((long) i, MemberFixture.create(123L, RoleType.USER)))
+                .toList());
     String keyword = books.getContent().getFirst().title();
     Pageable pageable = PageRequest.of(0, 10);
     List<String> keywordTokens = List.of(keyword.split(" "));
@@ -322,7 +344,9 @@ class BookServiceTest extends DomainIntegrationTest {
     int count = 3;
     Member member = MemberFixture.create(127L, RoleType.ADMIN);
     List<Book> allBooks =
-        IntStream.range(0, 5).mapToObj(i -> BookFixture.create((long) i)).toList();
+        IntStream.range(0, 5)
+            .mapToObj(i -> BookFixture.create((long) i, MemberFixture.create(123L, RoleType.USER)))
+            .toList();
     Page<Book> expected =
         new PageImpl<>(
             allBooks.stream()

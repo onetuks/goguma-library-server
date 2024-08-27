@@ -30,6 +30,18 @@ CREATE TABLE IF NOT EXISTS members
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='멤버 테이블';
 
+CREATE TABLE IF NOT EXISTS point_histories
+(
+    point_history_id BIGINT      NOT NULL AUTO_INCREMENT COMMENT '포인트 항목 식별자',
+    member_id        BIGINT      NOT NULL COMMENT '멤버 식별자',
+    activity         VARCHAR(50) NOT NULL COMMENT '포인트 내역 활동',
+    points           BIGINT      NOT NULL DEFAULT 0 COMMENT '포인트',
+    created_at       DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '포인트 내역일',
+    PRIMARY KEY (point_history_id),
+    FOREIGN KEY (member_id) REFERENCES members (member_id) ON DELETE CASCADE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='포인트 내역 테이블';
+
 CREATE TABLE IF NOT EXISTS badges
 (
     badge_id        BIGINT       NOT NULL AUTO_INCREMENT COMMENT '뱃지 식별자',
@@ -54,9 +66,10 @@ CREATE TABLE IF NOT EXISTS member_badges
 CREATE TABLE IF NOT EXISTS books
 (
     book_id         BIGINT       NOT NULL AUTO_INCREMENT COMMENT '책 식별자',
+    member_id       BIGINT       NOT NULL COMMENT '멤버 식별자',
     title           VARCHAR(255) NOT NULL COMMENT '책 제목',
     author_name     VARCHAR(100) NOT NULL COMMENT '저자 이름',
-    introduction    VARCHAR(5000) COMMENT '책 소개',
+    introduction    TEXT COMMENT '책 소개',
     isbn            VARCHAR(50) COMMENT '국제 표준 도서 번호', -- 13자
     publisher       VARCHAR(255) COMMENT '출판사',
     categories      JSON         NOT NULL COMMENT '카테고리',
@@ -66,6 +79,7 @@ CREATE TABLE IF NOT EXISTS books
     pick_counts     BIGINT       NOT NULL DEFAULT 0 COMMENT '도서픽 카운트',
     created_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '도서 등록일',
     PRIMARY KEY (book_id),
+    FOREIGN KEY (member_id) REFERENCES members (member_id),
     UNIQUE KEY unq_isbn (isbn)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='책 테이블';

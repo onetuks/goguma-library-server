@@ -34,11 +34,10 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("서평을 등록한다.")
   void create() {
     // Given
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     Review review =
         ReviewFixture.create(
-            null,
-            memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
-            bookEntityRepository.create(BookFixture.create(null)));
+            null, member, bookEntityRepository.create(BookFixture.create(null, member)));
 
     // When
     Review result = reviewEntityRepository.create(review);
@@ -57,12 +56,11 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("서평을 조회한다.")
   void read() {
     // Given
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     Review review =
         reviewEntityRepository.create(
             ReviewFixture.create(
-                null,
-                memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
-                bookEntityRepository.create(BookFixture.create(null))));
+                null, member, bookEntityRepository.create(BookFixture.create(null, member))));
 
     // When
     Review result = reviewEntityRepository.read(review.reviewId());
@@ -78,12 +76,13 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
     Pageable pageable = PageRequest.of(0, 10, Direction.DESC, "reviewId");
     IntStream.range(0, 10)
         .forEach(
-            i ->
-                reviewEntityRepository.create(
-                    ReviewFixture.create(
-                        null,
-                        memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
-                        bookEntityRepository.create(BookFixture.create(null)))));
+            i -> {
+              Member member =
+                  memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
+              reviewEntityRepository.create(
+                  ReviewFixture.create(
+                      null, member, bookEntityRepository.create(BookFixture.create(null, member))));
+            });
 
     // When
     Page<Review> results = reviewEntityRepository.readAll(SortBy.LATEST, pageable);
@@ -104,12 +103,14 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
     IntStream.range(0, 10)
         .forEach(
             i -> {
+              Member member =
+                  memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
               Review review =
                   reviewEntityRepository.create(
                       ReviewFixture.create(
                           null,
-                          memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
-                          bookEntityRepository.create(BookFixture.create(null))));
+                          member,
+                          bookEntityRepository.create(BookFixture.create(null, member))));
 
               IntStream.range(0, i * 2)
                   .forEach(
@@ -138,7 +139,8 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
     // Given
     int count = 10;
     Pageable pageable = PageRequest.of(0, 10);
-    Book book = bookEntityRepository.create(BookFixture.create(null));
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
+    Book book = bookEntityRepository.create(BookFixture.create(null, member));
     List<Review> reviews =
         IntStream.range(0, count)
             .mapToObj(
@@ -173,7 +175,8 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
     // Given
     int count = 10;
     Pageable pageable = PageRequest.of(0, 10);
-    Book book = bookEntityRepository.create(BookFixture.create(null));
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
+    Book book = bookEntityRepository.create(BookFixture.create(null, member));
     IntStream.range(0, count)
         .forEach(
             i -> {
@@ -214,7 +217,9 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
             i ->
                 reviewEntityRepository.create(
                     ReviewFixture.create(
-                        null, member, bookEntityRepository.create(BookFixture.create(null)))));
+                        null,
+                        member,
+                        bookEntityRepository.create(BookFixture.create(null, member)))));
 
     // When
     Page<Review> results = reviewEntityRepository.readAll(member.memberId(), pageable);
@@ -230,9 +235,10 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
   void readAll_OfBooks_Test() {
     // Given
     Pageable pageable = PageRequest.of(0, 3);
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     List<Book> thisWeekInterestedCategoriesBooks =
         IntStream.range(0, 3)
-            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null)))
+            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null, member)))
             .toList();
     thisWeekInterestedCategoriesBooks.forEach(
         book ->
@@ -261,9 +267,10 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
   void readAllWeeklyMostPicked_OnlyWeeklyFeaturedBookReview_OrderByPickCountDesc_Test() {
     // Given
     int count = 7;
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     List<Book> thisWeekFeaturedBooks =
         IntStream.range(0, 5)
-            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null)))
+            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null, member)))
             .toList();
     thisWeekFeaturedBooks.forEach(
         book -> {
@@ -305,9 +312,10 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
   void readAllWeeklyMostWrite_OnlyWeeklyFeaturedBookReview_OrderByWriteCount_Test() {
     // Given
     int count = 3;
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     List<Book> thisWeekFeaturedBooks =
         IntStream.range(0, 3)
-            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null)))
+            .mapToObj(i -> bookEntityRepository.create(BookFixture.create(null, member)))
             .toList();
     List<Member> members =
         IntStream.range(0, 4)
@@ -354,12 +362,11 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("서평을 수정한다.")
   void update() {
     // Given
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     Review review =
         reviewEntityRepository.create(
             ReviewFixture.create(
-                null,
-                memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
-                bookEntityRepository.create(BookFixture.create(null))));
+                null, member, bookEntityRepository.create(BookFixture.create(null, member))));
     Review updatingReview = ReviewFixture.create(review.reviewId(), review.member(), review.book());
 
     // When
@@ -379,12 +386,11 @@ class ReviewEntityRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("서평을 삭제한다.")
   void delete() {
     // Given
+    Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     Review review =
         reviewEntityRepository.create(
             ReviewFixture.create(
-                null,
-                memberEntityRepository.create(MemberFixture.create(null, RoleType.USER)),
-                bookEntityRepository.create(BookFixture.create(null))));
+                null, member, bookEntityRepository.create(BookFixture.create(null, member))));
 
     // When
     reviewEntityRepository.delete(review.reviewId());
