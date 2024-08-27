@@ -13,7 +13,9 @@ public record MemberPatchRequest(
     @Length(max = 30) String introduction,
     String instagramUrl,
     @Size(min = 1, max = 3) Set<Category> interestedCategories,
-    @NotNull boolean isAlarmAccepted) {
+    @NotNull boolean isAlarmAccepted,
+    String profileImageFilename,
+    String profileBackgroundImageFilename) {
 
   public MemberProfileParam to() {
     return new MemberProfileParam(
@@ -21,6 +23,8 @@ public record MemberPatchRequest(
         this.introduction(),
         this.instagramUrl(),
         this.interestedCategories(),
-        this.isAlarmAccepted());
+        this.isAlarmAccepted(),
+        this.profileImageFilename(),
+        this.profileBackgroundImageFilename());
   }
 }

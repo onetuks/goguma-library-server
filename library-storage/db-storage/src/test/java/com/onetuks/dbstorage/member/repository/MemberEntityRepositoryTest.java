@@ -86,7 +86,16 @@ class MemberEntityRepositoryTest extends DbStorageIntegrationTest {
     // Given
     Member member = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
     Member expected =
-        member.changeProfile("수정된 닉네임", "수정된 소개글", Set.of(Category.MAGAZINE), false, null, null);
+        member.changeProfile(
+            "수정된 닉네임",
+            "수정된 소개글",
+            "수정된 인스타",
+            Set.of(Category.MAGAZINE),
+            false,
+            member.profileImageFile().fileName(),
+            member.profileBackgroundImageFile().fileName(),
+            null,
+            null);
 
     // When
     Member result = memberEntityRepository.update(expected);

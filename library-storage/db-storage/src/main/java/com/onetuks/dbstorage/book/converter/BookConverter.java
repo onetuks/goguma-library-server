@@ -3,6 +3,7 @@ package com.onetuks.dbstorage.book.converter;
 import static com.onetuks.libraryobject.enums.ImageType.COVER_IMAGE;
 
 import com.onetuks.dbstorage.book.entity.BookEntity;
+import com.onetuks.dbstorage.member.converter.MemberConverter;
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.libraryobject.vo.ImageFile;
 import java.util.List;
@@ -11,9 +12,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class BookConverter {
 
+  private final MemberConverter memberConverter;
+
+  public BookConverter(MemberConverter memberConverter) {
+    this.memberConverter = memberConverter;
+  }
+
   public BookEntity toEntity(Book model) {
     return new BookEntity(
         model.bookId(),
+        memberConverter.toEntity(model.member()),
         model.title(),
         model.authorName(),
         model.introduction(),
@@ -33,6 +41,7 @@ public class BookConverter {
   public Book toModel(BookEntity entity) {
     return new Book(
         entity.getBookId(),
+        memberConverter.toModel(entity.getMemberEntity()),
         entity.getTitle(),
         entity.getAuthorName(),
         entity.getIntroduction(),

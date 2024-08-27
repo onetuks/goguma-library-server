@@ -4,7 +4,7 @@ public class UniqueColumnConstraintException extends IllegalArgumentException {
 
   public UniqueColumnConstraintException() {}
 
-  public UniqueColumnConstraintException(String s) {
-    super(s);
+  public UniqueColumnConstraintException(String message) {
+    super(message);
   }
 }

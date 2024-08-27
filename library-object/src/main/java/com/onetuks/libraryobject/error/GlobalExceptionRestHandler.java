@@ -2,6 +2,7 @@ package com.onetuks.libraryobject.error;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
+import com.onetuks.libraryobject.exception.NoSuchEntityException;
 import com.onetuks.libraryobject.exception.UniqueColumnConstraintException;
 import java.io.UncheckedIOException;
 import java.nio.file.NoSuchFileException;
@@ -22,6 +23,15 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionRestHandler {
+
+  @ExceptionHandler(NoSuchEntityException.class)
+  protected ResponseEntity<ErrorResponse> handleNoSuchEntityException(NoSuchEntityException e) {
+    logging(e);
+
+    final ErrorResponse response = ErrorResponse.of(ErrorCode.NOT_FOUND_ENTITY, e.getMessage());
+
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+  }
 
   /** 유니크 컬럼에 중복된 값을 넣으려고 하는 경우 - members, authors nickname col */
   @ExceptionHandler(UniqueColumnConstraintException.class)

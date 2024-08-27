@@ -8,4 +8,6 @@ public record MemberProfileParam(
     String introduction,
     String instagramUrl,
     Set<Category> interestedCategories,
-    boolean isAlarmAccepted) {}
+    boolean isAlarmAccepted,
+    String profileImageFilename,
+    String profileBackgroundImageFilename) {}

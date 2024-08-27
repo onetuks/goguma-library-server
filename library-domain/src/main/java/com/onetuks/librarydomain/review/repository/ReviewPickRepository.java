@@ -14,7 +14,9 @@ public interface ReviewPickRepository {
 
   Page<ReviewPick> readAll(long memberId, Pageable pageable);
 
-  boolean read(long memberId, long reviewId);
+  ReviewPick read(long memberId, long reviewId);
+
+  Long readCount(long loginId, long reviewId);
 
   void delete(long reviewPickId);
 }

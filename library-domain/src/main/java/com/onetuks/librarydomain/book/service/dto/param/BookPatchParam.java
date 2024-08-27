@@ -11,4 +11,5 @@ public record BookPatchParam(
     String publisher,
     Set<Category> categories,
     boolean isIndie,
-    boolean isPermitted) {}
+    boolean isPermitted,
+    String coverImageFilename) {}

@@ -12,7 +12,7 @@ public interface BookPickRepository {
 
   BookPick read(long bookPickId);
 
-  boolean read(long memberId, long bookId);
+  BookPick read(long memberId, long bookId);
 
   Page<BookPick> readAll(long memberId, Pageable pageable);
 

@@ -4,6 +4,7 @@ import com.onetuks.dbstorage.attendance.converter.AttendanceConverter;
 import com.onetuks.librarydomain.attendance.model.Attendance;
 import com.onetuks.librarydomain.attendance.repository.AttendanceRepository;
 import java.time.LocalDate;
+import java.util.List;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -27,5 +28,15 @@ public class AttendanceEntityRepository implements AttendanceRepository {
   public int readThisMonth(long loginId) {
     return repository.countByMemberEntityMemberIdAndAttendedAtGreaterThanEqual(
         loginId, LocalDate.now().withDayOfMonth(1));
+  }
+
+  @Override
+  public List<Attendance> readAllThisMonth(
+      long loginId, LocalDate startOfMonth, LocalDate endOfMonth) {
+    return repository
+        .findAllByMemberEntityMemberIdAndAttendedAtBetween(loginId, startOfMonth, endOfMonth)
+        .stream()
+        .map(converter::toModel)
+        .toList();
   }
 }
