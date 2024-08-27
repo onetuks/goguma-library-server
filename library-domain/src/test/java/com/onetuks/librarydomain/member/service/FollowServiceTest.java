@@ -116,15 +116,19 @@ class FollowServiceTest extends DomainIntegrationTest {
     // Given
     Member follower = MemberFixture.create(104L, RoleType.USER);
     Member followee = MemberFixture.create(204L, RoleType.USER);
+    Follow follow = FollowFixture.create(104L, follower, followee);
 
     given(followRepository.readExistence(follower.memberId(), followee.memberId()))
-        .willReturn(true);
+        .willReturn(follow);
 
     // When
-    boolean result = followService.searchExistence(follower.memberId(), followee.memberId());
+    Follow result = followService.searchExistence(follower.memberId(), followee.memberId());
 
     // Then
-    assertThat(result).isTrue();
+    assertAll(
+        () -> assertThat(result.followId()).isNotNull(),
+        () -> assertThat(result.follower().memberId()).isEqualTo(follow.follower().memberId()),
+        () -> assertThat(result.followee().memberId()).isEqualTo(follow.followee().memberId()));
   }
 
   @Test

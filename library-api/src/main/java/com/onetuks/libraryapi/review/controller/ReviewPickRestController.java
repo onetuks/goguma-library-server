@@ -98,6 +98,7 @@ public class ReviewPickRestController {
 
   /**
    * 서평픽 카운트 조회
+   *
    * @param loginId : 로그인 ID
    * @param reviewId : 서평 ID
    * @return : 서평픽 카운트

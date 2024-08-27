@@ -6,6 +6,7 @@ import com.onetuks.librarydomain.member.repository.FollowRepository;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
 import com.onetuks.libraryobject.enums.CacheName;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +38,7 @@ public class FollowService {
                 memberRepository.read(followeeId).increaseFollowerCountStatics())));
   }
 
+  @CacheEvict(value = CacheName.MEMBER_FOLLOWS, allEntries = true)
   @Transactional
   public void remove(long loginId, long followId) {
     Follow follow = followRepository.read(followId);
@@ -53,7 +55,7 @@ public class FollowService {
 
   @Cacheable(value = CacheName.MEMBER_FOLLOWS, key = "#loginId" + "-" + "#followeeId")
   @Transactional(readOnly = true)
-  public boolean searchExistence(long loginId, long followeeId) {
+  public Follow searchExistence(long loginId, long followeeId) {
     return followRepository.readExistence(loginId, followeeId);
   }
 

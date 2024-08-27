@@ -70,11 +70,12 @@ public class FollowRestController {
    * @return : 팔로우 여부
    */
   @GetMapping(path = "/members/follows", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Boolean> getMyFollow(
+  public ResponseEntity<FollowResponse> getMyFollow(
       @LoginId Long loginId, @RequestParam(name = "followee-id") Long followeeId) {
-    boolean result = followService.searchExistence(loginId, followeeId);
+    Follow result = followService.searchExistence(loginId, followeeId);
+    FollowResponse response = FollowResponse.from(result);
 
-    return ResponseEntity.status(HttpStatus.OK).body(result);
+    return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
   /**
