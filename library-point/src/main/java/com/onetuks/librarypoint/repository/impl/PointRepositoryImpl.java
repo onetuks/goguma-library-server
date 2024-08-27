@@ -41,7 +41,7 @@ public class PointRepositoryImpl implements PointRepository {
   }
 
   @Override
-  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  @Transactional(propagation = Propagation.REQUIRED)
   public void creditPointsWithLock(long memberId, Activity activity) {
     MemberEntity memberEntity =
         memberEntityJpaRepository
