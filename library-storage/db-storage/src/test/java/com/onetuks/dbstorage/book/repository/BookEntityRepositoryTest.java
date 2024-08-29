@@ -11,6 +11,7 @@ import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.RoleType;
+import com.onetuks.libraryobject.exception.NoSuchEntityException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.IntStream;
@@ -19,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 class BookEntityRepositoryTest extends DbStorageIntegrationTest {
 
@@ -294,6 +294,6 @@ class BookEntityRepositoryTest extends DbStorageIntegrationTest {
 
     // Then
     assertThatThrownBy(() -> bookEntityRepository.read(book.bookId()))
-        .isInstanceOf(JpaObjectRetrievalFailureException.class);
+        .isInstanceOf(NoSuchEntityException.class);
   }
 }

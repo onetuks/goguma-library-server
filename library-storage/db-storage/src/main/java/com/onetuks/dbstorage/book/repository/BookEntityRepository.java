@@ -7,7 +7,7 @@ import com.onetuks.dbstorage.book.entity.BookEntity;
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.book.repository.BookRepository;
 import com.onetuks.libraryobject.enums.Category;
-import jakarta.persistence.EntityNotFoundException;
+import com.onetuks.libraryobject.exception.NoSuchEntityException;
 import java.util.List;
 import java.util.Set;
 import org.springframework.data.domain.Page;
@@ -43,7 +43,7 @@ public class BookEntityRepository implements BookRepository {
     return converter.toModel(
         repository
             .findById(bookId)
-            .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 도서입니다.")));
+            .orElseThrow(() -> new NoSuchEntityException("존재하지 않는 도서입니다.")));
   }
 
   @Override

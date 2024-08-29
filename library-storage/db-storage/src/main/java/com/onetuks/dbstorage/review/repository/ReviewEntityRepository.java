@@ -8,6 +8,7 @@ import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.librarydomain.review.repository.ReviewRepository;
 import com.onetuks.libraryobject.enums.SortBy;
+import com.onetuks.libraryobject.exception.NoSuchEntityException;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -47,7 +48,7 @@ public class ReviewEntityRepository implements ReviewRepository {
     return converter.toModel(
         repository
             .findById(reviewId)
-            .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 서평입니다.")));
+            .orElseThrow(() -> new NoSuchEntityException("존재하지 않는 서평입니다.")));
   }
 
   @Override
@@ -55,7 +56,7 @@ public class ReviewEntityRepository implements ReviewRepository {
     return converter.toModel(
         repository
             .findByReviewId(reviewId)
-            .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사람입니다.")));
+            .orElseThrow(() -> new NoSuchEntityException("존재하지 않는 사람입니다.")));
   }
 
   @Override
