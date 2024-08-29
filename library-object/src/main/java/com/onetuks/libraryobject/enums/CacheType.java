@@ -9,7 +9,8 @@ public enum CacheType {
   REVIEW_FEED(CacheName.REVIEW_FEED, 60 * 20, 1_000),
   BOOK_PICKS(CacheName.BOOK_PICKS, 60 * 20, 1_000),
   REVIEW_PICKS(CacheName.REVIEW_PICKS, 60 * 20, 1_000),
-  MEMBER_FOLLOWS(CacheName.MEMBER_FOLLOWS, 60 * 20, 1_000);
+  MEMBER_FOLLOWS(CacheName.MEMBER_FOLLOWS, 60 * 20, 1_000),
+  SEARCHED_BOOKS(CacheName.SEARCHED_BOOKS, 60 * 20, 1_000);
 
   private final String cacheName;
   private final long expirationAfterWrite;
