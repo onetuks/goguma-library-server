@@ -88,8 +88,32 @@ public class ReviewEntityJpaQueryDslRepository {
     return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
   }
 
+  @Transactional(readOnly = true)
+  public Page<ReviewEntity> findAllByMemberId(long memberId, SortBy sortBy, Pageable pageable) {
+    List<ReviewEntity> content =
+        queryFactory
+            .selectFrom(reviewEntity)
+            .where(equalsToMemberId(memberId))
+            .orderBy(reviewOrderBy(sortBy))
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
+
+    JPAQuery<Long> countQuery =
+        queryFactory
+            .select(reviewEntity.count())
+            .where(equalsToMemberId(memberId))
+            .from(reviewEntity);
+
+    return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
+  }
+
   private BooleanExpression equalsToBookId(long bookId) {
     return reviewEntity.bookEntity.bookId.eq(bookId);
+  }
+
+  private BooleanExpression equalsToMemberId(long memberId) {
+    return reviewEntity.memberEntity.memberId.eq(memberId);
   }
 
   private BooleanExpression reviewPickedAfterLastMondayMidnight() {

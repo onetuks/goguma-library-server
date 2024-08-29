@@ -10,11 +10,11 @@ import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.ClientProvider;
 import com.onetuks.libraryobject.enums.RoleType;
+import com.onetuks.libraryobject.exception.NoSuchEntityException;
 import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 class MemberEntityRepositoryTest extends DbStorageIntegrationTest {
 
@@ -129,6 +129,6 @@ class MemberEntityRepositoryTest extends DbStorageIntegrationTest {
 
     // Then
     assertThatThrownBy(() -> memberEntityRepository.read(member.memberId()))
-        .isInstanceOf(JpaObjectRetrievalFailureException.class);
+        .isInstanceOf(NoSuchEntityException.class);
   }
 }

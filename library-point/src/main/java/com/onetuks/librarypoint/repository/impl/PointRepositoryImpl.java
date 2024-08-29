@@ -2,16 +2,15 @@ package com.onetuks.librarypoint.repository.impl;
 
 import com.onetuks.dbstorage.member.entity.MemberEntity;
 import com.onetuks.dbstorage.member.repository.MemberEntityJpaRepository;
+import com.onetuks.libraryobject.exception.NoSuchEntityException;
 import com.onetuks.librarypoint.repository.PointRepository;
 import com.onetuks.librarypoint.repository.converter.PointHistoryConverter;
 import com.onetuks.librarypoint.repository.entity.PointHistoryEntity;
 import com.onetuks.librarypoint.service.model.PointHistory;
 import com.onetuks.librarypoint.service.model.vo.Activity;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
@@ -41,12 +40,13 @@ public class PointRepositoryImpl implements PointRepository {
   }
 
   @Override
-  @Transactional(propagation = Propagation.REQUIRED)
+  // todo : 리시버 포인트 동시성 문제 해결
+//  @Transactional(propagation = Propagation.REQUIRED)
   public void creditPointsWithLock(long memberId, Activity activity) {
     MemberEntity memberEntity =
         memberEntityJpaRepository
             .findByMemberId(memberId)
-            .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
+            .orElseThrow(() -> new NoSuchEntityException("존재하지 않는 멤버입니다."));
     memberEntity.addPoints(activity.getPoints());
     pointHistoryEntityJpaRepository.save(
         new PointHistoryEntity(
@@ -73,6 +73,6 @@ public class PointRepositoryImpl implements PointRepository {
   private MemberEntity getMember(long memberId) {
     return memberEntityJpaRepository
         .findById(memberId)
-        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
+        .orElseThrow(() -> new NoSuchEntityException("존재하지 않는 멤버입니다."));
   }
 }

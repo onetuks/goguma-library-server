@@ -138,7 +138,7 @@ public class ReviewRestController {
       @PathVariable(name = "book-id") Long bookId,
       @RequestParam(name = "sort", required = false, defaultValue = "LATEST") SortBy sortBy,
       @PageableDefault(size = 3, sort = "reviewId", direction = Direction.DESC) Pageable pageable) {
-    Page<Review> results = reviewService.searchAll(bookId, sortBy, pageable);
+    Page<Review> results = reviewService.searchAllOfBook(bookId, sortBy, pageable);
     ReviewPageResponses responses = ReviewPageResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);
@@ -154,8 +154,9 @@ public class ReviewRestController {
   @GetMapping(path = "/member/{member-id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ReviewPageResponses> getReviewsOfMember(
       @PathVariable(name = "member-id") Long memberId,
+      @RequestParam(name = "sort", required = false, defaultValue = "LATEST") SortBy sortBy,
       @PageableDefault(size = 3, sort = "reviewId", direction = Direction.DESC) Pageable pageable) {
-    Page<Review> results = reviewService.searchAll(memberId, pageable);
+    Page<Review> results = reviewService.searchAllOfMember(memberId, sortBy, pageable);
     ReviewPageResponses responses = ReviewPageResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);

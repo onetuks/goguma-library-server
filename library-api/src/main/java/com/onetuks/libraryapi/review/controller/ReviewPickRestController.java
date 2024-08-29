@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -33,15 +32,19 @@ public class ReviewPickRestController {
   /**
    * 서평픽 등록
    *
-   * <p>- 00시 기준 일간 5회만 포인트 지급 - 서평픽커 1포인트 지급 - 서평리시버 5포인트 지급
+   * <p>- 00시 기준 일간 5회만 포인트 지급
+   *
+   * <p>- 서평픽커 1포인트 지급
+   *
+   * <p>- 서평리시버 5포인트 지급
    *
    * @param loginId : 로그인 ID
    * @param reviewId : 서평 ID
    * @return : 서평픽 응답
    */
-  @PostMapping(path = "/picks", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "/{review-id}/picks", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ReviewPickResponse> postNewReviewPick(
-      @LoginId Long loginId, @RequestParam(name = "review-id") Long reviewId) {
+      @LoginId Long loginId, @PathVariable(name = "review-id") Long reviewId) {
     ReviewPick result = reviewPickService.register(loginId, reviewId);
     ReviewPickResponse response = ReviewPickResponse.from(result);
 

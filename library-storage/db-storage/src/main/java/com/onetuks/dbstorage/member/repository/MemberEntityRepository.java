@@ -4,7 +4,7 @@ import com.onetuks.dbstorage.member.converter.MemberConverter;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
 import com.onetuks.libraryobject.enums.ClientProvider;
-import jakarta.persistence.EntityNotFoundException;
+import com.onetuks.libraryobject.exception.NoSuchEntityException;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
@@ -29,7 +29,7 @@ public class MemberEntityRepository implements MemberRepository {
     return converter.toModel(
         repository
             .findById(memberId)
-            .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다.")));
+            .orElseThrow(() -> new NoSuchEntityException("존재하지 않는 멤버입니다.")));
   }
 
   @Override
