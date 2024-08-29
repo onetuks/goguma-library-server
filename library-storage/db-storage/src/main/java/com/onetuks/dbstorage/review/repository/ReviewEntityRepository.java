@@ -9,7 +9,6 @@ import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.librarydomain.review.repository.ReviewRepository;
 import com.onetuks.libraryobject.enums.SortBy;
 import com.onetuks.libraryobject.exception.NoSuchEntityException;
-import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

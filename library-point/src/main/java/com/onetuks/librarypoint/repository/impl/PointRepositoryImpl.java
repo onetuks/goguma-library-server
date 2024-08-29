@@ -41,7 +41,7 @@ public class PointRepositoryImpl implements PointRepository {
 
   @Override
   // todo : 리시버 포인트 동시성 문제 해결
-//  @Transactional(propagation = Propagation.REQUIRED)
+  //  @Transactional(propagation = Propagation.REQUIRED)
   public void creditPointsWithLock(long memberId, Activity activity) {
     MemberEntity memberEntity =
         memberEntityJpaRepository

@@ -41,9 +41,7 @@ public class BookEntityRepository implements BookRepository {
   @Override
   public Book read(long bookId) {
     return converter.toModel(
-        repository
-            .findById(bookId)
-            .orElseThrow(() -> new NoSuchEntityException("존재하지 않는 도서입니다.")));
+        repository.findById(bookId).orElseThrow(() -> new NoSuchEntityException("존재하지 않는 도서입니다.")));
   }
 
   @Override
