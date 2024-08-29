@@ -21,6 +21,10 @@ public class FollowConverter {
   }
 
   public Follow toModel(FollowEntity entity) {
+    if (entity == null) {
+      return null;
+    }
+
     return new Follow(
         entity.getFollowId(),
         memberConverter.toModel(entity.getFollower()),

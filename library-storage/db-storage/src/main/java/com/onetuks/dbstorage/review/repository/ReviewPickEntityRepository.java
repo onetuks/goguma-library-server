@@ -43,7 +43,7 @@ public class ReviewPickEntityRepository implements ReviewPickRepository {
     return converter.toModel(
         repository
             .findByMemberEntityMemberIdAndReviewEntityReviewId(memberId, reviewId)
-            .orElseThrow(() -> new NoSuchEntityException("존재하지 않는 서평픽입니다.")));
+            .orElse(null));
   }
 
   @Override

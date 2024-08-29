@@ -24,6 +24,10 @@ public class BookPickConverter {
   }
 
   public BookPick toModel(BookPickEntity entity) {
+    if (entity == null) {
+      return null;
+    }
+
     return new BookPick(
         entity.getBookPickId(),
         memberConverter.toModel(entity.getMemberEntity()),

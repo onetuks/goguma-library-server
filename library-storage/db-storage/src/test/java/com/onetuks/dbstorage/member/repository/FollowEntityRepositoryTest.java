@@ -1,7 +1,6 @@
 package com.onetuks.dbstorage.member.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.dbstorage.DbStorageIntegrationTest;
@@ -10,7 +9,6 @@ import com.onetuks.librarydomain.MemberFixture;
 import com.onetuks.librarydomain.member.model.Follow;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.libraryobject.enums.RoleType;
-import com.onetuks.libraryobject.exception.NoSuchEntityException;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -145,10 +143,10 @@ class FollowEntityRepositoryTest extends DbStorageIntegrationTest {
     followEntityRepository.delete(follow.followId());
 
     // Then
-    assertThatThrownBy(
-            () ->
-                followEntityRepository.readExistence(
-                    follow.follower().memberId(), follow.followee().memberId()))
-        .isInstanceOf(NoSuchEntityException.class);
+    Follow result =
+        followEntityRepository.readExistence(
+            follow.follower().memberId(), follow.followee().memberId());
+
+    assertThat(result).isNull();
   }
 }
