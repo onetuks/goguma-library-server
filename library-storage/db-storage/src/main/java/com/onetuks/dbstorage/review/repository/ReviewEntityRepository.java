@@ -8,7 +8,7 @@ import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.librarydomain.review.repository.ReviewRepository;
 import com.onetuks.libraryobject.enums.SortBy;
-import jakarta.persistence.EntityNotFoundException;
+import com.onetuks.libraryobject.exception.NoSuchEntityException;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -47,7 +47,7 @@ public class ReviewEntityRepository implements ReviewRepository {
     return converter.toModel(
         repository
             .findById(reviewId)
-            .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 서평입니다.")));
+            .orElseThrow(() -> new NoSuchEntityException("존재하지 않는 서평입니다.")));
   }
 
   @Override
@@ -55,7 +55,7 @@ public class ReviewEntityRepository implements ReviewRepository {
     return converter.toModel(
         repository
             .findByReviewId(reviewId)
-            .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사람입니다.")));
+            .orElseThrow(() -> new NoSuchEntityException("존재하지 않는 사람입니다.")));
   }
 
   @Override
@@ -66,13 +66,13 @@ public class ReviewEntityRepository implements ReviewRepository {
   }
 
   @Override
-  public Page<Review> readAll(long bookId, SortBy sortBy, Pageable pageable) {
+  public Page<Review> readAllByBook(long bookId, SortBy sortBy, Pageable pageable) {
     return qDslRepository.findAllByBookId(bookId, sortBy, pageable).map(converter::toModel);
   }
 
   @Override
-  public Page<Review> readAll(long memberId, Pageable pageable) {
-    return repository.findAllByMemberEntityMemberId(memberId, pageable).map(converter::toModel);
+  public Page<Review> readAllByMember(long memberId, SortBy sortBy, Pageable pageable) {
+    return qDslRepository.findAllByMemberId(memberId, sortBy, pageable).map(converter::toModel);
   }
 
   @Override

@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -35,13 +34,15 @@ public class FollowRestController {
    * 팔로우 등록
    *
    * @param loginId : 로그인 아이디
-   * @param followeeId : 팔로우 대상 아이디
+   * @param targetMemberId : 팔로우 대상 아이디
    * @return : 팔로우 등록 결과
    */
-  @PostMapping(path = "/members/follows", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(
+      path = "/members/{target-member-id}/follows",
+      produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<FollowResponse> postNewFollow(
-      @LoginId Long loginId, @RequestParam(name = "followee-id") Long followeeId) {
-    Follow result = followService.register(loginId, followeeId);
+      @LoginId Long loginId, @PathVariable(name = "target-member-id") Long targetMemberId) {
+    Follow result = followService.register(loginId, targetMemberId);
     FollowResponse response = FollowResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -66,13 +67,15 @@ public class FollowRestController {
    * 팔로우 여부 조회
    *
    * @param loginId : 로그인 아이디
-   * @param followeeId : 팔로우 대상 아이디
+   * @param targetMemberId : 팔로우 대상 아이디
    * @return : 팔로우 여부
    */
-  @GetMapping(path = "/members/follows", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(
+      path = "/members/{target-member-id}/follows",
+      produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<FollowResponse> getMyFollow(
-      @LoginId Long loginId, @RequestParam(name = "followee-id") Long followeeId) {
-    Follow result = followService.searchExistence(loginId, followeeId);
+      @LoginId Long loginId, @PathVariable(name = "target-member-id") Long targetMemberId) {
+    Follow result = followService.searchExistence(loginId, targetMemberId);
     FollowResponse response = FollowResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);

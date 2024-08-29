@@ -112,13 +112,13 @@ public class ReviewService {
   }
 
   @Transactional(readOnly = true)
-  public Page<Review> searchAll(long bookId, SortBy sortBy, Pageable pageable) {
-    return reviewRepository.readAll(bookId, sortBy, pageable);
+  public Page<Review> searchAllOfBook(long bookId, SortBy sortBy, Pageable pageable) {
+    return reviewRepository.readAllByBook(bookId, sortBy, pageable);
   }
 
   @Transactional(readOnly = true)
-  public Page<Review> searchAll(long memberId, Pageable pageable) {
-    return reviewRepository.readAll(memberId, pageable);
+  public Page<Review> searchAllOfMember(long memberId, SortBy sortBy, Pageable pageable) {
+    return reviewRepository.readAllByMember(memberId, sortBy, pageable);
   }
 
   @Transactional(readOnly = true)
