@@ -7,6 +7,7 @@ import com.onetuks.librarydomain.member.repository.MemberRepository;
 import com.onetuks.libraryobject.enums.CacheName;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,7 @@ public class BookPickService {
     this.bookRepository = bookRepository;
   }
 
+  @CachePut(value = CacheName.BOOK_PICKS, key = "#loginId" + "-" + "#bookId")
   @Transactional
   public BookPick register(long loginId, long bookId) {
     return bookPickRepository.create(

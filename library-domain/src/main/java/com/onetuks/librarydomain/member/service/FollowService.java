@@ -7,6 +7,7 @@ import com.onetuks.librarydomain.member.repository.MemberRepository;
 import com.onetuks.libraryobject.enums.CacheName;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,7 @@ public class FollowService {
     this.memberRepository = memberRepository;
   }
 
+  @CachePut(value = CacheName.MEMBER_FOLLOWS, key = "#loginId" + "-" + "#followeeId")
   @Transactional
   public Follow register(long loginId, long followeeId) {
     if (loginId == followeeId) {
