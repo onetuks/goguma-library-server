@@ -42,27 +42,6 @@ CREATE TABLE IF NOT EXISTS point_histories
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='포인트 내역 테이블';
 
-CREATE TABLE IF NOT EXISTS badges
-(
-    badge_id        BIGINT       NOT NULL AUTO_INCREMENT COMMENT '뱃지 식별자',
-    name            VARCHAR(255) NOT NULL COMMENT '뱃지 이름',
-    detail          VARCHAR(255) NOT NULL COMMENT '뱃지 설명',
-    badge_image_uri VARCHAR(255) NOT NULL COMMENT '뱃지 아이콘 URI',
-    PRIMARY KEY (badge_id)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='뱃지 테이블';
-
-CREATE TABLE IF NOT EXISTS member_badges
-(
-    member_badge_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '멤버 뱃지 식별자',
-    member_id       BIGINT NOT NULL COMMENT '멤버 식별자',
-    badge_id        BIGINT NOT NULL COMMENT '뱃지 식별자',
-    PRIMARY KEY (member_badge_id),
-    FOREIGN KEY (member_id) REFERENCES members (member_id) ON DELETE CASCADE,
-    FOREIGN KEY (badge_id) REFERENCES badges (badge_id) ON DELETE CASCADE
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='멤버 뱃지 테이블';
-
 CREATE TABLE IF NOT EXISTS books
 (
     book_id         BIGINT       NOT NULL AUTO_INCREMENT COMMENT '책 식별자',
