@@ -69,6 +69,7 @@ public class DbStorageIntegrationTest {
         Flyway.configure()
             .dataSource(database.getJdbcUrl(), database.getUsername(), database.getPassword())
             .locations("filesystem:migration/sql")
+            .locations("filesystem:./src/main/resources/db/migration")
             .load();
     flyway.migrate();
   }

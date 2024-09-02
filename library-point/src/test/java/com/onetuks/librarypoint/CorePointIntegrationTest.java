@@ -55,7 +55,7 @@ public class CorePointIntegrationTest {
     flyway =
         Flyway.configure()
             .dataSource(database.getJdbcUrl(), database.getUsername(), database.getPassword())
-            .locations("filesystem:../library-storage/db-storage/migration/sql")
+            .locations("filesystem:../library-storage/db-storage/src/main/resources/db/migration")
             .load();
     flyway.migrate();
 
