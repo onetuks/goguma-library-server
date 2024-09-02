@@ -8,6 +8,8 @@ import com.onetuks.librarydomain.book.service.dto.param.BookPostParam;
 import com.onetuks.librarydomain.global.file.repository.FileRepository;
 import com.onetuks.librarydomain.global.point.service.PointService;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
+import com.onetuks.libraryobject.enums.CacheName;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -100,6 +102,7 @@ public class BookService {
     return bookRepository.read(bookId);
   }
 
+  @Cacheable(value = CacheName.SEARCHED_BOOKS, condition = "#keyword == null")
   @Transactional(readOnly = true)
   public Page<Book> searchWithKeyword(String keyword, Pageable pageable) {
     return bookRepository.readAll(keyword, pageable);

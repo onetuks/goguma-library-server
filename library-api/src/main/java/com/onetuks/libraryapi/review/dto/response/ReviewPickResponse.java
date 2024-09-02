@@ -4,8 +4,12 @@ import com.onetuks.librarydomain.review.model.ReviewPick;
 
 public record ReviewPickResponse(long reviewPickId, long memberId, long reviewId) {
 
-  public static ReviewPickResponse from(ReviewPick reviewPick) {
+  public static ReviewPickResponse from(ReviewPick model) {
+    if (model == null) {
+      return null;
+    }
+
     return new ReviewPickResponse(
-        reviewPick.reviewPickId(), reviewPick.member().memberId(), reviewPick.review().reviewId());
+        model.reviewPickId(), model.member().memberId(), model.review().reviewId());
   }
 }

@@ -24,6 +24,10 @@ public class ReviewPickConverter {
   }
 
   public ReviewPick toModel(ReviewPickEntity entity) {
+    if (entity == null) {
+      return null;
+    }
+
     return new ReviewPick(
         entity.getReviewPickId(),
         memberConverter.toModel(entity.getMemberEntity()),

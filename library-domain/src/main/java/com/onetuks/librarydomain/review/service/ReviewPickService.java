@@ -11,6 +11,7 @@ import com.onetuks.libraryobject.enums.CacheName;
 import com.onetuks.libraryobject.exception.ApiAccessDeniedException;
 import java.util.Objects;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +38,7 @@ public class ReviewPickService {
     this.pointService = pointService;
   }
 
+  @CachePut(value = CacheName.REVIEW_PICKS, key = "#loginId" + "-" + "#reviewId")
   @Transactional
   public ReviewPick register(long loginId, long reviewId) {
     Member picker = memberRepository.read(loginId);

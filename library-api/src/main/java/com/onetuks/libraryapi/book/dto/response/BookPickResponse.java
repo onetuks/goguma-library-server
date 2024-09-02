@@ -4,8 +4,12 @@ import com.onetuks.librarydomain.book.model.BookPick;
 
 public record BookPickResponse(long bookPickId, long memberId, long bookId) {
 
-  public static BookPickResponse from(BookPick bookPick) {
+  public static BookPickResponse from(BookPick model) {
+    if (model == null) {
+      return null;
+    }
+
     return new BookPickResponse(
-        bookPick.bookPickId(), bookPick.member().memberId(), bookPick.book().bookId());
+        model.bookPickId(), model.member().memberId(), model.book().bookId());
   }
 }
