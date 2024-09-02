@@ -6,6 +6,6 @@ public class AuthPermittedEndpoint {
 
   public static final String[] ENDPOINTS =
       new String[] {
-        "/", "/api/auth/login/**", "/api/test/login", "/error", "/docs/**", "/actuator/**"
+        "/", "/greeting", "/api/auth/login/**", "/api/test/login", "/error", "/docs/**", "/actuator/**"
       };
 }
