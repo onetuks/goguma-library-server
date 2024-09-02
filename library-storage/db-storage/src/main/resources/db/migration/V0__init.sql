@@ -149,3 +149,28 @@ CREATE TABLE IF NOT EXISTS attendances
     UNIQUE KEY unq_member_id_attended_at (member_id, attended_at)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='출석 테이블';
+
+CREATE TABLE IF NOT EXISTS notifications
+(
+    notification_id   BIGINT                                    NOT NULL AUTO_INCREMENT COMMENT '알림 식별자',
+    member_id         BIGINT                                    NOT NULL COMMENT '멤버 식별자(발신자)',
+    message           VARCHAR(255)                              NOT NULL COMMENT '알림 메시지',
+    notification_type ENUM ('NOTICE', 'EVENT', 'SOCIAL_UPDATE') NOT NULL COMMENT '알림 타입',
+    created_at        DATETIME                                  NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '알림 생성일',
+    PRIMARY KEY (notification_id),
+    FOREIGN KEY (member_id) REFERENCES members (member_id) ON DELETE CASCADE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='알림 테이블';
+
+CREATE TABLE notification_receipts
+(
+    notification_receipts_id BIGINT AUTO_INCREMENT COMMENT '알림 수신 식별자',
+    member_id                BIGINT   NOT NULL COMMENT '멤버 식별자(수신자)',
+    notification_id          BIGINT   NOT NULL COMMENT '알림 식별자',
+    is_read                  BOOLEAN  NOT NULL DEFAULT FALSE COMMENT '읽음 상태',
+    read_at                  DATETIME NULL COMMENT '읽은 시간',
+    PRIMARY KEY (notification_receipts_id),
+    FOREIGN KEY (member_id) REFERENCES members (member_id) ON DELETE CASCADE,
+    FOREIGN KEY (notification_id) REFERENCES notifications (notification_id) ON DELETE CASCADE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='알림 수신 테이블';
