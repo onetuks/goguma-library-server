@@ -112,22 +112,22 @@ class BookPickServiceTest extends DomainIntegrationTest {
   }
 
   @Test
-  @DisplayName("해당 멤버가 북픽한 도서라면 true를 반환한다.")
+  @DisplayName("해당 멤버가 북픽한 도서라면 해당 북픽 정보를 반환한다.")
   void searchExistenceTest() {
     // Given
-    Member member = MemberFixture.create(101L, RoleType.USER);
-    BookPick bookPick = BookPickFixture.create(101L, member, BookFixture.create(101L, member));
+    Member picker = MemberFixture.create(101L, RoleType.USER);
+    BookPick bookPick = BookPickFixture.create(101L, picker, BookFixture.create(101L, picker));
 
-    given(bookPickRepository.read(member.memberId(), bookPick.book().bookId()))
+    given(bookPickRepository.read(picker.memberId(), bookPick.book().bookId()))
         .willReturn(bookPick);
 
     // When
-    BookPick result = bookPickService.searchExistence(member.memberId(), bookPick.book().bookId());
+    BookPick result = bookPickService.searchExistence(picker.memberId(), bookPick.book().bookId());
 
     // Then
     assertAll(
         () -> assertThat(result.bookPickId()).isNotNull(),
-        () -> assertThat(result.member().memberId()).isEqualTo(bookPick.member().memberId()),
+        () -> assertThat(result.member().memberId()).isEqualTo(picker.memberId()),
         () -> assertThat(result.book().bookId()).isEqualTo(bookPick.book().bookId()));
   }
 }

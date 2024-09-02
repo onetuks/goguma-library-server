@@ -11,7 +11,6 @@ import com.onetuks.librarydomain.MemberFixture;
 import com.onetuks.librarydomain.book.model.BookPick;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.libraryobject.enums.RoleType;
-import com.onetuks.libraryobject.exception.NoSuchEntityException;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -139,10 +138,9 @@ class BookPickEntityRepositoryTest extends DbStorageIntegrationTest {
     bookPickEntityRepository.delete(bookPick.bookPickId());
 
     // Then
-    assertThatThrownBy(
-            () ->
-                bookPickEntityRepository.read(
-                    bookPick.member().memberId(), bookPick.book().bookId()))
-        .isInstanceOf(NoSuchEntityException.class);
+    BookPick result =
+        bookPickEntityRepository.read(bookPick.member().memberId(), bookPick.book().bookId());
+
+    assertThat(result).isNull();
   }
 }

@@ -8,6 +8,7 @@ public interface CacheName {
   String BOOK_PICKS = "book_picks";
   String REVIEW_PICKS = "review_picks";
   String MEMBER_FOLLOWS = "member_follows";
+  String SEARCHED_BOOKS = "searched_books";
 
   // Cache Key
   String FEATURED_BOOKS_CACHE_KEY = "'featured_books'";

@@ -13,7 +13,6 @@ import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.review.model.Review;
 import com.onetuks.librarydomain.review.model.ReviewPick;
 import com.onetuks.libraryobject.enums.RoleType;
-import com.onetuks.libraryobject.exception.NoSuchEntityException;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -199,7 +198,9 @@ class ReviewPickEntityRepositoryTest extends DbStorageIntegrationTest {
     reviewPickEntityRepository.delete(reviewPick.reviewPickId());
 
     // Then
-    assertThatThrownBy(() -> reviewPickEntityRepository.read(reviewPick.reviewPickId()))
-        .isInstanceOf(NoSuchEntityException.class);
+    ReviewPick result =
+        reviewPickEntityRepository.read(member.memberId(), reviewPick.review().reviewId());
+
+    assertThat(result).isNull();
   }
 }

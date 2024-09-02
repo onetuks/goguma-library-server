@@ -51,7 +51,7 @@ public class BookPickRestController {
    * @param bookPickId : 북픽 ID
    * @return : 204 No Content
    */
-  @DeleteMapping(path = "/{book-pick-id}")
+  @DeleteMapping(path = "/picks/{book-pick-id}")
   public ResponseEntity<Void> deleteMyBookPick(
       @LoginId Long loginId, @PathVariable(name = "book-pick-id") Long bookPickId) {
     bookPickService.remove(loginId, bookPickId);

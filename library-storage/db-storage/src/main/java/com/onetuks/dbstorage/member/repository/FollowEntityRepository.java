@@ -43,9 +43,7 @@ public class FollowEntityRepository implements FollowRepository {
   @Override
   public Follow readExistence(long followerId, long followeeId) {
     return followConverter.toModel(
-        repository
-            .findByFollowerMemberIdAndFolloweeMemberId(followerId, followeeId)
-            .orElseThrow(() -> new NoSuchEntityException("존재하지 않는 팔로우입니다.")));
+        repository.findByFollowerMemberIdAndFolloweeMemberId(followerId, followeeId).orElse(null));
   }
 
   @Override
