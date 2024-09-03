@@ -68,7 +68,7 @@ public class DbStorageIntegrationTest {
     flyway =
         Flyway.configure()
             .dataSource(database.getJdbcUrl(), database.getUsername(), database.getPassword())
-            .locations("filesystem:migration/sql")
+            .locations("filesystem:./src/main/resources/db/migration")
             .load();
     flyway.migrate();
   }
@@ -86,6 +86,8 @@ public class DbStorageIntegrationTest {
       properties.put(
           "spring.datasource.url",
           "jdbc:mysql://" + localDbHost + ":" + localDbPort + "/goguma-library-test");
+      properties.put("spring.datasource.username", database.getUsername());
+      properties.put("spring.datasource.password", database.getPassword());
 
       TestPropertyValues.of(properties).applyTo(applicationContext);
     }
