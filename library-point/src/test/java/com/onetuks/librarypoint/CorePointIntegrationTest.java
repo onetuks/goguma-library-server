@@ -76,6 +76,8 @@ public class CorePointIntegrationTest {
       properties.put(
           "spring.datasource.url",
           "jdbc:mysql://" + localDbHost + ":" + localDbPort + "/goguma-library-test");
+      properties.put("spring.datasource.username", database.getUsername());
+      properties.put("spring.datasource.password", database.getPassword());
 
       var redisHost = redis.getHost();
       var redisPort = redis.getFirstMappedPort();
