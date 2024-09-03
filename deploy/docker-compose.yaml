@@ -1,0 +1,14 @@
+services:
+  cloud-config:
+    image: seyoe/cloud-config:latest
+    container_name: cloud-config
+    restart: always
+    ports:
+      - '8888:8888'
+
+  server:
+    image: seyoe/goguma-library-server:latest
+    container_name: server
+    restart: always
+    ports:
+      - '8080:8080'

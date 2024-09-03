@@ -1,0 +1,32 @@
+{
+  "AWSEBDockerrunVersion": "2",
+  "containerDefinitions": [
+    {
+      "name": "cloud-config",
+      "image": "seyoe/cloud-config:latest",
+      "essential": true,
+      "memory": 128,
+      "portMappings": [
+        {
+          "containerPort": 8888,
+          "hostPort": 8888
+        }
+      ]
+    },
+    {
+      "name": "server",
+      "image": "seyoe/goguma-library-server:latest",
+      "essential": true,
+      "memory": 256,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 8080
+        }
+      ],
+      "links": [
+        "cloud-config"
+      ]
+    }
+  ]
+}

@@ -74,9 +74,9 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/goguma-library-server:latest
 
-      - name: Build Number
-        id: build-number
-        run: echo "::set-output name=BUILD_NUMBER::$(date '+%-d.%-m.%Y.%-H.%-M.%-S')"
+      - name: Generate Version Label
+        id: version_label
+        run: echo "version_label=$(date +'%Y%m%d%H%M%S')-${{ github.sha }}" >> $GITHUB_ENV
 
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v22
@@ -85,6 +85,6 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: goguma-library-server
           environment_name: Goguma-library-server-env
-          version_label: v${{steps.current-time.outputs.formattedTime}}
+          version_label: ${{ env.version_label }}
           region: ap-northeast-2
-          deployment_package: elasticbeanstalk/docker-compose.yml
+          deployment_package: ./deploy/docker-compose.yml
