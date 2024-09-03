@@ -1,5 +1,9 @@
 {
   "AWSEBDockerrunVersion": "2",
+  "authentication": {
+    "bucket": "elasticbeanstalk-ap-northeast-2-867344475562",
+    "key": "dockercfg"
+  },
   "containerDefinitions": [
     {
       "name": "cloud-config",

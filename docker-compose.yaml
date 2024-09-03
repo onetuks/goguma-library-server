@@ -10,5 +10,10 @@ services:
     image: seyoe/goguma-library-server:latest
     container_name: server
     restart: always
+    environment:
+      APP_NAME: ${APP_NAME}
+      PROFILE: ${PROFILE}
+      CLOUD_CONFIG_URL: ${CLOUD_CONFIG_URL}
+      ACTUATOR_PORT: ${ACTUATOR_PORT}
     ports:
       - '8080:8080'
