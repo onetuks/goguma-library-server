@@ -87,5 +87,5 @@ jobs:
           environment_name: Goguma-library-server-env
           version_label: ${{ env.version_label }}
           region: ap-northeast-2
-          deployment_package: ../../deploy/docker-compose.yml
+          deployment_package: docker-compose.yaml
           wait_for_environment_recovery: 180
