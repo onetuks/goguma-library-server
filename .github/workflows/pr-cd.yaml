@@ -79,7 +79,7 @@ jobs:
         run: echo "version_label=$(date +'%Y%m%d%H%M%S')-${{ github.sha }}" >> $GITHUB_ENV
 
       - name: Deploy to EB
-        uses: einaregilsson/beanstalk-deploy@v22
+        uses: einaregilsson/beanstalk-deploy@v20
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -87,4 +87,5 @@ jobs:
           environment_name: Goguma-library-server-env
           version_label: ${{ env.version_label }}
           region: ap-northeast-2
-          deployment_package: ./deploy/docker-compose.yml
+          deployment_package: ../../deploy/docker-compose.yml
+          wait_for_environment_recovery: 180
