@@ -67,7 +67,7 @@ jobs:
           path: .
 
       - name: Docker Image Build & Push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           platforms: linux/amd64,linux/arm64
@@ -79,7 +79,7 @@ jobs:
         run: echo "version_label=$(date +'%Y%m%d%H%M%S')-${{ github.sha }}" >> $GITHUB_ENV
 
       - name: Deploy to EB
-        uses: einaregilsson/beanstalk-deploy@v20
+        uses: einaregilsson/beanstalk-deploy@v22
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
