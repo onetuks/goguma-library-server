@@ -74,18 +74,37 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/goguma-library-server:latest
 
-      - name: Generate Version Label
-        id: version_label
-        run: echo "version_label=$(date +'%Y%m%d%H%M%S')-${{ github.sha }}" >> $GITHUB_ENV
+      - name: Install AWS CLI
+        run: sudo apt-get install -y awscli
 
-      - name: Deploy to EB
-        uses: einaregilsson/beanstalk-deploy@v22
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: goguma-library-server
-          environment_name: Goguma-library-server-env
-          version_label: ${{ env.version_label }}
-          region: ap-northeast-2
-          deployment_package: Dockerrun.aws.json
-          wait_for_environment_recovery: 180
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Upload docker-compose.yaml to S3
+        run: |
+          aws s3 cp docker-compose.yaml s3://${{ secrets.EB_S3_BUCKET }}/docker-compose.yaml
+
+      - name: Get current time
+        uses: josStorer/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYYMMDD-HH
+          utcOffset: "+08:00"
+
+      - name: Create new application version
+        run: |
+          aws elasticbeanstalk create-application-version \
+            --application-name ${{ secrets.EB_APP_NAME }} \
+            --version-label v${{ steps.current-time.outputs.formattedTime }} \
+            --source-bundle S3Bucket=${{ secrets.EB_S3_BUCKET }},S3Key=docker-compose.yaml
+
+      - name: Update Elastic Beanstalk environment
+        run: |
+          aws elasticbeanstalk update-environment \
+            --application-name ${{ secrets.EB_APP_NAME }} \
+            --environment-name ${{ secrets.EB_ENV_NAME }} \
+            --version-label v${{ steps.current-time.outputs.formattedTime }}
