@@ -1,0 +1,50 @@
+{
+  "AWSEBDockerrunVersion": "3",
+  "authentication": {
+    "bucket": "elasticbeanstalk-ap-northeast-2-867344475562",
+    "key": ".dockercfg"
+  },
+  "containerDefinitions": [
+    {
+      "name": "cloud-config",
+      "image": "seyoe/cloud-config:latest",
+      "essential": "true",
+      "portMappings": [
+        {
+          "containerPort": "${CLOUD_CONFIG_PORT}",
+          "hostPort": "${CLOUD_CONFIG_PORT}"
+        }
+      ],
+      "environment": []
+    },
+    {
+      "name": "server",
+      "image": "seyoe/goguma-library-server:latest",
+      "essential": "true",
+      "portMappings": [
+        {
+          "containerPort": "${PORT}",
+          "hostPort": "${PORT}"
+        }
+      ],
+      "environment": [
+        {
+          "name": "APP_NAME",
+          "value": "${APP_NAME}"
+        },
+        {
+          "name": "PROFILE",
+          "value": "${PROFILE}"
+        },
+        {
+          "name": "CLOUD_CONFIG_URL",
+          "value": "${CLOUD_CONFIG_URL}"
+        },
+        {
+          "name": "ACTUATOR_PORT",
+          "value": "${ACTUATOR_PORT}"
+        }
+      ]
+    }
+  ]
+}

@@ -55,7 +55,7 @@ public class CorePointIntegrationTest {
     flyway =
         Flyway.configure()
             .dataSource(database.getJdbcUrl(), database.getUsername(), database.getPassword())
-            .locations("filesystem:../library-storage/db-storage/migration/sql")
+            .locations("filesystem:../library-storage/db-storage/src/main/resources/db/migration")
             .load();
     flyway.migrate();
 
@@ -76,6 +76,8 @@ public class CorePointIntegrationTest {
       properties.put(
           "spring.datasource.url",
           "jdbc:mysql://" + localDbHost + ":" + localDbPort + "/goguma-library-test");
+      properties.put("spring.datasource.username", database.getUsername());
+      properties.put("spring.datasource.password", database.getPassword());
 
       var redisHost = redis.getHost();
       var redisPort = redis.getFirstMappedPort();

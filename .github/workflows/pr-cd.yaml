@@ -67,9 +67,44 @@ jobs:
           path: .
 
       - name: Docker Image Build & Push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/goguma-library-server:latest
+
+      - name: Install AWS CLI
+        run: sudo apt-get install -y awscli
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Upload docker-compose.yaml to S3
+        run: |
+          aws s3 cp docker-compose.yaml s3://${{ secrets.EB_S3_BUCKET }}/docker-compose.yaml
+
+      - name: Get current time
+        uses: josStorer/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYYMMDD-HH
+          utcOffset: "+08:00"
+
+      - name: Create new application version
+        run: |
+          aws elasticbeanstalk create-application-version \
+            --application-name ${{ secrets.EB_APP_NAME }} \
+            --version-label v${{ steps.current-time.outputs.formattedTime }} \
+            --source-bundle S3Bucket=${{ secrets.EB_S3_BUCKET }},S3Key=docker-compose.yaml
+
+      - name: Update Elastic Beanstalk environment
+        run: |
+          aws elasticbeanstalk update-environment \
+            --application-name ${{ secrets.EB_APP_NAME }} \
+            --environment-name ${{ secrets.EB_ENV_NAME }} \
+            --version-label v${{ steps.current-time.outputs.formattedTime }}
