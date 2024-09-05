@@ -92,7 +92,7 @@ jobs:
         uses: josStorer/get-current-time@v2
         id: current-time
         with:
-          format: YYYYMMDD-HH
+          format: YYYYMMDD-HHmmss
           utcOffset: "+08:00"
 
       - name: Create new application version
