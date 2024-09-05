@@ -13,8 +13,8 @@ public class AuthPermittedEndpoint {
         "/error",
         "/docs/**",
         "/actuator/**",
-          "/api/books/recommend/weekly-featured",
-          "/api/books/search",
-          "/api/reviews"
+        "/api/books/recommend/weekly-featured",
+        "/api/books/search",
+        "/api/reviews"
       };
 }

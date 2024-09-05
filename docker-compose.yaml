@@ -17,3 +17,10 @@ services:
       ACTUATOR_PORT: ${ACTUATOR_PORT}
     ports:
       - ${PORT}:${PORT}
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    ports:
+      - '6379:6379'
