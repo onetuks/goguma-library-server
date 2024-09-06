@@ -48,7 +48,7 @@
     },
     {
       "name": "redis",
-      "image": "redis:latest",
+      "image": "redis:7.4.0",
       "essential": "true",
       "portMappings": [
         {
