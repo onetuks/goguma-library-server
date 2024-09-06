@@ -101,6 +101,7 @@ jobs:
 
       - name: Create new application version
         run: |
+          echo version-label: v${{ steps.current-time.outputs.formattedTime }}
           aws elasticbeanstalk create-application-version \
             --application-name ${{ secrets.EB_APP_NAME }} \
             --version-label v${{ steps.current-time.outputs.formattedTime }} \
