@@ -18,13 +18,16 @@ public class GoogleClientConfig {
   @Value("${oauth.google.client-secret}")
   private String clientSecret;
 
+  @Value("${oauth.google.redirect-uri}")
+  private String redirectUri;
+
   public ClientRegistration googleClientRegistration() {
     return ClientRegistration.withRegistrationId("google")
         .clientId(clientId)
         .clientSecret(clientSecret)
         .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-        .redirectUri("http://localhost:8000/login/oauth2/callback/google")
+        .redirectUri(redirectUri)
         .scope("profile", "email")
         .authorizationUri("https://accounts.google.com/o/oauth2/v2/auth")
         .tokenUri("https://www.googleapis.com/oauth2/v4/token")

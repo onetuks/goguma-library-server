@@ -16,12 +16,15 @@ public class KakaoClientConfig {
   @Value("${oauth.kakao.client-secret}")
   private String clientSecret;
 
+  @Value("${oauth.kakao.redirect-uri}")
+  private String redirectUri;
+
   public ClientRegistration kakaoClientRegistration() {
     return ClientRegistration.withRegistrationId("kakao")
         .clientId(clientId)
         .clientSecret(clientSecret)
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-        .redirectUri("http://localhost:8000/login/oauth2/callback/kakao")
+        .redirectUri(redirectUri)
         .authorizationUri("https://kauth.kakao.com/oauth/authorize")
         .tokenUri("https://kauth.kakao.com/oauth/token")
         .userInfoUri("https://kapi.kakao.com/v2/user/me")
