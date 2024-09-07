@@ -7,12 +7,12 @@ public class AuthPermittedEndpoint {
   public static final String[] ENDPOINTS =
       new String[] {
         "/",
-        "/greeting",
-        "/api/auth/login/**",
-        "/api/test/login",
+        "/health",
         "/error",
         "/docs/**",
         "/actuator/**",
+        "/api/auth/login/**",
+        "/api/test/login",
         "/api/books/recommend/weekly-featured",
         "/api/books/search",
         "/api/reviews"
