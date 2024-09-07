@@ -16,12 +16,15 @@ public class NaverClientConfig {
   @Value("${oauth.naver.client_secret}")
   private String clientSecret;
 
+  @Value("${oauth.naver.redirect-uri}")
+  private String redirectUri;
+
   public ClientRegistration naverClientRegistration() {
     return ClientRegistration.withRegistrationId("naver")
         .clientId(clientId)
         .clientSecret(clientSecret)
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-        .redirectUri("http://localhost:8000/login/oauth2/callback/naver")
+        .redirectUri(redirectUri)
         .authorizationUri("https://nid.naver.com/oauth2.0/authorize")
         .tokenUri("https://nid.naver.com/oauth2.0/token")
         .userInfoUri("https://openapi.naver.com/v1/nid/me")
