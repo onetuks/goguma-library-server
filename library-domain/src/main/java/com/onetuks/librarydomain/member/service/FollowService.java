@@ -37,7 +37,10 @@ public class FollowService {
             null,
             memberRepository.update(memberRepository.read(loginId).increaseFollowingCountStatics()),
             memberRepository.update(
-                memberRepository.read(followeeId).increaseFollowerCountStatics())));
+                memberRepository
+                    .read(followeeId)
+                    .increaseFollowerCountStatics()
+                    .creditBadgeForFollowerRegistration())));
   }
 
   @CacheEvict(value = CacheName.MEMBER_FOLLOWS, allEntries = true)

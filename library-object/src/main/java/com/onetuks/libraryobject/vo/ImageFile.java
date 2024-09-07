@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 public record ImageFile(ImageType imageType, MultipartFile file, String fileName) {
 
   private static final String AWS_BUCKET_URL =
-      "https://goguma-chimpanzee.s3.ap-northeast-2.amazonaws.com";
+      "https://goguma-chimpanzees.s3.ap-northeast-2.amazonaws.com";
   public static final String DEFAULT_PROFILE_IMAGE_URI = "default-profile.png";
   public static final String DEFAULT_PROFILE_BACKGROUND_IMAGE_URI =
       "default-profile-background.png";

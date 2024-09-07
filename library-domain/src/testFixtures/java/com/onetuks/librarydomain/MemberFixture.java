@@ -4,6 +4,7 @@ import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.member.model.vo.AuthInfo;
 import com.onetuks.librarydomain.member.model.vo.Nickname;
 import com.onetuks.libraryobject.ImageFileFixture;
+import com.onetuks.libraryobject.enums.Badge;
 import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.ClientProvider;
 import com.onetuks.libraryobject.enums.ImageType;
@@ -31,6 +32,7 @@ public class MemberFixture {
         createInterestedCategories(),
         createIsAlarmAccepted(),
         createPoints(),
+        createBadges(),
         ImageFileFixture.create(ImageType.PROFILE_IMAGE, UUID.randomUUID().toString()),
         ImageFileFixture.create(ImageType.PROFILE_BACKGROUND_IMAGE, UUID.randomUUID().toString()),
         null);
@@ -46,6 +48,7 @@ public class MemberFixture {
         createInterestedCategories(),
         createIsAlarmAccepted(),
         createPoints(),
+        createBadges(),
         ImageFileFixture.createMock(ImageType.PROFILE_IMAGE, UUID.randomUUID().toString()),
         ImageFileFixture.createMock(
             ImageType.PROFILE_BACKGROUND_IMAGE, UUID.randomUUID().toString()),
@@ -79,6 +82,12 @@ public class MemberFixture {
 
   private static long createPoints() {
     return random.nextLong(1_000);
+  }
+
+  private static Set<Badge> createBadges() {
+    return IntStream.range(0, random.nextInt(Badge.values().length))
+        .mapToObj(i -> Badge.values()[random.nextInt(Badge.values().length)])
+        .collect(Collectors.toSet());
   }
 
   private static boolean createIsAlarmAccepted() {

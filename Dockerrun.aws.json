@@ -45,6 +45,17 @@
           "value": "${ACTUATOR_PORT}"
         }
       ]
+    },
+    {
+      "name": "redis",
+      "image": "redis:7.4.0",
+      "essential": "true",
+      "portMappings": [
+        {
+          "containerPort": "6379",
+          "hostPort": "6379"
+        }
+      ]
     }
   ]
 }

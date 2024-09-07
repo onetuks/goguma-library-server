@@ -60,7 +60,7 @@ public class DbStorageIntegrationTest {
   static {
     database =
         new MySQLContainer<>("mysql:8.0")
-            .withDatabaseName("goguma-library-test")
+            .withDatabaseName("goguma_library_test")
             .withUsername("root")
             .withPassword("password");
     database.start();
@@ -85,7 +85,7 @@ public class DbStorageIntegrationTest {
 
       properties.put(
           "spring.datasource.url",
-          "jdbc:mysql://" + localDbHost + ":" + localDbPort + "/goguma-library-test");
+          "jdbc:mysql://" + localDbHost + ":" + localDbPort + "/goguma_library_test");
       properties.put("spring.datasource.username", database.getUsername());
       properties.put("spring.datasource.password", database.getPassword());
 

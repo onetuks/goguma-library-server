@@ -26,6 +26,7 @@ public class MemberConverter {
         model.interestedCategories(),
         model.isAlarmAccepted(),
         model.points(),
+        model.badges(),
         model.profileImageFile().fileName(),
         model.profileBackgroundImageFile().fileName(),
         toStaticsEntity(model.memberStatics()));
@@ -41,6 +42,7 @@ public class MemberConverter {
         entity.getInterestedCategories(),
         entity.getIsAlarmAccepted(),
         entity.getPoints(),
+        entity.getBadges(),
         ImageFile.of(PROFILE_IMAGE, entity.getProfileImageUri()),
         ImageFile.of(PROFILE_BACKGROUND_IMAGE, entity.getProfileBackgroundImageUri()),
         toStaticsModel(entity.getMemberStaticsEntity()));

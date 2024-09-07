@@ -84,27 +84,28 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
+      - name: Get current time
+        uses: josStorer/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYYMMDD-HHmmss
+          utcOffset: "+09:00"
+
       - name: Create Deploy File
         run: |
           zip -r app-bundle.zip docker-compose.yaml Dockerrun.aws.json
 
       - name: Upload docker-compose.yaml to S3
         run: |
-          aws s3 cp app-bundle.zip s3://${{ secrets.EB_S3_BUCKET }}/app-bundle.zip
-
-      - name: Get current time
-        uses: josStorer/get-current-time@v2
-        id: current-time
-        with:
-          format: YYYYMMDD-HHmmss
-          utcOffset: "+08:00"
+          aws s3 cp app-bundle.zip s3://${{ secrets.EB_S3_BUCKET }}/deploy-files/v${{ steps.current-time.outputs.formattedTime }}-app-bundle.zip
 
       - name: Create new application version
         run: |
+          echo version-label: v${{ steps.current-time.outputs.formattedTime }}
           aws elasticbeanstalk create-application-version \
             --application-name ${{ secrets.EB_APP_NAME }} \
             --version-label v${{ steps.current-time.outputs.formattedTime }} \
-            --source-bundle S3Bucket=${{ secrets.EB_S3_BUCKET }},S3Key=app-bundle.zip
+            --source-bundle S3Bucket=${{ secrets.EB_S3_BUCKET }},S3Key=deploy-files/v${{ steps.current-time.outputs.formattedTime }}-app-bundle.zip
 
       - name: Update Elastic Beanstalk environment
         run: |

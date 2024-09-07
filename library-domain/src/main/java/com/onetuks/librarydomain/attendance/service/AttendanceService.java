@@ -3,6 +3,7 @@ package com.onetuks.librarydomain.attendance.service;
 import com.onetuks.librarydomain.attendance.model.Attendance;
 import com.onetuks.librarydomain.attendance.repository.AttendanceRepository;
 import com.onetuks.librarydomain.global.point.service.PointService;
+import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -34,10 +35,13 @@ public class AttendanceService {
     }
 
     int attendedCount = attendanceRepository.readThisMonth(loginId);
-
     pointService.creditPointForAttendance(loginId, attendedCount + 1);
 
-    return attendanceRepository.create(new Attendance(null, memberRepository.read(loginId), null));
+    Member member =
+        memberRepository.update(
+            memberRepository.read(loginId).creditBadgeForAttendance(attendedCount + 1));
+
+    return attendanceRepository.create(new Attendance(null, member, null));
   }
 
   @Transactional(readOnly = true)

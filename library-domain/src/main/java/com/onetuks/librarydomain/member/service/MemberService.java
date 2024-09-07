@@ -34,7 +34,12 @@ public class MemberService {
         optionalMember.orElseGet(
             () ->
                 memberRepository.create(
-                    Member.builder().authInfo(authInfo).points(0L).isAlarmAccepted(true).build()));
+                    Member.builder()
+                        .authInfo(authInfo)
+                        .points(0L)
+                        .badges(Set.of())
+                        .isAlarmAccepted(true)
+                        .build()));
 
     return MemberAuthResult.of(optionalMember.isEmpty(), savedMember);
   }

@@ -3,6 +3,7 @@ package com.onetuks.librarypoint.fixture;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
 import com.onetuks.dbstorage.member.entity.MemberStaticsEntity;
 import com.onetuks.dbstorage.member.entity.embed.AuthInfoEmbeddable;
+import com.onetuks.libraryobject.enums.Badge;
 import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.ClientProvider;
 import com.onetuks.libraryobject.enums.RoleType;
@@ -29,6 +30,7 @@ public class MemberEntityFixture {
         Set.of(Category.MAGAZINE, Category.ART_BOOK),
         true,
         initialPoint,
+        Set.of(Badge.REVIEW_NOOB, Badge.REVIEW_APPRENTICE, Badge.ATTENDANCE_NOOB),
         ImageFile.DEFAULT_PROFILE_IMAGE_URI,
         ImageFile.DEFAULT_PROFILE_BACKGROUND_IMAGE_URI,
         createMemberStaticEntity());

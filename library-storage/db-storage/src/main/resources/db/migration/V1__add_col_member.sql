@@ -1,0 +1,1 @@
+ALTER TABLE members ADD COLUMN `badges` JSON NOT NULL COMMENT '멤버 뱃지 목록';

@@ -26,7 +26,7 @@ public class TestRestController {
    *
    * @return : API 서버 동작 확인 메시지
    */
-  @GetMapping(path = "/greeting", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/health", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> home() {
     return ResponseEntity.ok("Welcome to Goguma Library API");
   }

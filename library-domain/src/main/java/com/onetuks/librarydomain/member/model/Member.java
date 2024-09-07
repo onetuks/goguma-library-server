@@ -7,9 +7,14 @@ import static com.onetuks.libraryobject.vo.ImageFile.DEFAULT_PROFILE_IMAGE_URI;
 
 import com.onetuks.librarydomain.member.model.vo.AuthInfo;
 import com.onetuks.librarydomain.member.model.vo.Nickname;
+import com.onetuks.libraryobject.enums.Badge;
+import com.onetuks.libraryobject.enums.BadgeType;
 import com.onetuks.libraryobject.enums.Category;
 import com.onetuks.libraryobject.enums.RoleType;
 import com.onetuks.libraryobject.vo.ImageFile;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import lombok.Builder;
@@ -25,6 +30,7 @@ public record Member(
     Set<Category> interestedCategories,
     boolean isAlarmAccepted,
     long points,
+    Set<Badge> badges,
     ImageFile profileImageFile,
     ImageFile profileBackgroundImageFile,
     MemberStatics memberStatics) {
@@ -51,6 +57,7 @@ public record Member(
         interestedCategories(),
         isAlarmAccepted(),
         points(),
+        badges(),
         profileImageFile(),
         profileBackgroundImageFile(),
         memberStatics());
@@ -75,6 +82,7 @@ public record Member(
         interestedCategories,
         isAlarmAccepted,
         points,
+        badges,
         getProfileImageFile(profileImageFilename, profileImage),
         getProfileBackgroundImageFile(profileBackgroundImageFilename, profileBackgroundImage),
         memberStatics);
@@ -90,6 +98,7 @@ public record Member(
         interestedCategories,
         isAlarmAccepted,
         points,
+        badges,
         profileImageFile,
         profileBackgroundImageFile,
         memberStatics.increaseReviewCategoryCounts(categories));
@@ -105,6 +114,7 @@ public record Member(
         interestedCategories,
         isAlarmAccepted,
         points,
+        badges,
         profileImageFile,
         profileBackgroundImageFile,
         memberStatics.decreaseReviewCategoryCounts(categories));
@@ -120,6 +130,7 @@ public record Member(
         interestedCategories,
         isAlarmAccepted,
         points,
+        badges,
         profileImageFile,
         profileBackgroundImageFile,
         memberStatics.increaseFollowerCount());
@@ -135,6 +146,7 @@ public record Member(
         interestedCategories,
         isAlarmAccepted,
         points,
+        badges,
         profileImageFile,
         profileBackgroundImageFile,
         memberStatics.decreaseFollowerCount());
@@ -150,6 +162,7 @@ public record Member(
         interestedCategories,
         isAlarmAccepted,
         points,
+        badges,
         profileImageFile,
         profileBackgroundImageFile,
         memberStatics.increaseFollowingCount());
@@ -165,9 +178,78 @@ public record Member(
         interestedCategories,
         isAlarmAccepted,
         points,
+        badges,
         profileImageFile,
         profileBackgroundImageFile,
         memberStatics.decreaseFollowingCount());
+  }
+
+  public Member creditBadgeForReviewRegistration() {
+    long reviewCounts = this.memberStatics.reviewCounts();
+    Set<Badge> newBadges = Collections.synchronizedSet(new HashSet<>(this.badges));
+    Arrays.stream(Badge.values())
+        .filter(badge -> badge.getBadgeType() == BadgeType.REVIEW_BADGE)
+        .filter(badge -> badge.getBadgeCondition() <= reviewCounts)
+        .forEach(newBadges::add);
+
+    return new Member(
+        memberId,
+        authInfo,
+        nickname,
+        introduction,
+        instagramUrl,
+        interestedCategories,
+        isAlarmAccepted,
+        points,
+        newBadges,
+        profileImageFile,
+        profileBackgroundImageFile,
+        memberStatics);
+  }
+
+  public Member creditBadgeForFollowerRegistration() {
+    long followerCounts = this.memberStatics.followerCounts();
+    Set<Badge> newBadges = Collections.synchronizedSet(new HashSet<>(this.badges));
+    Arrays.stream(Badge.values())
+        .filter(badge -> badge.getBadgeType() == BadgeType.FOLLOWER_BADGE)
+        .filter(badge -> badge.getBadgeCondition() <= followerCounts)
+        .forEach(newBadges::add);
+
+    return new Member(
+        memberId,
+        authInfo,
+        nickname,
+        introduction,
+        instagramUrl,
+        interestedCategories,
+        isAlarmAccepted,
+        points,
+        newBadges,
+        profileImageFile,
+        profileBackgroundImageFile,
+        memberStatics);
+  }
+
+  public Member creditBadgeForAttendance(int attendedCount) {
+    Set<Badge> newBadges = Collections.synchronizedSet(new HashSet<>(this.badges));
+    Arrays.stream(Badge.values())
+        .filter(badge -> badge.getBadgeType() == BadgeType.ATTENDANCE_BADGE)
+        .filter(badge -> badge.getBadgeCondition() <= attendedCount)
+        .forEach(newBadges::add);
+
+    return new Member(
+        memberId,
+        authInfo,
+        nickname,
+        introduction,
+        instagramUrl,
+        interestedCategories,
+        isAlarmAccepted,
+        points,
+        newBadges,
+        profileImageFile,
+        profileBackgroundImageFile,
+        memberStatics);
   }
 
   private ImageFile getProfileImageFile(String profileImageFilename, MultipartFile profileImage) {
