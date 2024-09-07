@@ -7,6 +7,7 @@ import static jakarta.persistence.CascadeType.REMOVE;
 
 import com.onetuks.dbstorage.member.entity.embed.AuthInfoEmbeddable;
 import com.onetuks.libraryobject.annotation.Generated;
+import com.onetuks.libraryobject.enums.Badge;
 import com.onetuks.libraryobject.enums.Category;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
@@ -64,6 +65,10 @@ public class MemberEntity {
   @Column(name = "points", nullable = false)
   private Long points;
 
+  @Type(value = JsonType.class)
+  @Column(name = "badges", nullable = false)
+  private Set<Badge> badges;
+
   @Column(name = "profile_image_uri")
   private String profileImageUri;
 
@@ -86,6 +91,7 @@ public class MemberEntity {
       Set<Category> interestedCategories,
       Boolean isAlarmAccepted,
       Long points,
+      Set<Badge> badges,
       String profileImageUri,
       String profileBackgroundImageUri,
       MemberStaticsEntity memberStaticsEntity) {
@@ -97,6 +103,7 @@ public class MemberEntity {
     this.interestedCategories = interestedCategories;
     this.isAlarmAccepted = isAlarmAccepted;
     this.points = points;
+    this.badges = badges;
     this.profileImageUri = profileImageUri;
     this.profileBackgroundImageUri = profileBackgroundImageUri;
     this.memberStaticsEntity = memberStaticsEntity;

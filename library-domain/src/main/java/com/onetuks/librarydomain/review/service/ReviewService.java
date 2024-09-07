@@ -54,7 +54,10 @@ public class ReviewService {
     Book book = bookRepository.read(bookId);
 
     Member updateMember =
-        memberRepository.update(member.increaseReviewCategoryStatics(book.categories()));
+        memberRepository.update(
+            member
+                .increaseReviewCategoryStatics(book.categories())
+                .creditBadgeForReviewRegistration());
 
     boolean isFeaturedBook =
         weeklyFeaturedBookRepository.readAllForThisWeek().getContent().stream()
