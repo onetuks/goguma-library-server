@@ -1,4 +1,4 @@
-package com.onetuks.librarypoint.repository.impl;
+package com.onetuks.librarypoint.repository;
 
 import com.onetuks.librarypoint.repository.entity.PointHistoryEntity;
 import org.springframework.data.domain.Page;

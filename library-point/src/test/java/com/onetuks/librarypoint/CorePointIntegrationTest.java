@@ -6,7 +6,7 @@ import com.onetuks.librarypoint.CorePointIntegrationTest.CorePointConfig;
 import com.onetuks.librarypoint.CorePointIntegrationTest.CorePointInitializer;
 import com.onetuks.librarypoint.repository.DailyPointLimitRepository;
 import com.onetuks.librarypoint.repository.PointRepository;
-import com.onetuks.librarypoint.service.PointServiceImpl;
+import com.onetuks.librarypoint.service.PointService;
 import com.redis.testcontainers.RedisContainer;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +28,7 @@ import org.testcontainers.containers.MySQLContainer;
 @ContextConfiguration(initializers = CorePointInitializer.class)
 public class CorePointIntegrationTest {
 
-  @Autowired public PointServiceImpl pointService;
+  @Autowired public PointService pointService;
   @Autowired public PointRepository pointRepository;
   @Autowired public DailyPointLimitRepository dailyPointLimitRepository;
 
