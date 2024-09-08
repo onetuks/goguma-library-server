@@ -12,8 +12,8 @@ public enum Activity {
   ATTENDANCE_DAILY("일일 출석", 1L),
   ATTENDANCE_3_DAYS("3일 연속 출석", 3L),
   ATTENDANCE_5_DAYS("5일 연속 출석", 5L),
-  ACTIVITY_10_DAYS("10일 연속 출석", 10L),
-  ACTIVITY_30_DAYS("30일 연속 출석", 30L);
+  ATTENDANCE_10_DAYS("10일 연속 출석", 10L),
+  ATTENDANCE_30_DAYS("30일 연속 출석", 30L);
 
   private final String description;
   private final long points;
