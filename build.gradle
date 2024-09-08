@@ -77,5 +77,10 @@ dependencies {
     implementation(project(':library-storage:file-storage'))
 
     implementation(project(':library-test'))
+
+    if (!project.hasProperty('spring.profiles.active')
+            || project.property('spring.profiles.active') != 'prod') {
+        implementation('org.springframework.boot:spring-boot-starter-actuator')
+    }
     implementation(project(':library-monitoring'))
 }
