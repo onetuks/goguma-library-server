@@ -13,6 +13,7 @@ import com.onetuks.libraryauth.service.dto.LoginResult;
 import com.onetuks.libraryauth.service.dto.LogoutResult;
 import com.onetuks.libraryauth.service.dto.RefreshResult;
 import com.onetuks.libraryauth.util.LoginId;
+import com.onetuks.libraryauth.util.OnlyForAdmin;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -142,7 +143,6 @@ public class AuthRestController {
     return ResponseEntity.status(HttpStatus.OK).body(RefreshResponse.from(result));
   }
 
-  // TODO : 일반 유저 접근 방지 처리
   /**
    * 멤버 권한 상승
    *
@@ -150,6 +150,7 @@ public class AuthRestController {
    * @param loginId : 로그인 아이디
    * @return : 권한 상승 응답 (갱신된 JWT 토큰 포함)
    */
+  @OnlyForAdmin
   @PatchMapping(path = "/promotion")
   public ResponseEntity<RefreshResponse> promote(
       HttpServletRequest request, @LoginId Long loginId) {
