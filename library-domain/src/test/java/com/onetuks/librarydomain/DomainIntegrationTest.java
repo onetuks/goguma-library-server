@@ -21,7 +21,7 @@ import com.onetuks.librarydomain.review.service.ReviewPickService;
 import com.onetuks.librarydomain.review.service.ReviewService;
 import com.onetuks.librarydomain.weekly.repository.WeeklyFeaturedBookRepository;
 import com.onetuks.librarydomain.weekly.service.WeeklyFeaturedBookService;
-import com.onetuks.libraryobject.component.TestFileCleaner;
+import com.onetuks.libraryobject.util.TestFileCleaner;
 import com.onetuks.libraryobject.util.URIBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
