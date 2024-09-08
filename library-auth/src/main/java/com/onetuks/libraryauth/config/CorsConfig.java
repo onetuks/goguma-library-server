@@ -11,7 +11,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class CorsConfig {
 
   private static final List<String> ALLOWED_ORIGINS =
-      List.of("http://localhost:8000", "https://goguma-chimpanzees.site");
+      List.of(
+          "http://localhost:8000",
+          "https://d225o0wew8yd80.cloudfront.net",
+          "https://goguma-chimpanzees.site");
 
   private static final List<String> ALLOWED_METHODS =
       List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS");
