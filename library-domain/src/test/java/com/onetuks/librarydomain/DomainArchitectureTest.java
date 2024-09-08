@@ -120,7 +120,7 @@ public class DomainArchitectureTest extends DomainIntegrationTest {
               .arePublic()
               .and()
               .areDeclaredInClassesThat()
-              .doNotHaveSimpleName("PointService")
+              .haveSimpleNameNotContaining("Point")
               .should()
               .haveNameMatching("^(register|search|edit|remove).*");
 

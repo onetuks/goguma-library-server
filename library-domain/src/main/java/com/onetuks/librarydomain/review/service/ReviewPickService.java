@@ -1,6 +1,6 @@
 package com.onetuks.librarydomain.review.service;
 
-import com.onetuks.librarydomain.global.point.service.PointService;
+import com.onetuks.librarydomain.global.point.producer.PointEventProducer;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
 import com.onetuks.librarydomain.review.model.Review;
@@ -25,17 +25,17 @@ public class ReviewPickService {
   private final MemberRepository memberRepository;
   private final ReviewRepository reviewRepository;
 
-  private final PointService pointService;
+  private final PointEventProducer pointEventProducer;
 
   public ReviewPickService(
       ReviewPickRepository reviewPickRepository,
       MemberRepository memberRepository,
       ReviewRepository reviewRepository,
-      PointService pointService) {
+      PointEventProducer pointEventProducer) {
     this.reviewPickRepository = reviewPickRepository;
     this.memberRepository = memberRepository;
     this.reviewRepository = reviewRepository;
-    this.pointService = pointService;
+    this.pointEventProducer = pointEventProducer;
   }
 
   @CachePut(value = CacheName.REVIEW_PICKS, key = "#loginId" + "-" + "#reviewId")
@@ -44,7 +44,7 @@ public class ReviewPickService {
     Member picker = memberRepository.read(loginId);
     Review review = reviewRepository.readWithLock(reviewId);
 
-    pointService.creditPointForReviewPick(picker.memberId(), review.member().memberId());
+    pointEventProducer.creditPointForReviewPick(picker.memberId(), review.member().memberId());
     reviewRepository.update(review.increasePickCount());
 
     return reviewPickRepository.create(new ReviewPick(null, picker, review));
@@ -60,7 +60,7 @@ public class ReviewPickService {
       throw new ApiAccessDeniedException("해당 서평픽에 대한 권한이 없는 멤버입니다.");
     }
 
-    pointService.debitPointForReviewPick(picker.memberId());
+    pointEventProducer.debitPointForReviewPick(picker.memberId());
     reviewRepository.update(reviewPick.review().decreasePickCount());
 
     reviewPickRepository.delete(reviewPick.reviewPickId());

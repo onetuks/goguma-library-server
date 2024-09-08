@@ -54,7 +54,8 @@ class ReviewPickServiceTest extends DomainIntegrationTest {
         () -> assertThat(result.member().memberId()).isEqualTo(reviewPick.member().memberId()),
         () -> assertThat(result.review().reviewId()).isEqualTo(reviewPick.review().reviewId()));
 
-    verify(pointService, times(1)).creditPointForReviewPick(picker.memberId(), receiver.memberId());
+    verify(pointEventProducer, times(1))
+        .creditPointForReviewPick(picker.memberId(), receiver.memberId());
   }
 
   @Test
@@ -77,7 +78,7 @@ class ReviewPickServiceTest extends DomainIntegrationTest {
 
     // Then
     verify(reviewPickRepository, times(1)).delete(reviewPick.reviewPickId());
-    verify(pointService, times(1)).debitPointForReviewPick(picker.memberId());
+    verify(pointEventProducer, times(1)).debitPointForReviewPick(picker.memberId());
   }
 
   @Test
@@ -103,7 +104,7 @@ class ReviewPickServiceTest extends DomainIntegrationTest {
         .isInstanceOf(ApiAccessDeniedException.class);
 
     verify(reviewPickRepository, never()).delete(reviewPick.reviewPickId());
-    verify(pointService, never()).debitPointForReviewPick(notPicker.memberId());
+    verify(pointEventProducer, never()).debitPointForReviewPick(notPicker.memberId());
   }
 
   @Test

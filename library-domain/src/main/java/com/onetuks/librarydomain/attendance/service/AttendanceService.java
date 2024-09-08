@@ -2,7 +2,7 @@ package com.onetuks.librarydomain.attendance.service;
 
 import com.onetuks.librarydomain.attendance.model.Attendance;
 import com.onetuks.librarydomain.attendance.repository.AttendanceRepository;
-import com.onetuks.librarydomain.global.point.service.PointService;
+import com.onetuks.librarydomain.global.point.producer.PointEventProducer;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
 import java.time.LocalDate;
@@ -17,15 +17,15 @@ public class AttendanceService {
   private final AttendanceRepository attendanceRepository;
   private final MemberRepository memberRepository;
 
-  private final PointService pointService;
+  private final PointEventProducer pointEventProducer;
 
   public AttendanceService(
       AttendanceRepository attendanceRepository,
       MemberRepository memberRepository,
-      PointService pointService) {
+      PointEventProducer pointEventProducer) {
     this.attendanceRepository = attendanceRepository;
     this.memberRepository = memberRepository;
-    this.pointService = pointService;
+    this.pointEventProducer = pointEventProducer;
   }
 
   @Transactional
@@ -35,7 +35,7 @@ public class AttendanceService {
     }
 
     int attendedCount = attendanceRepository.readThisMonth(loginId);
-    pointService.creditPointForAttendance(loginId, attendedCount + 1);
+    pointEventProducer.creditPointForAttendance(loginId, attendedCount + 1);
 
     Member member =
         memberRepository.update(

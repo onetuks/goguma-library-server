@@ -9,7 +9,7 @@ import com.onetuks.librarydomain.book.service.BookPickService;
 import com.onetuks.librarydomain.book.service.BookService;
 import com.onetuks.librarydomain.book.service.IsbnSearchService;
 import com.onetuks.librarydomain.global.file.repository.FileRepository;
-import com.onetuks.librarydomain.global.point.service.PointService;
+import com.onetuks.librarydomain.global.point.producer.PointEventProducer;
 import com.onetuks.librarydomain.member.repository.FollowRepository;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
 import com.onetuks.librarydomain.member.service.FollowService;
@@ -56,7 +56,7 @@ public class DomainIntegrationTest {
   @MockBean public FollowRepository followRepository;
   @MockBean public AttendanceRepository attendanceRepository;
 
-  @MockBean public PointService pointService;
+  @MockBean public PointEventProducer pointEventProducer;
 
   @Autowired private TestFileCleaner testFileCleaner;
 

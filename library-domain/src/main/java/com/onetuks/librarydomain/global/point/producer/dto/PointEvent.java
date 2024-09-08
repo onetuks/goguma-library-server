@@ -1,4 +1,4 @@
-package com.onetuks.librarydomain.global.point.service.dto;
+package com.onetuks.librarydomain.global.point.producer.dto;
 
 import java.io.Serializable;
 import lombok.AccessLevel;

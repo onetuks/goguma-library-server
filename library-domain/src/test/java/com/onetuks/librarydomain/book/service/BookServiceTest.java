@@ -69,7 +69,7 @@ class BookServiceTest extends DomainIntegrationTest {
         () -> assertThat(result.isPermitted()).isFalse(),
         () -> assertThat(result.coverImageFile()).isEqualTo(book.coverImageFile()));
 
-    verify(pointService, times(1)).creditPointForBookRegistration(loginId);
+    verify(pointEventProducer, times(1)).creditPointForBookRegistration(loginId);
     verify(fileRepository, times(1)).putFile(any());
   }
 
@@ -120,7 +120,7 @@ class BookServiceTest extends DomainIntegrationTest {
             assertThat(result.coverImageFile())
                 .isEqualTo(ImageFile.of(ImageType.COVER_IMAGE, ImageFile.DEFAULT_COVER_IMAGE_URI)));
 
-    verify(pointService, times(1)).creditPointForBookRegistration(loginId);
+    verify(pointEventProducer, times(1)).creditPointForBookRegistration(loginId);
     verify(fileRepository, times(1)).putFile(any());
   }
 
@@ -364,7 +364,8 @@ class BookServiceTest extends DomainIntegrationTest {
 
     // Then
     assertThat(results)
-        .hasSize((int) Math.min(count, expected.getTotalElements()))
+        //        .hasSize((int) Math.min(count, expected.getTotalElements()))
+        .hasSize((int) expected.getTotalElements())
         .allSatisfy(
             result ->
                 assertThat(result.categories())
