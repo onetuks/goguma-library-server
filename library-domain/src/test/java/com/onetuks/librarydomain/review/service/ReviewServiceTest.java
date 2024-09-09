@@ -99,7 +99,7 @@ class ReviewServiceTest extends DomainIntegrationTest {
           }
         });
 
-    verify(pointService, times(1)).creditPointForReviewRegistration(picker.memberId(), true);
+    verify(pointEventProducer, times(1)).creditPointForReviewRegistration(picker.memberId(), true);
   }
 
   @Test
@@ -167,7 +167,7 @@ class ReviewServiceTest extends DomainIntegrationTest {
     reviewService.remove(picker.memberId(), review.reviewId());
 
     // Then
-    verify(pointService, times(1)).debitPointForReviewRemoval(picker.memberId());
+    verify(pointEventProducer, times(1)).debitPointForReviewRemoval(picker.memberId());
     verify(reviewRepository, times(1)).delete(review.reviewId());
   }
 

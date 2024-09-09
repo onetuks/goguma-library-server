@@ -72,11 +72,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             request.getHeader(AuthHeaderUtil.HEADER_AUTHORIZATION),
             e.getMessage());
       } else {
-        log.info(
-            "[인증] 비인증 API 요청입니다. - URL: {} / Header: {} / Exception: {}",
-            request.getRequestURL(),
-            request.getHeader(AuthHeaderUtil.HEADER_AUTHORIZATION),
-            e.getMessage());
+        log.info("[인증] 비인증 허용 API 요청입니다. - URL: {}", request.getRequestURL());
       }
     } finally {
       filterChain.doFilter(request, response);

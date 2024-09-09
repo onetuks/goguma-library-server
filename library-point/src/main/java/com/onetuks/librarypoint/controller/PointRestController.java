@@ -2,7 +2,7 @@ package com.onetuks.librarypoint.controller;
 
 import com.onetuks.libraryauth.util.LoginId;
 import com.onetuks.librarypoint.controller.dto.response.PointHistoryResponse.PointHistoryResponses;
-import com.onetuks.librarypoint.service.PointServiceImpl;
+import com.onetuks.librarypoint.service.PointService;
 import com.onetuks.librarypoint.service.model.PointHistory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/api/points")
 public class PointRestController {
 
-  private final PointServiceImpl pointService;
+  private final PointService pointService;
 
-  public PointRestController(PointServiceImpl pointService) {
+  public PointRestController(PointService pointService) {
     this.pointService = pointService;
   }
 

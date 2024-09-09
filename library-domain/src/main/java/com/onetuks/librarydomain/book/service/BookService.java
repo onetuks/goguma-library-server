@@ -6,7 +6,7 @@ import com.onetuks.librarydomain.book.repository.BookRepository;
 import com.onetuks.librarydomain.book.service.dto.param.BookPatchParam;
 import com.onetuks.librarydomain.book.service.dto.param.BookPostParam;
 import com.onetuks.librarydomain.global.file.repository.FileRepository;
-import com.onetuks.librarydomain.global.point.service.PointService;
+import com.onetuks.librarydomain.global.point.producer.PointEventProducer;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
 import com.onetuks.libraryobject.enums.CacheName;
 import org.springframework.cache.annotation.Cacheable;
@@ -23,19 +23,19 @@ public class BookService {
   private final MemberRepository memberRepository;
   private final FileRepository fileRepository;
 
-  private final PointService pointService;
+  private final PointEventProducer pointEventProducer;
   private final IsbnSearchService isbnSearchService;
 
   public BookService(
       BookRepository bookRepository,
       MemberRepository memberRepository,
       FileRepository fileRepository,
-      PointService pointService,
+      PointEventProducer pointEventProducer,
       IsbnSearchService isbnSearchService) {
     this.bookRepository = bookRepository;
     this.memberRepository = memberRepository;
     this.fileRepository = fileRepository;
-    this.pointService = pointService;
+    this.pointEventProducer = pointEventProducer;
     this.isbnSearchService = isbnSearchService;
   }
 
@@ -58,7 +58,7 @@ public class BookService {
             param.coverImageFilename(),
             coverImage);
 
-    pointService.creditPointForBookRegistration(loginId);
+    pointEventProducer.creditPointForBookRegistration(loginId);
     fileRepository.putFile(book.coverImageFile());
 
     return bookRepository.create(book);
@@ -87,7 +87,7 @@ public class BookService {
     Book book = bookRepository.read(bookId);
 
     fileRepository.deleteFile(book.coverImageFile());
-    pointService.debitPointForBookRemoval(book.member().memberId());
+    pointEventProducer.debitPointForBookRemoval(book.member().memberId());
 
     bookRepository.delete(bookId);
   }

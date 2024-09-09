@@ -2,7 +2,7 @@ package com.onetuks.librarydomain.review.service;
 
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.book.repository.BookRepository;
-import com.onetuks.librarydomain.global.point.service.PointService;
+import com.onetuks.librarydomain.global.point.producer.PointEventProducer;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
 import com.onetuks.librarydomain.review.model.Review;
@@ -33,19 +33,19 @@ public class ReviewService {
   private final BookRepository bookRepository;
   private final WeeklyFeaturedBookRepository weeklyFeaturedBookRepository;
 
-  private final PointService pointService;
+  private final PointEventProducer pointEventProducer;
 
   public ReviewService(
       ReviewRepository reviewRepository,
       MemberRepository memberRepository,
       BookRepository bookRepository,
       WeeklyFeaturedBookRepository weeklyFeaturedBookRepository,
-      PointService pointService) {
+      PointEventProducer pointEventProducer) {
     this.reviewRepository = reviewRepository;
     this.memberRepository = memberRepository;
     this.bookRepository = bookRepository;
     this.weeklyFeaturedBookRepository = weeklyFeaturedBookRepository;
-    this.pointService = pointService;
+    this.pointEventProducer = pointEventProducer;
   }
 
   @Transactional
@@ -63,7 +63,7 @@ public class ReviewService {
         weeklyFeaturedBookRepository.readAllForThisWeek().getContent().stream()
             .map(WeeklyFeaturedBook::book)
             .anyMatch(featuredBook -> Objects.equals(featuredBook.bookId(), book.bookId()));
-    pointService.creditPointForReviewRegistration(member.memberId(), isFeaturedBook);
+    pointEventProducer.creditPointForReviewRegistration(member.memberId(), isFeaturedBook);
 
     return reviewRepository.create(
         new Review(updateMember, book, param.reviewTitle(), param.reviewContent()));
@@ -95,7 +95,7 @@ public class ReviewService {
 
     memberRepository.update(
         review.member().decreaseReviewCategoryStatics(review.book().categories()));
-    pointService.debitPointForReviewRemoval(loginId);
+    pointEventProducer.debitPointForReviewRemoval(loginId);
 
     reviewRepository.delete(reviewId);
   }
