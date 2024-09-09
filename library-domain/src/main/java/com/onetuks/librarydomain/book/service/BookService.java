@@ -9,6 +9,7 @@ import com.onetuks.librarydomain.global.file.repository.FileRepository;
 import com.onetuks.librarydomain.global.point.producer.PointEventProducer;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
 import com.onetuks.libraryobject.enums.CacheName;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,6 +44,7 @@ public class BookService {
     return isbnSearchService.search(isbn);
   }
 
+  @CacheEvict(value = CacheName.SEARCHED_BOOKS, allEntries = true)
   @Transactional
   public Book register(long loginId, BookPostParam param, MultipartFile coverImage) {
     Book book =
@@ -64,6 +66,7 @@ public class BookService {
     return bookRepository.create(book);
   }
 
+  @CacheEvict(value = CacheName.SEARCHED_BOOKS, allEntries = true)
   @Transactional
   public Book edit(long bookId, BookPatchParam param, MultipartFile coverImage) {
     return bookRepository.update(
@@ -82,6 +85,7 @@ public class BookService {
                 coverImage));
   }
 
+  @CacheEvict(value = CacheName.SEARCHED_BOOKS, allEntries = true)
   @Transactional
   public void remove(long bookId) {
     Book book = bookRepository.read(bookId);
