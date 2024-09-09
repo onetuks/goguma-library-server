@@ -68,7 +68,7 @@ public class AuthToken {
     } catch (SecurityException e) {
       log.info("Invalid JWT signature.");
     } catch (MalformedJwtException e) {
-      log.info("Invalid JWT token.");
+      log.info("Invalid JWT token. {}", e.getCause().toString());
     } catch (ExpiredJwtException e) {
       log.info("Expired JWT token.");
     } catch (UnsupportedJwtException e) {

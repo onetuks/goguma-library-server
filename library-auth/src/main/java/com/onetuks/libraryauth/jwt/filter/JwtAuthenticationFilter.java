@@ -43,39 +43,37 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
       SecurityContextHolder.getContext().setAuthentication(authentication);
     } catch (NullPointerException e) {
-      boolean isAuthPermittedAccess =
-          Arrays.stream(AuthPermittedEndpoint.ENDPOINTS)
-              .anyMatch(endpoint -> request.getRequestURI().contains(endpoint));
-
-      if (isAuthPermittedAccess) {
-        log.info("[인증] 비인증 API 요청입니다.");
+      if (isAuthPermittedAccess(request)) {
+        log.info("[JWT] 비인증 API 요청입니다.");
       } else {
         log.info(
-            "[인증] HTTP 요청에 Authentication 헤더가 비어있습니다 - URL: {} / Header: {}",
+            "[JWT] HTTP 요청에 Authentication 헤더가 비어있습니다 - URL: {} / Header: {}",
             request.getRequestURL(),
             request.getHeader(AuthHeaderUtil.HEADER_AUTHORIZATION));
       }
     } catch (MalformedJwtException e) {
       log.info(
-          "[인증] JWT 토큰이 올바르지 않습니다. (소셜 로그인 인가코드/인증토큰으로 로그인 중일 수 있습니다.) - URL: {} / Header: {}",
+          "[JWT] JWT 토큰이 올바르지 않습니다. (소셜 로그인 인가코드/인증토큰으로 로그인 중일 수 있습니다.) - URL: {} / Header: {}",
           request.getRequestURL(),
           request.getHeader(AuthHeaderUtil.HEADER_AUTHORIZATION));
     } catch (RuntimeException e) {
-      boolean isAuthPermittedAccess =
-          Arrays.stream(AuthPermittedEndpoint.ENDPOINTS)
-              .anyMatch(endpoint -> request.getRequestURL().toString().contains(endpoint));
-
-      if (!isAuthPermittedAccess) {
-        log.warn(
-            "[인증] JWT 토큰 검증 중 오류가 발생했습니다. (비정상적인 접근일 가능성이 있습니다.) - URL: {} / Header: {} / Exception: {}",
+      if (isAuthPermittedAccess(request)) {
+        log.info("[JWT] 비인증 허용 API 요청입니다. - URL: {} / Header: {}",
             request.getRequestURL(),
-            request.getHeader(AuthHeaderUtil.HEADER_AUTHORIZATION),
-            e.getMessage());
+            request.getHeader(AuthHeaderUtil.HEADER_AUTHORIZATION));
       } else {
-        log.info("[인증] 비인증 허용 API 요청입니다. - URL: {}", request.getRequestURL());
+        log.warn(
+            "[JWT] JWT 토큰 검증 중 오류가 발생했습니다. (비정상적인 접근일 가능성이 있습니다.) - URL: {} / Header: {}",
+            request.getRequestURL(),
+            request.getHeader(AuthHeaderUtil.HEADER_AUTHORIZATION));
       }
     } finally {
       filterChain.doFilter(request, response);
     }
+  }
+
+  private boolean isAuthPermittedAccess(HttpServletRequest request) {
+    return Arrays.stream(AuthPermittedEndpoint.ENDPOINTS)
+        .anyMatch(endpoint -> request.getRequestURI().contains(endpoint));
   }
 }
