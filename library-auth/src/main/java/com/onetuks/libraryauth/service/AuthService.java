@@ -97,7 +97,7 @@ public class AuthService {
     boolean tokenRemovalSucceed = authTokenService.removeAccessToken(accessToken);
     boolean memberRemovalSucceed = memberService.remove(loginId);
 
-    if (tokenRemovalSucceed && memberRemovalSucceed) {
+    if (!tokenRemovalSucceed && !memberRemovalSucceed) {
       throw new IllegalStateException("회원 탈퇴에 실패했습니다.");
     }
   }

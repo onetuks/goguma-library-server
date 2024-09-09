@@ -45,7 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     } catch (NullPointerException e) {
       boolean isAuthPermittedAccess =
           Arrays.stream(AuthPermittedEndpoint.ENDPOINTS)
-              .anyMatch(endpoint -> endpoint.matches(request.getRequestURI()));
+              .anyMatch(endpoint -> request.getRequestURI().contains(endpoint));
 
       if (isAuthPermittedAccess) {
         log.info("[인증] 비인증 API 요청입니다.");
