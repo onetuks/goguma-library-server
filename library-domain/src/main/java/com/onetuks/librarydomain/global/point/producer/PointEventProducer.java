@@ -10,8 +10,8 @@ public class PointEventProducer {
 
   private final MessageStreamer streamer;
 
-  public PointEventProducer(RedisTemplate<Long, Object> redisTemplate) {
-    this.streamer = new MessageStreamer(redisTemplate);
+  public PointEventProducer(MessageStreamer streamer) {
+    this.streamer = streamer;
   }
 
   public void creditPointForBookRegistration(long memberId) {

@@ -7,15 +7,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class MessageStreamer {
 
-  private final RedisTemplate<Long, Object> longObjectRedisTemplate;
+  private final RedisTemplate<String, Object> longObjectRedisTemplate;
 
-  public MessageStreamer(RedisTemplate<Long, Object> longObjectRedisTemplate) {
+  public MessageStreamer(RedisTemplate<String, Object> longObjectRedisTemplate) {
     this.longObjectRedisTemplate = longObjectRedisTemplate;
   }
 
   public void sendMessage(long streamKey, Object message) {
     longObjectRedisTemplate
         .opsForStream()
-        .add(StreamRecords.newRecord().ofObject(message).withStreamKey(streamKey));
+        .add(StreamRecords.newRecord().ofObject(message).withStreamKey(String.valueOf(streamKey)));
   }
 }
