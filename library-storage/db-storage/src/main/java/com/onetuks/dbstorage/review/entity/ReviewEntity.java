@@ -4,6 +4,7 @@ import com.onetuks.dbstorage.book.entity.BookEntity;
 import com.onetuks.dbstorage.common.BaseCreatedAndUpdatedEntity;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
 import com.onetuks.libraryobject.annotation.Generated;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -29,11 +30,11 @@ public class ReviewEntity extends BaseCreatedAndUpdatedEntity {
   @Column(name = "review_id", nullable = false)
   private Long reviewId;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "member_id", nullable = false)
   private MemberEntity memberEntity;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "book_id", nullable = false)
   private BookEntity bookEntity;
 

@@ -1,6 +1,7 @@
 package com.onetuks.dbstorage.member.entity;
 
 import com.onetuks.libraryobject.annotation.Generated;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,11 +33,11 @@ public class FollowEntity {
   @Column(name = "follow_id", nullable = false)
   private Long followId;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "follower_id", referencedColumnName = "member_id", nullable = false)
   private MemberEntity follower;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "followee_id", referencedColumnName = "member_id", nullable = false)
   private MemberEntity followee;
 

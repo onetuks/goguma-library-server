@@ -3,6 +3,7 @@ package com.onetuks.dbstorage.review.entity;
 import com.onetuks.dbstorage.common.BaseCreatedEntity;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
 import com.onetuks.libraryobject.annotation.Generated;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -34,11 +35,11 @@ public class ReviewPickEntity extends BaseCreatedEntity {
   @Column(name = "review_pick_id", nullable = false)
   private Long reviewPickId;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "member_id", nullable = false)
   private MemberEntity memberEntity;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "review_id", nullable = false)
   private ReviewEntity reviewEntity;
 

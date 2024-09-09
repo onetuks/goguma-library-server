@@ -2,6 +2,7 @@ package com.onetuks.dbstorage.attendance.entity;
 
 import com.onetuks.dbstorage.member.entity.MemberEntity;
 import com.onetuks.libraryobject.annotation.Generated;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -37,7 +38,7 @@ public class AttendanceEntity {
   @Column(name = "attendance_id", nullable = false)
   private Long attendanceId;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "member_id", nullable = false)
   private MemberEntity memberEntity;
 
