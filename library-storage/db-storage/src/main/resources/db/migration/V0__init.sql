@@ -28,8 +28,7 @@ CREATE TABLE IF NOT EXISTS members
     PRIMARY KEY (member_id),
     UNIQUE KEY unq_social_id_client_provider (social_id, client_provider),
     UNIQUE KEY unq_nickname (nickname),
-    FOREIGN KEY fk_member_member_statics_id (member_statics_id) REFERENCES member_statics (member_statics_id) ON
-        DELETE CASCADE
+    FOREIGN KEY fk_member_member_statics_id (member_statics_id) REFERENCES member_statics (member_statics_id) ON DELETE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='멤버 테이블';
 
@@ -41,7 +40,7 @@ CREATE TABLE IF NOT EXISTS point_histories
     points           BIGINT      NOT NULL DEFAULT 0 COMMENT '포인트',
     created_at       DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '포인트 내역일',
     PRIMARY KEY (point_history_id),
-    FOREIGN KEY fk_point_histories_member_id (member_id) REFERENCES members (member_id) ON DELETE CASCADE
+    FOREIGN KEY fk_point_histories_member_id (member_id) REFERENCES members (member_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='포인트 내역 테이블';
 
@@ -61,7 +60,7 @@ CREATE TABLE IF NOT EXISTS books
     pick_counts     BIGINT       NOT NULL DEFAULT 0 COMMENT '도서픽 카운트',
     created_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '도서 등록일',
     PRIMARY KEY (book_id),
-    FOREIGN KEY fk_books_member_id (member_id) REFERENCES members (member_id) ON DELETE CASCADE,
+    FOREIGN KEY fk_books_member_id (member_id) REFERENCES members (member_id),
     UNIQUE KEY unq_isbn (isbn)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='책 테이블';
@@ -77,8 +76,8 @@ CREATE TABLE IF NOT EXISTS reviews
     created_at     DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '서평 생성일',
     updated_at     DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '서평 수정일',
     PRIMARY KEY (review_id),
-    FOREIGN KEY fk_reviews_member_id (member_id) REFERENCES members (member_id) ON DELETE CASCADE,
-    FOREIGN KEY fk_review_book_id (book_id) REFERENCES books (book_id) ON DELETE CASCADE
+    FOREIGN KEY fk_reviews_member_id (member_id) REFERENCES members (member_id),
+    FOREIGN KEY fk_review_book_id (book_id) REFERENCES books (book_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='서평 테이블';
 
@@ -89,8 +88,8 @@ CREATE TABLE IF NOT EXISTS review_picks
     review_id      BIGINT   NOT NULL COMMENT '서평 식별자',
     created_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '서평픽 생성일',
     PRIMARY KEY (review_pick_id),
-    FOREIGN KEY fk_review_picks_member_id (member_id) REFERENCES members (member_id) ON DELETE CASCADE,
-    FOREIGN KEY fk_review_picks_review_id (review_id) REFERENCES reviews (review_id) ON DELETE CASCADE,
+    FOREIGN KEY fk_review_picks_member_id (member_id) REFERENCES members (member_id),
+    FOREIGN KEY fk_review_picks_review_id (review_id) REFERENCES reviews (review_id),
     UNIQUE KEY unq_member_id_review_id (member_id, review_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='서평픽 테이블';
@@ -101,8 +100,8 @@ CREATE TABLE IF NOT EXISTS book_picks
     member_id    BIGINT NOT NULL COMMENT '멤버 식별자',
     book_id      BIGINT NOT NULL COMMENT '책 식별자',
     PRIMARY KEY (book_pick_id),
-    FOREIGN KEY fk_book_picks_member_id (member_id) REFERENCES members (member_id) ON DELETE CASCADE,
-    FOREIGN KEY fk_book_picks_book_id (book_id) REFERENCES books (book_id) ON DELETE CASCADE,
+    FOREIGN KEY fk_book_picks_member_id (member_id) REFERENCES members (member_id),
+    FOREIGN KEY fk_book_picks_book_id (book_id) REFERENCES books (book_id),
     UNIQUE KEY unq_member_id_book_id (member_id, book_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='북픽 테이블';
@@ -113,8 +112,8 @@ CREATE TABLE IF NOT EXISTS follows
     follower_id BIGINT NOT NULL COMMENT '팔로우한 멤버(팔로워) 식별자',
     followee_id BIGINT NOT NULL COMMENT '팔로우 받은 멤버(팔로이) 식별자',
     PRIMARY KEY (follow_id),
-    FOREIGN KEY fk_follows_follower_id (follower_id) REFERENCES members (member_id) ON DELETE CASCADE,
-    FOREIGN KEY fk_follows_followee_id (followee_id) REFERENCES members (member_id) ON DELETE CASCADE,
+    FOREIGN KEY fk_follows_follower_id (follower_id) REFERENCES members (member_id),
+    FOREIGN KEY fk_follows_followee_id (followee_id) REFERENCES members (member_id),
     UNIQUE KEY unq_follower_id_followee_id (follower_id, followee_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='팔로우 테이블';
@@ -135,9 +134,8 @@ CREATE TABLE IF NOT EXISTS weekly_featured_books
     book_id                        BIGINT NOT NULL COMMENT '도서 식별자',
     PRIMARY KEY (weekly_featured_book_id),
     FOREIGN KEY fk_weekly_featured_books_event_id (weekly_featured_books_event_id)
-        REFERENCES weekly_featured_books_events (weekly_featured_books_event_id)
-        ON DELETE CASCADE,
-    FOREIGN KEY fk_weekly_featured_books_book_id (book_id) REFERENCES books (book_id) ON DELETE CASCADE,
+        REFERENCES weekly_featured_books_events (weekly_featured_books_event_id) ON DELETE CASCADE,
+    FOREIGN KEY fk_weekly_featured_books_book_id (book_id) REFERENCES books (book_id),
     UNIQUE KEY unq_book_id (book_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='금주도서 테이블';
@@ -148,7 +146,7 @@ CREATE TABLE IF NOT EXISTS attendances
     member_id     BIGINT NOT NULL COMMENT '멤버 식별자',
     attended_at   DATE   NOT NULL DEFAULT (CURRENT_DATE) COMMENT '출석 일시',
     PRIMARY KEY (attendance_id),
-    FOREIGN KEY fk_attendances_member_id (member_id) REFERENCES members (member_id) ON DELETE CASCADE,
+    FOREIGN KEY fk_attendances_member_id (member_id) REFERENCES members (member_id),
     UNIQUE KEY unq_member_id_attended_at (member_id, attended_at)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='출석 테이블';
@@ -161,7 +159,7 @@ CREATE TABLE IF NOT EXISTS notifications
     notification_type ENUM ('NOTICE', 'EVENT', 'SOCIAL_UPDATE') NOT NULL COMMENT '알림 타입',
     created_at        DATETIME                                  NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '알림 생성일',
     PRIMARY KEY (notification_id),
-    FOREIGN KEY fk_notifications_member_id (member_id) REFERENCES members (member_id) ON DELETE CASCADE
+    FOREIGN KEY fk_notifications_member_id (member_id) REFERENCES members (member_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='알림 테이블';
 
@@ -173,7 +171,7 @@ CREATE TABLE notification_receipts
     is_read                  BOOLEAN  NOT NULL DEFAULT FALSE COMMENT '읽음 상태',
     read_at                  DATETIME NULL COMMENT '읽은 시간',
     PRIMARY KEY (notification_receipts_id),
-    FOREIGN KEY fk_notification_receipts_member_id (member_id) REFERENCES members (member_id) ON DELETE CASCADE,
-    FOREIGN KEY fk_notification_receipts_notification_id (notification_id) REFERENCES notifications (notification_id) ON DELETE CASCADE
+    FOREIGN KEY fk_notification_receipts_member_id (member_id) REFERENCES members (member_id),
+    FOREIGN KEY fk_notification_receipts_notification_id (notification_id) REFERENCES notifications (notification_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='알림 수신 테이블';

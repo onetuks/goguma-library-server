@@ -2,7 +2,6 @@ package com.onetuks.dbstorage.book.entity;
 
 import com.onetuks.dbstorage.member.entity.MemberEntity;
 import com.onetuks.libraryobject.annotation.Generated;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -34,11 +33,11 @@ public class BookPickEntity {
   @Column(name = "book_pick_id", nullable = false)
   private Long bookPickId;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id", nullable = false)
   private MemberEntity memberEntity;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "book_id", nullable = false)
   private BookEntity bookEntity;
 

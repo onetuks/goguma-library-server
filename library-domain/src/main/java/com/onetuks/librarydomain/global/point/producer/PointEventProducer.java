@@ -2,7 +2,6 @@ package com.onetuks.librarydomain.global.point.producer;
 
 import com.onetuks.librarydomain.global.point.producer.dto.PointEvent;
 import com.onetuks.librarydomain.global.util.MessageStreamer;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service

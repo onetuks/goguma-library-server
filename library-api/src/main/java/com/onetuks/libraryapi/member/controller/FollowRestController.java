@@ -55,9 +55,9 @@ public class FollowRestController {
    * @param followId : 팔로우 식별자
    * @return : 204 No Content
    */
-  @DeleteMapping(path = "/members/follows/{follow-id}")
+  @DeleteMapping(path = "/members/follows/{following-id}")
   public ResponseEntity<Void> deleteFollow(
-      @LoginId Long loginId, @PathVariable(name = "follow-id") Long followId) {
+      @LoginId Long loginId, @PathVariable(name = "following-id") Long followId) {
     followService.remove(loginId, followId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
