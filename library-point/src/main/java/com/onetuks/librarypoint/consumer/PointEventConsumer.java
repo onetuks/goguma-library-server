@@ -34,11 +34,13 @@ public class PointEventConsumer
       if (creditType == CreditType.CREDIT) {
         forwardToCreditService(activity, memberId);
         log.info("Credit Point Event Success - memberId: {}, activity: {}", memberId, activity);
-        return;
+      } else if (creditType == CreditType.DEBIT) {
+        forwardToDebitService(activity, memberId);
+        log.info("Debit Point Event Success - memberId: {}, activity: {}", memberId, activity);
+      } else {
+        pointService.removeMemberPointHistories(memberId);
+        log.info("Remove Member Point Histories Success - memberId: {}", memberId);
       }
-
-      forwardToDebitService(activity, memberId);
-      log.info("Debit Point Event Success - memberId: {}, activity: {}", memberId, activity);
 
     } catch (NullPointerException e) {
       log.warn("Invalid Point Event Message", e);
@@ -55,6 +57,7 @@ public class PointEventConsumer
       case REVIEW_REGISTRATION_BASE -> pointService.creditPointForReviewRegistration(memberId);
       case REVIEW_PICK_PICKER -> pointService.creditPointForReviewPicker(memberId);
       case REVIEW_PICK_RECEIVER -> pointService.creditPointForReviewReceiver(memberId);
+      case MEMBER_POINT_HISTORIES -> {}
       default -> pointService.creditPointForAttendance(memberId, activity);
     }
   }

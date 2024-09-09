@@ -61,4 +61,8 @@ public class PointEventProducer {
           streamer.sendMessage(loginId, new PointEvent("CREDIT", "ATTENDANCE_30_DAYS", loginId));
     }
   }
+
+  public void removeMemberPointHistories(long memberId) {
+    streamer.sendMessage(memberId, new PointEvent("REMOVE", "MEMBER_POINT_HISTORIES", memberId));
+  }
 }

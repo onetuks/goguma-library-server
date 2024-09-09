@@ -71,4 +71,9 @@ public class PointRepository {
         .findById(memberId)
         .orElseThrow(() -> new NoSuchEntityException("존재하지 않는 멤버입니다."));
   }
+
+  @Transactional
+  public void deleteAllPointHistories(long memberId) {
+    pointHistoryEntityJpaRepository.deleteAllByMemberEntityMemberId(memberId);
+  }
 }

@@ -13,7 +13,8 @@ public enum Activity {
   ATTENDANCE_3_DAYS("3일 연속 출석", 3L),
   ATTENDANCE_5_DAYS("5일 연속 출석", 5L),
   ATTENDANCE_10_DAYS("10일 연속 출석", 10L),
-  ATTENDANCE_30_DAYS("30일 연속 출석", 30L);
+  ATTENDANCE_30_DAYS("30일 연속 출석", 30L),
+  MEMBER_POINT_HISTORIES("포인트 내역 삭제", 0L);
 
   private final String description;
   private final long points;

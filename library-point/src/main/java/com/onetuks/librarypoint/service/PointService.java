@@ -75,4 +75,8 @@ public class PointService {
   public Page<PointHistory> searchAllPointHistories(long loginId, Pageable pageable) {
     return pointRepository.readAllPointHistories(loginId, pageable);
   }
+
+  public void removeMemberPointHistories(long memberId) {
+    pointRepository.deleteAllPointHistories(memberId);
+  }
 }
