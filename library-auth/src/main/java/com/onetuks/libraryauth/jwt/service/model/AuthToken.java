@@ -62,23 +62,27 @@ public class AuthToken {
   }
 
   public boolean isValidTokenClaims() {
-    Optional<Object> claims = Optional.empty();
     try {
-      claims = Optional.ofNullable(getTokenClaims());
+      return Optional.ofNullable(getTokenClaims()).isPresent();
     } catch (SecurityException e) {
       log.info("Invalid JWT signature.");
+      return false;
     } catch (MalformedJwtException e) {
       log.info("Invalid JWT token. {}", e.getCause().toString());
+      return false;
     } catch (ExpiredJwtException e) {
       log.info("Expired JWT token.");
+      return false;
     } catch (UnsupportedJwtException e) {
       log.info("Unsupported JWT token.");
+      return false;
     } catch (IllegalArgumentException e) {
       log.info("JWT token compact of handler are invalid.");
+      return false;
     } catch (Exception e) {
+      log.info("Unexpected JWT token error.");
       return false;
     }
-    return claims.isPresent();
   }
 
   private Claims getTokenClaims() {

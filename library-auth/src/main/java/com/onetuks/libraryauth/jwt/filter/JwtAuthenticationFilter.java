@@ -57,6 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
           request.getRequestURL(),
           request.getHeader(AuthHeaderUtil.HEADER_AUTHORIZATION));
     } catch (RuntimeException e) {
+      log.warn(e.getMessage());
       if (isAuthPermittedAccess(request)) {
         log.info(
             "[JWT] 비인증 허용 API 요청입니다. - URL: {} / Header: {}",
