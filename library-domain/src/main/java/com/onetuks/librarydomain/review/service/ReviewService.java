@@ -127,13 +127,20 @@ public class ReviewService {
   @Transactional(readOnly = true)
   public Page<Review> searchAllWithInterestedCategories(long memberId, Pageable pageable) {
     Set<Category> interestedCategories = memberRepository.read(memberId).interestedCategories();
-    List<Book> thisWeekInterestedCategoriesBooks =
-        weeklyFeaturedBookRepository.readAllForThisWeek().getContent().stream()
-            .map(WeeklyFeaturedBook::book)
+
+    // Fix: 기존 (금주도서 서평에서 조회) -> 변경 (전체 서평에서 조회)
+    //    List<Book> thisWeekInterestedCategoriesBooks =
+    //        weeklyFeaturedBookRepository.readAllForThisWeek().getContent().stream()
+    //            .map(WeeklyFeaturedBook::book)
+    //            .filter(book ->
+    // book.categories().stream().anyMatch(interestedCategories::contains))
+    //            .toList();
+    List<Book> interestedCategoryBooks =
+        bookRepository.readAll(null, pageable).getContent().stream()
             .filter(book -> book.categories().stream().anyMatch(interestedCategories::contains))
             .toList();
 
-    return reviewRepository.readAll(thisWeekInterestedCategoriesBooks, pageable);
+    return reviewRepository.readAll(interestedCategoryBooks, pageable);
   }
 
   private void checkAuthentication(long loginId, Review review) {
