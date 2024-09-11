@@ -5,6 +5,7 @@ plugins {
 dependencies {
     // Module
     implementation(project(':library-object'))
+    implementation(project(':library-stream'))
 
     // Test
     testImplementation(testFixtures(project(':library-object')))
@@ -28,8 +29,4 @@ dependencies {
 
     // Caffeine Cache
     implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
-
-    // Spring Redis
-    implementation('org.springframework.boot:spring-boot-starter-data-redis')
-    testImplementation('com.redis.testcontainers:testcontainers-redis-junit:1.6.4')
 }

@@ -4,6 +4,7 @@ dependencies {
     compileOnly(project(':library-domain'))
     implementation(project(':library-storage:db-storage'))
     implementation(project(':library-object'))
+    implementation(project(':library-stream'))
 
     // Test
     testImplementation(project(':library-domain'))

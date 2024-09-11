@@ -7,7 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PointHistoryEntityJpaRepository extends JpaRepository<PointHistoryEntity, Long> {
 
-  Page<PointHistoryEntity> findAllByMemberEntityMemberId(long loginId, Pageable pageable);
+  Page<PointHistoryEntity> findAllByMemberEntityMemberIdOrderByCreatedAtDesc(
+      long loginId, Pageable pageable);
 
   void deleteAllByMemberEntityMemberId(long memberId);
 }

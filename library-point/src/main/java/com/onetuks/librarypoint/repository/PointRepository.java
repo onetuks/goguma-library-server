@@ -61,7 +61,7 @@ public class PointRepository {
   @Transactional(readOnly = true)
   public Page<PointHistory> readAllPointHistories(long memberId, Pageable pageable) {
     return pointHistoryEntityJpaRepository
-        .findAllByMemberEntityMemberId(memberId, pageable)
+        .findAllByMemberEntityMemberIdOrderByCreatedAtDesc(memberId, pageable)
         .map(pointHistoryConverter::toModel);
   }
 

@@ -6,6 +6,7 @@ import com.onetuks.librarypoint.service.PointService;
 import com.onetuks.librarypoint.service.model.PointHistory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,7 +34,8 @@ public class PointRestController {
    */
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<PointHistoryResponses> getPointHistories(
-      @LoginId Long loginId, @PageableDefault(sort = "createdAt") Pageable pageable) {
+      @LoginId Long loginId,
+      @PageableDefault(sort = "createdAt", direction = Direction.DESC) Pageable pageable) {
     Page<PointHistory> results = pointService.searchAllPointHistories(loginId, pageable);
     PointHistoryResponses responses = PointHistoryResponses.from(results);
 
