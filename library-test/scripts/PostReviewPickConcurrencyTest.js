@@ -10,12 +10,11 @@ export let options = {
 function getToken() {
   const authUrl = 'http://localhost:8080/api/test/login';
   const authRes = http.post(authUrl);
-
   return JSON.parse(authRes.body).appToken;
 }
 
 export default function() {
-  const reviewId = 1;
+  const reviewId = 4;
 
   const url = `http://localhost:8080/api/reviews/${reviewId}/picks`;
   const params = {

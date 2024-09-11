@@ -3,6 +3,7 @@ package com.onetuks.librarydomain.member.model.vo;
 import com.onetuks.libraryobject.annotation.Generated;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public record Nickname(String value) {
 
@@ -14,7 +15,7 @@ public record Nickname(String value) {
 
   public Nickname {
     if (value == null) {
-      value = DEFAULT_NICKNAME;
+      value = DEFAULT_NICKNAME + UUID.randomUUID().toString().substring(0, 5).replace("-", "");
     }
     validateNicknameValueForbiddenToken(value);
     validateNicknameValueSpecialCharacter(value);
