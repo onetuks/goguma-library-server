@@ -133,7 +133,10 @@ public class ReviewService {
     Set<Category> interestedCategories = memberRepository.read(memberId).interestedCategories();
     List<Book> interestedCategoryBooks =
         bookRepository.readAll(null, pageable).getContent().stream()
-            .filter(book -> book.categories().stream().anyMatch(interestedCategories::contains))
+            .filter(
+                book ->
+                    book.categories().stream().anyMatch(interestedCategories::contains)
+                        || interestedCategories.contains(Category.ALL))
             .toList();
 
     return reviewRepository.readAll(interestedCategoryBooks, pageable);
