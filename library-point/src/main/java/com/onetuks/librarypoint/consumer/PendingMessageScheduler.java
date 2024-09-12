@@ -51,9 +51,6 @@ public class PendingMessageScheduler implements InitializingBean {
             streamer.findStreamMessageById(this.streamKey, pendingMessage.getIdAsString());
 
         if (messageToProcess == null) {
-          log.warn("존재하지 않는 메시지");
-          streamer.deleteFromPending(
-              streamKey, consumerGroupName, consumerName, pendingMessage.getId());
           continue;
         }
 
@@ -64,20 +61,20 @@ public class PendingMessageScheduler implements InitializingBean {
         if (errorCount >= 5) {
           log.warn("재처리 시도 제한 초과");
         } else if (pendingMessage.getTotalDeliveryCount() >= 2) {
-          log.info("delivery 제한 횟수 초과");
+          log.warn("delivery 제한 횟수 초과");
         } else {
           PointEvent pointEvent =
               objectMapper.readValue(messageToProcess.getValue(), PointEvent.class);
           consumer.forwardByCreditType(pointEvent);
         }
 
-        streamer.ackStream(consumerGroupName, messageToProcess);
+        streamer.ackStream(streamKey, consumerGroupName, messageToProcess);
         streamer.deleteFromStream(streamKey, pendingMessage.getId());
       } catch (Exception e) {
         streamer.increaseRedisValue(ERROR_COUNT_KEY, pendingMessage.getIdAsString());
+        log.warn("Failed to process pending message: gr: {} / cs: {}",
+            pendingMessage.getGroupName(), pendingMessage.getConsumerName());
       }
     }
-
-    log.info("Pending Message Processed");
   }
 }
