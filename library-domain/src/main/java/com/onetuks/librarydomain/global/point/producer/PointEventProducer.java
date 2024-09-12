@@ -58,26 +58,21 @@ public class PointEventProducer {
   }
 
   public void creditPointForAttendance(long loginId, int attendedCount) {
-    streamer.addToStream(
-        StreamKey.POINT_EVENT.getKey(), new PointEvent("CREDIT", "ATTENDANCE_DAILY", loginId));
-
     switch (attendedCount) {
-      case 3 ->
-          streamer.addToStream(
-              StreamKey.POINT_EVENT.getKey(),
-              new PointEvent("CREDIT", "ATTENDANCE_3_DAYS", loginId));
-      case 5 ->
-          streamer.addToStream(
-              StreamKey.POINT_EVENT.getKey(),
-              new PointEvent("CREDIT", "ATTENDANCE_5_DAYS", loginId));
-      case 10 ->
-          streamer.addToStream(
-              StreamKey.POINT_EVENT.getKey(),
-              new PointEvent("CREDIT", "ATTENDANCE_10_DAYS", loginId));
-      case 30 ->
-          streamer.addToStream(
-              StreamKey.POINT_EVENT.getKey(),
-              new PointEvent("CREDIT", "ATTENDANCE_30_DAYS", loginId));
+      case 1 -> streamer.addToStream(
+          StreamKey.POINT_EVENT.getKey(), new PointEvent("CREDIT", "ATTENDANCE_DAILY", loginId));
+      case 3 -> streamer.addToStream(
+          StreamKey.POINT_EVENT.getKey(),
+          new PointEvent("CREDIT", "ATTENDANCE_3_DAYS", loginId));
+      case 5 -> streamer.addToStream(
+          StreamKey.POINT_EVENT.getKey(),
+          new PointEvent("CREDIT", "ATTENDANCE_5_DAYS", loginId));
+      case 10 -> streamer.addToStream(
+          StreamKey.POINT_EVENT.getKey(),
+          new PointEvent("CREDIT", "ATTENDANCE_10_DAYS", loginId));
+      case 30 -> streamer.addToStream(
+          StreamKey.POINT_EVENT.getKey(),
+          new PointEvent("CREDIT", "ATTENDANCE_30_DAYS", loginId));
     }
   }
 
