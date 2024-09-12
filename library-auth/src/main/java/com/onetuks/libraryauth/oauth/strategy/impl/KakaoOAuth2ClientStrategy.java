@@ -28,6 +28,7 @@ import reactor.core.publisher.Mono;
 public class KakaoOAuth2ClientStrategy implements OAuth2ClientStrategy {
 
   private static final Logger log = LoggerFactory.getLogger(KakaoOAuth2ClientStrategy.class);
+
   private final WebClient webClient;
   private final KakaoClientConfig kakaoClientConfig;
 

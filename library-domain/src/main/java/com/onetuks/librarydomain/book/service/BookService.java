@@ -6,9 +6,10 @@ import com.onetuks.librarydomain.book.repository.BookRepository;
 import com.onetuks.librarydomain.book.service.dto.param.BookPatchParam;
 import com.onetuks.librarydomain.book.service.dto.param.BookPostParam;
 import com.onetuks.librarydomain.global.file.repository.FileRepository;
-import com.onetuks.librarydomain.global.point.service.PointService;
+import com.onetuks.librarydomain.global.point.producer.PointEventProducer;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
 import com.onetuks.libraryobject.enums.CacheName;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,19 +24,19 @@ public class BookService {
   private final MemberRepository memberRepository;
   private final FileRepository fileRepository;
 
-  private final PointService pointService;
+  private final PointEventProducer pointEventProducer;
   private final IsbnSearchService isbnSearchService;
 
   public BookService(
       BookRepository bookRepository,
       MemberRepository memberRepository,
       FileRepository fileRepository,
-      PointService pointService,
+      PointEventProducer pointEventProducer,
       IsbnSearchService isbnSearchService) {
     this.bookRepository = bookRepository;
     this.memberRepository = memberRepository;
     this.fileRepository = fileRepository;
-    this.pointService = pointService;
+    this.pointEventProducer = pointEventProducer;
     this.isbnSearchService = isbnSearchService;
   }
 
@@ -43,6 +44,7 @@ public class BookService {
     return isbnSearchService.search(isbn);
   }
 
+  @CacheEvict(value = CacheName.SEARCHED_BOOKS, allEntries = true)
   @Transactional
   public Book register(long loginId, BookPostParam param, MultipartFile coverImage) {
     Book book =
@@ -58,12 +60,13 @@ public class BookService {
             param.coverImageFilename(),
             coverImage);
 
-    pointService.creditPointForBookRegistration(loginId);
+    pointEventProducer.creditPointForBookRegistration(loginId);
     fileRepository.putFile(book.coverImageFile());
 
     return bookRepository.create(book);
   }
 
+  @CacheEvict(value = CacheName.SEARCHED_BOOKS, allEntries = true)
   @Transactional
   public Book edit(long bookId, BookPatchParam param, MultipartFile coverImage) {
     return bookRepository.update(
@@ -82,12 +85,13 @@ public class BookService {
                 coverImage));
   }
 
+  @CacheEvict(value = CacheName.SEARCHED_BOOKS, allEntries = true)
   @Transactional
   public void remove(long bookId) {
     Book book = bookRepository.read(bookId);
 
     fileRepository.deleteFile(book.coverImageFile());
-    pointService.debitPointForBookRemoval(book.member().memberId());
+    pointEventProducer.debitPointForBookRemoval(book.member().memberId());
 
     bookRepository.delete(bookId);
   }

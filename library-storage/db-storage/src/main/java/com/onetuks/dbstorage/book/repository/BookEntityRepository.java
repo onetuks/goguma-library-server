@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onetuks.dbstorage.book.converter.BookConverter;
 import com.onetuks.dbstorage.book.entity.BookEntity;
+import com.onetuks.dbstorage.common.DeletionRepository;
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.book.repository.BookRepository;
 import com.onetuks.libraryobject.enums.Category;
@@ -22,14 +23,17 @@ public class BookEntityRepository implements BookRepository {
 
   private final BookEntityJpaRepository repository;
   private final BookEntityJpaQueryDslRepository qDslRepository;
+  private final DeletionRepository deletionRepository;
   private final BookConverter converter;
 
   public BookEntityRepository(
       BookEntityJpaRepository repository,
       BookEntityJpaQueryDslRepository qDslRepository,
+      DeletionRepository deletionRepository,
       BookConverter converter) {
     this.repository = repository;
     this.qDslRepository = qDslRepository;
+    this.deletionRepository = deletionRepository;
     this.converter = converter;
   }
 
@@ -90,6 +94,6 @@ public class BookEntityRepository implements BookRepository {
 
   @Override
   public void delete(long bookId) {
-    repository.deleteById(bookId);
+    deletionRepository.deleteBook(bookId);
   }
 }

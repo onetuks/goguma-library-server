@@ -1,6 +1,7 @@
 package com.onetuks.librarydomain.member.service;
 
 import com.onetuks.librarydomain.global.file.repository.FileRepository;
+import com.onetuks.librarydomain.global.point.producer.PointEventProducer;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.member.model.vo.AuthInfo;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
@@ -20,9 +21,15 @@ public class MemberService {
   private final MemberRepository memberRepository;
   private final FileRepository fileRepository;
 
-  public MemberService(MemberRepository memberRepository, FileRepository fileRepository) {
+  private final PointEventProducer pointEventProducer;
+
+  public MemberService(
+      MemberRepository memberRepository,
+      FileRepository fileRepository,
+      PointEventProducer pointEventProducer) {
     this.memberRepository = memberRepository;
     this.fileRepository = fileRepository;
+    this.pointEventProducer = pointEventProducer;
   }
 
   @Transactional
@@ -88,6 +95,8 @@ public class MemberService {
   @Transactional
   public boolean remove(long memberId) {
     Member member = memberRepository.read(memberId);
+
+    pointEventProducer.removeMemberPointHistories(memberId);
 
     fileRepository.deleteFile(member.profileImageFile());
     memberRepository.delete(memberId);

@@ -43,7 +43,7 @@ class AttendanceServiceTest extends DomainIntegrationTest {
         () -> assertThat(result.member().memberId()).isEqualTo(member.memberId()),
         () -> assertThat(result.attendedAt()).isEqualTo(LocalDate.now()));
 
-    verify(pointService, times(1)).creditPointForAttendance(member.memberId(), 1);
+    verify(pointEventProducer, times(1)).creditPointForAttendance(member.memberId(), 1);
   }
 
   @Test

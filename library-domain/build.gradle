@@ -5,6 +5,7 @@ plugins {
 dependencies {
     // Module
     implementation(project(':library-object'))
+    implementation(project(':library-stream'))
 
     // Test
     testImplementation(testFixtures(project(':library-object')))

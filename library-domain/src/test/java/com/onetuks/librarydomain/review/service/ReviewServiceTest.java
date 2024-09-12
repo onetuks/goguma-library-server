@@ -13,7 +13,6 @@ import com.onetuks.librarydomain.BookFixture;
 import com.onetuks.librarydomain.DomainIntegrationTest;
 import com.onetuks.librarydomain.MemberFixture;
 import com.onetuks.librarydomain.ReviewFixture;
-import com.onetuks.librarydomain.WeeklyFeaturedBookFixture;
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.review.model.Review;
@@ -99,7 +98,7 @@ class ReviewServiceTest extends DomainIntegrationTest {
           }
         });
 
-    verify(pointService, times(1)).creditPointForReviewRegistration(picker.memberId(), true);
+    verify(pointEventProducer, times(1)).creditPointForReviewRegistration(picker.memberId(), true);
   }
 
   @Test
@@ -167,7 +166,7 @@ class ReviewServiceTest extends DomainIntegrationTest {
     reviewService.remove(picker.memberId(), review.reviewId());
 
     // Then
-    verify(pointService, times(1)).debitPointForReviewRemoval(picker.memberId());
+    verify(pointEventProducer, times(1)).debitPointForReviewRemoval(picker.memberId());
     verify(reviewRepository, times(1)).delete(review.reviewId());
   }
 
@@ -269,23 +268,16 @@ class ReviewServiceTest extends DomainIntegrationTest {
   }
 
   @Test
-  @DisplayName("금주도서 중 관심 카테고리에 하나라도 포함되는 모든 도서의 서평을 조회한다.")
+  @DisplayName("관심 카테고리에 하나라도 포함되는 모든 도서의 서평을 조회한다.")
   void searchAllWithInterestedCategories_Test() {
     // Given
     Pageable pageable = PageRequest.of(0, 3);
     Member member = MemberFixture.create(126L, RoleType.USER);
-    Page<WeeklyFeaturedBook> thisWeekFeaturedBooks =
-        new PageImpl<>(
-            IntStream.range(0, 10)
-                .mapToObj(
-                    i ->
-                        WeeklyFeaturedBookFixture.create(
-                            (long) i, BookFixture.create((long) i, member)))
-                .toList());
+    List<Book> books =
+        IntStream.range(0, 10).mapToObj(i -> BookFixture.create((long) i, member)).toList();
     PageImpl<Review> reviews =
         new PageImpl<>(
-            thisWeekFeaturedBooks.getContent().stream()
-                .map(WeeklyFeaturedBook::book)
+            books.stream()
                 .filter(
                     book ->
                         book.categories().stream()
@@ -294,7 +286,7 @@ class ReviewServiceTest extends DomainIntegrationTest {
                 .toList());
 
     given(memberRepository.read(member.memberId())).willReturn(member);
-    given(weeklyFeaturedBookRepository.readAllForThisWeek()).willReturn(thisWeekFeaturedBooks);
+    given(bookRepository.readAll(null, pageable)).willReturn(new PageImpl<>(books));
     given(reviewRepository.readAll(anyList(), any(Pageable.class))).willReturn(reviews);
 
     // When
@@ -302,14 +294,13 @@ class ReviewServiceTest extends DomainIntegrationTest {
         reviewService.searchAllWithInterestedCategories(member.memberId(), pageable);
 
     // Then
-    List<Book> thisWeekInterestedCategoriesBooks =
-        thisWeekFeaturedBooks.getContent().stream()
-            .map(WeeklyFeaturedBook::book)
+    List<Book> interestedCategoriesBooks =
+        books.stream()
             .filter(
                 book ->
                     book.categories().stream().anyMatch(member.interestedCategories()::contains))
             .toList();
 
-    assertThat(results).hasSize(thisWeekInterestedCategoriesBooks.size());
+    assertThat(results).hasSize(interestedCategoriesBooks.size());
   }
 }

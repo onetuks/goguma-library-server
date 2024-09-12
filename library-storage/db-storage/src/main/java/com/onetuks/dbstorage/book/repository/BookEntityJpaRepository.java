@@ -1,6 +1,7 @@
 package com.onetuks.dbstorage.book.repository;
 
 import com.onetuks.dbstorage.book.entity.BookEntity;
+import com.onetuks.dbstorage.member.entity.MemberEntity;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,4 +26,6 @@ public interface BookEntityJpaRepository extends JpaRepository<BookEntity, Long>
   Page<BookEntity> findAllNotInPastWeeklyFeaturedBooks(
       @Param("pastWeeklyFeaturedBooksIds") List<Long> pastWeeklyFeaturedBooksIds,
       Pageable pageable);
+
+  void deleteAllByMemberEntity(MemberEntity memberEntity);
 }

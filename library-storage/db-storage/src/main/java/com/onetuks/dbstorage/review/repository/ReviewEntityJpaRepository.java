@@ -33,4 +33,8 @@ public interface ReviewEntityJpaRepository extends JpaRepository<ReviewEntity, L
 
   Page<ReviewEntity> findAllByBookEntityIn(
       List<BookEntity> thisWeekInterestedCategoriesBooks, Pageable pageable);
+
+  void deleteAllByMemberEntity(MemberEntity memberEntity);
+
+  void deleteAllByBookEntity(BookEntity bookEntity);
 }

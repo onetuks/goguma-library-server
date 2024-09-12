@@ -1,5 +1,6 @@
 package com.onetuks.dbstorage.member.repository;
 
+import com.onetuks.dbstorage.common.DeletionRepository;
 import com.onetuks.dbstorage.member.converter.MemberConverter;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
@@ -12,10 +13,15 @@ import org.springframework.stereotype.Repository;
 public class MemberEntityRepository implements MemberRepository {
 
   private final MemberEntityJpaRepository repository;
+  private final DeletionRepository deletionRepository;
   private final MemberConverter converter;
 
-  public MemberEntityRepository(MemberEntityJpaRepository repository, MemberConverter converter) {
+  public MemberEntityRepository(
+      MemberEntityJpaRepository repository,
+      DeletionRepository deletionRepository,
+      MemberConverter converter) {
     this.repository = repository;
+    this.deletionRepository = deletionRepository;
     this.converter = converter;
   }
 
@@ -46,6 +52,6 @@ public class MemberEntityRepository implements MemberRepository {
 
   @Override
   public void delete(long memberId) {
-    repository.deleteById(memberId);
+    deletionRepository.deleteMember(memberId);
   }
 }

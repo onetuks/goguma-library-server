@@ -6,7 +6,8 @@ import com.onetuks.librarypoint.CorePointIntegrationTest.CorePointConfig;
 import com.onetuks.librarypoint.CorePointIntegrationTest.CorePointInitializer;
 import com.onetuks.librarypoint.repository.DailyPointLimitRepository;
 import com.onetuks.librarypoint.repository.PointRepository;
-import com.onetuks.librarypoint.service.PointServiceImpl;
+import com.onetuks.librarypoint.service.PointService;
+import com.onetuks.librarystream.util.MessageStreamer;
 import com.redis.testcontainers.RedisContainer;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,15 +29,20 @@ import org.testcontainers.containers.MySQLContainer;
 @ContextConfiguration(initializers = CorePointInitializer.class)
 public class CorePointIntegrationTest {
 
-  @Autowired public PointServiceImpl pointService;
+  @Autowired public PointService pointService;
   @Autowired public PointRepository pointRepository;
   @Autowired public DailyPointLimitRepository dailyPointLimitRepository;
+  @Autowired public MessageStreamer messageStreamer;
 
   @Autowired public MemberEntityJpaRepository memberEntityJpaRepository;
 
   @Configuration
   @ComponentScan(
-      basePackages = {"com.onetuks.librarypoint", "com.onetuks.dbstorage"},
+      basePackages = {
+        "com.onetuks.librarypoint",
+        "com.onetuks.dbstorage",
+        "com.onetuks.librarystream"
+      },
       basePackageClasses = RedisConfig.class)
   public static class CorePointConfig {}
 

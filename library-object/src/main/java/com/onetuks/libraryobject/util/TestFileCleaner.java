@@ -1,4 +1,4 @@
-package com.onetuks.libraryobject.component;
+package com.onetuks.libraryobject.util;
 
 import com.onetuks.libraryobject.enums.ImageType;
 import java.io.IOException;

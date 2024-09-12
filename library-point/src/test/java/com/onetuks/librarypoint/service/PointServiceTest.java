@@ -1,9 +1,6 @@
 package com.onetuks.librarypoint.service;
 
-import static com.onetuks.librarypoint.service.model.vo.Activity.ACTIVITY_10_DAYS;
-import static com.onetuks.librarypoint.service.model.vo.Activity.ACTIVITY_30_DAYS;
-import static com.onetuks.librarypoint.service.model.vo.Activity.ATTENDANCE_3_DAYS;
-import static com.onetuks.librarypoint.service.model.vo.Activity.ATTENDANCE_5_DAYS;
+import static com.onetuks.librarypoint.service.model.vo.Activity.ATTENDANCE_10_DAYS;
 import static com.onetuks.librarypoint.service.model.vo.Activity.ATTENDANCE_DAILY;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,7 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-class PointServiceImplTest extends CorePointIntegrationTest {
+class PointServiceTest extends CorePointIntegrationTest {
 
   private MemberEntity memberEntity;
 
@@ -66,11 +63,10 @@ class PointServiceImplTest extends CorePointIntegrationTest {
   @DisplayName("서평 등록 시 일반도서라면 15포인트를 지급한다.")
   void creditPointForReviewRegistration_IsNotWeeklyFeaturedBookCredit15Point_Test() {
     // Given
-    boolean isWeeklyFeaturedBook = false;
     long expected = memberEntity.getPoints() + Activity.REVIEW_REGISTRATION_BASE.getPoints();
 
     // When
-    pointService.creditPointForReviewRegistration(memberEntity.getMemberId(), isWeeklyFeaturedBook);
+    pointService.creditPointForReviewRegistration(memberEntity.getMemberId());
 
     // Then
     long result =
@@ -83,11 +79,10 @@ class PointServiceImplTest extends CorePointIntegrationTest {
   @DisplayName("서평 등록 시 금주도서라면 30포인트를 지급한다.")
   void creditPointForReviewRegistration_IsWeeklyFeaturedBookCredit30Point_Test() {
     // Given
-    boolean isWeeklyFeaturedBook = true;
     long expected = memberEntity.getPoints() + Activity.REVIEW_REGISTRATION_EVENT.getPoints();
 
     // When
-    pointService.creditPointForReviewRegistration(memberEntity.getMemberId(), isWeeklyFeaturedBook);
+    pointService.creditPointForReviewRegistrationEvent(memberEntity.getMemberId());
 
     // Then
     long result =
@@ -114,29 +109,24 @@ class PointServiceImplTest extends CorePointIntegrationTest {
   }
 
   @Test
-  @DisplayName("서평픽 시 일일 한계치 이하라면 픽커에게 1포인트, 리시버에게 5포인트 지급하고 픽커의 일일 포인트 지급수를 1 증가시킨다.")
-  void creditPointForReviewPick_UnderLimit_CreditPoint_Test() {
+  @DisplayName("서평픽 시 일일 한계치 이하라면, 픽커에게 1포인트 지급하고 일일 포인트 지급수를 1 증가시킨다.")
+  void creditPointForReviewPicker_UnderLimit_CreditPoint_Test() {
     // Given
     MemberEntity picker = memberEntityJpaRepository.save(MemberEntityFixture.create());
-    MemberEntity receiver = memberEntityJpaRepository.save(MemberEntityFixture.create());
 
     long expectedPickerPoint = picker.getPoints() + Activity.REVIEW_PICK_PICKER.getPoints();
-    long expectedReceiverPoint = receiver.getPoints() + Activity.REVIEW_PICK_RECEIVER.getPoints();
     int expectedPickerCreditCount = 1;
 
     // When
-    pointService.creditPointForReviewPick(picker.getMemberId(), receiver.getMemberId());
+    pointService.creditPointForReviewPicker(picker.getMemberId());
 
     // Then
     long pickerPoint =
         memberEntityJpaRepository.findById(picker.getMemberId()).orElseThrow().getPoints();
-    long receiverPoint =
-        memberEntityJpaRepository.findById(receiver.getMemberId()).orElseThrow().getPoints();
     long pickerCreditCount =
         dailyPointLimitRepository.findById(picker.getMemberId()).orElseThrow().getCreditCount();
 
     assertThat(pickerPoint).isEqualTo(expectedPickerPoint);
-    assertThat(receiverPoint).isEqualTo(expectedReceiverPoint);
     assertThat(pickerCreditCount).isEqualTo(expectedPickerCreditCount);
   }
 
@@ -145,34 +135,82 @@ class PointServiceImplTest extends CorePointIntegrationTest {
   void creditPointForReviewPick_OverLimit_DoNotCreditPoint_Test() {
     // Given
     MemberEntity picker = memberEntityJpaRepository.save(MemberEntityFixture.create());
-    MemberEntity receiver = memberEntityJpaRepository.save(MemberEntityFixture.create());
 
     long expectedPickerPoint = picker.getPoints();
-    long expectedReceiverPoint = receiver.getPoints();
     long expectedPickerCreditCount = 5;
 
     IntStream.range(0, 5)
         .forEach(i -> dailyPointLimitRepository.increaseCreditCount(picker.getMemberId()));
 
     // When
-    pointService.creditPointForReviewPick(picker.getMemberId(), receiver.getMemberId());
+    pointService.creditPointForReviewPicker(picker.getMemberId());
 
     // Then
     long pickerPoint =
         memberEntityJpaRepository.findById(picker.getMemberId()).orElseThrow().getPoints();
-    long receiverPoint =
-        memberEntityJpaRepository.findById(receiver.getMemberId()).orElseThrow().getPoints();
     long pickerCreditCount =
         dailyPointLimitRepository.findById(picker.getMemberId()).orElseThrow().getCreditCount();
 
     assertThat(pickerPoint).isEqualTo(expectedPickerPoint);
-    assertThat(receiverPoint).isEqualTo(expectedReceiverPoint);
     assertThat(pickerCreditCount).isEqualTo(expectedPickerCreditCount);
   }
 
   @Test
+  @DisplayName("서평픽 등록 시 리시버에게 5포인트 지급한다")
+  void creditPointForReviewReceiver_CreditPoint_Test() {
+    // Given
+    MemberEntity receiver = memberEntityJpaRepository.save(MemberEntityFixture.create());
+
+    long expectedReceiverPoint = receiver.getPoints() + Activity.REVIEW_PICK_RECEIVER.getPoints();
+
+    // When
+    pointService.creditPointForReviewReceiver(receiver.getMemberId());
+
+    // Then
+    long receiverPoint =
+        memberEntityJpaRepository.findById(receiver.getMemberId()).orElseThrow().getPoints();
+
+    assertThat(receiverPoint).isEqualTo(expectedReceiverPoint);
+  }
+
+  //  @Test
+  //  @DisplayName("여러 픽커가 한 명의 리시버의 서평을 픽했을때 리시버에게 각 픽당 5포인트가 모두 지급된다.")
+  //  void creditPointForReviewReceiver_MultiReviewPick_CreditAllPointsTest()
+  //      throws InterruptedException {
+  //    // Given
+  //    int threadCount = 5;
+  //    long memberId = memberEntityJpaRepository.save(MemberEntityFixture.create()).getMemberId();
+  //    ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
+  //    CountDownLatch latch = new CountDownLatch(1);
+  //
+  //    // When
+  //    Runnable task = () -> {
+  //      try {
+  //        latch.await();
+  //        pointService.creditPointForReviewReceiver(memberId);
+  //      } catch (Exception e) {
+  //        log.warn("Error occurred while executing task", e);
+  //      }
+  //    };
+  //
+  //    for (int i = 0; i < threadCount; i++) {
+  //      executorService.submit(task);
+  //    }
+  //
+  //    latch.countDown();
+  //    executorService.shutdown();
+  //    executorService.awaitTermination(10, TimeUnit.SECONDS);
+  //
+  //    // Then
+  //    MemberEntity memberEntity =
+  // memberEntityJpaRepository.findByMemberId(memberId).orElseThrow();
+  //
+  //    assertThat(memberEntity.getPoints()).isEqualTo(5 * threadCount);
+  //  }
+
+  @Test
   @DisplayName("서평픽 취소 시 픽커에게 1포인트 차감하고, 일일 서평픽 포인트 지급수를 1 감소시킨다.")
-  void debitPointForReviewPick_Test() {
+  void debitPointForReviewPicker_Test() {
     // Given
     MemberEntity picker = memberEntityJpaRepository.save(MemberEntityFixture.create());
 
@@ -182,7 +220,7 @@ class PointServiceImplTest extends CorePointIntegrationTest {
     dailyPointLimitRepository.save(new DailyPointLimit(picker.getMemberId(), expectedCount + 1));
 
     // When
-    pointService.debitPointForReviewPick(picker.getMemberId());
+    pointService.debitPointForReviewPicker(picker.getMemberId());
 
     // Then
     long resultPoint =
@@ -196,7 +234,7 @@ class PointServiceImplTest extends CorePointIntegrationTest {
 
   @Test
   @DisplayName("오늘 서평픽한 적이 없다면 포인트와 잔여횟수가 차감되지 않는다.")
-  void debitPointForReviewPick_IfZeroCreditCount_Test() {
+  void debitPointForReviewPicker_IfZeroCreditCount_Test() {
     // Given
     MemberEntity picker = memberEntityJpaRepository.save(MemberEntityFixture.create());
 
@@ -206,7 +244,7 @@ class PointServiceImplTest extends CorePointIntegrationTest {
     long expectedCount = 0;
 
     // When
-    pointService.debitPointForReviewPick(picker.getMemberId());
+    pointService.debitPointForReviewPicker(picker.getMemberId());
 
     // Then
     long resultPoint =
@@ -222,10 +260,11 @@ class PointServiceImplTest extends CorePointIntegrationTest {
   @DisplayName("누적 출석일이 없는 경우 기본 1포인트만 지급한다.")
   void creditPointForAttendance_Daily1Point_Test() {
     // Given
-    long expectedPoint = memberEntity.getPoints() + ATTENDANCE_DAILY.getPoints();
+    Activity activity = ATTENDANCE_DAILY;
+    long expectedPoint = memberEntity.getPoints() + activity.getPoints();
 
     // When
-    pointService.creditPointForAttendance(memberEntity.getMemberId(), 1);
+    pointService.creditPointForAttendance(memberEntity.getMemberId(), activity);
 
     // Then
     long result =
@@ -235,69 +274,15 @@ class PointServiceImplTest extends CorePointIntegrationTest {
   }
 
   @Test
-  @DisplayName("3일째 출석 시 3포인트를 지급한다.")
-  void creditPointForAttendance_3Days_Test() {
+  @DisplayName("(n > 1)일째 출석 시 (1 + n) 포인트를 지급한다.")
+  void creditPointForAttendance_nDays_CreditN1PointsTest() {
     // Given
+    Activity activity = ATTENDANCE_10_DAYS;
     long expectedPoint =
-        memberEntity.getPoints() + ATTENDANCE_DAILY.getPoints() + ATTENDANCE_3_DAYS.getPoints();
+        memberEntity.getPoints() + ATTENDANCE_DAILY.getPoints() + activity.getPoints();
 
     // When
-    pointService.creditPointForAttendance(
-        memberEntity.getMemberId(), (int) ATTENDANCE_3_DAYS.getPoints());
-
-    // Then
-    long result =
-        memberEntityJpaRepository.findById(memberEntity.getMemberId()).orElseThrow().getPoints();
-
-    assertThat(result).isEqualTo(expectedPoint);
-  }
-
-  @Test
-  @DisplayName("5일째 출석 시 5포인트를 지급한다.")
-  void creditPointForAttendance_5Days_Test() {
-    // Given
-    long expectedPoint =
-        memberEntity.getPoints() + ATTENDANCE_DAILY.getPoints() + ATTENDANCE_5_DAYS.getPoints();
-
-    // When
-    pointService.creditPointForAttendance(
-        memberEntity.getMemberId(), (int) ATTENDANCE_5_DAYS.getPoints());
-
-    // Then
-    long result =
-        memberEntityJpaRepository.findById(memberEntity.getMemberId()).orElseThrow().getPoints();
-
-    assertThat(result).isEqualTo(expectedPoint);
-  }
-
-  @Test
-  @DisplayName("10일째 출석 시 10포인트를 지급한다.")
-  void creditPointForAttendance_10Days_Test() {
-    // Given
-    long expectedPoint =
-        memberEntity.getPoints() + ATTENDANCE_DAILY.getPoints() + ACTIVITY_10_DAYS.getPoints();
-
-    // When
-    pointService.creditPointForAttendance(
-        memberEntity.getMemberId(), (int) ACTIVITY_10_DAYS.getPoints());
-
-    // Then
-    long result =
-        memberEntityJpaRepository.findById(memberEntity.getMemberId()).orElseThrow().getPoints();
-
-    assertThat(result).isEqualTo(expectedPoint);
-  }
-
-  @Test
-  @DisplayName("30일째 출석 시 30포인트를 지급한다.")
-  void creditPointForAttendance_30Days_Test() {
-    // Given
-    long expectedPoint =
-        memberEntity.getPoints() + ATTENDANCE_DAILY.getPoints() + ACTIVITY_30_DAYS.getPoints();
-
-    // When
-    pointService.creditPointForAttendance(
-        memberEntity.getMemberId(), (int) ACTIVITY_30_DAYS.getPoints());
+    pointService.creditPointForAttendance(memberEntity.getMemberId(), activity);
 
     // Then
     long result =

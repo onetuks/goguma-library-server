@@ -1,6 +1,7 @@
 package com.onetuks.dbstorage.review.repository;
 
 import com.onetuks.dbstorage.book.converter.BookConverter;
+import com.onetuks.dbstorage.common.DeletionRepository;
 import com.onetuks.dbstorage.member.converter.MemberConverter;
 import com.onetuks.dbstorage.review.converter.ReviewConverter;
 import com.onetuks.librarydomain.book.model.Book;
@@ -20,6 +21,7 @@ public class ReviewEntityRepository implements ReviewRepository {
 
   private final ReviewEntityJpaRepository repository;
   private final ReviewEntityJpaQueryDslRepository qDslRepository;
+  private final DeletionRepository deletionRepository;
   private final ReviewConverter converter;
   private final BookConverter bookConverter;
   private final MemberConverter memberConverter;
@@ -27,11 +29,13 @@ public class ReviewEntityRepository implements ReviewRepository {
   public ReviewEntityRepository(
       ReviewEntityJpaRepository repository,
       ReviewEntityJpaQueryDslRepository qDslRepository,
+      DeletionRepository deletionRepository,
       ReviewConverter converter,
       BookConverter bookConverter,
       MemberConverter memberConverter) {
     this.repository = repository;
     this.qDslRepository = qDslRepository;
+    this.deletionRepository = deletionRepository;
     this.converter = converter;
     this.bookConverter = bookConverter;
     this.memberConverter = memberConverter;
@@ -108,6 +112,6 @@ public class ReviewEntityRepository implements ReviewRepository {
 
   @Override
   public void delete(long reviewId) {
-    repository.deleteById(reviewId);
+    deletionRepository.deleteReview(reviewId);
   }
 }

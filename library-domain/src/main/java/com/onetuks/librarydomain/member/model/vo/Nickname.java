@@ -3,10 +3,11 @@ package com.onetuks.librarydomain.member.model.vo;
 import com.onetuks.libraryobject.annotation.Generated;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public record Nickname(String value) {
 
-  private static final String DEFAULT_NICKNAME = "고구마 침팬치";
+  private static final String DEFAULT_NICKNAME = "고구마침팬치";
   private static final List<String> FORBIDDEN_TOKENS =
       List.of("admin", "administrator", "root", "관리자", "운영자", "시스템");
   private static final List<String> SPECIAL_CHARACTERS =
@@ -14,7 +15,7 @@ public record Nickname(String value) {
 
   public Nickname {
     if (value == null) {
-      value = DEFAULT_NICKNAME;
+      value = DEFAULT_NICKNAME + UUID.randomUUID().toString().substring(0, 3).replace("-", "");
     }
     validateNicknameValueForbiddenToken(value);
     validateNicknameValueSpecialCharacter(value);

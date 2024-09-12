@@ -2,7 +2,7 @@ package com.onetuks.librarydomain.review.service;
 
 import com.onetuks.librarydomain.book.model.Book;
 import com.onetuks.librarydomain.book.repository.BookRepository;
-import com.onetuks.librarydomain.global.point.service.PointService;
+import com.onetuks.librarydomain.global.point.producer.PointEventProducer;
 import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.librarydomain.member.repository.MemberRepository;
 import com.onetuks.librarydomain.review.model.Review;
@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,21 +34,22 @@ public class ReviewService {
   private final BookRepository bookRepository;
   private final WeeklyFeaturedBookRepository weeklyFeaturedBookRepository;
 
-  private final PointService pointService;
+  private final PointEventProducer pointEventProducer;
 
   public ReviewService(
       ReviewRepository reviewRepository,
       MemberRepository memberRepository,
       BookRepository bookRepository,
       WeeklyFeaturedBookRepository weeklyFeaturedBookRepository,
-      PointService pointService) {
+      PointEventProducer pointEventProducer) {
     this.reviewRepository = reviewRepository;
     this.memberRepository = memberRepository;
     this.bookRepository = bookRepository;
     this.weeklyFeaturedBookRepository = weeklyFeaturedBookRepository;
-    this.pointService = pointService;
+    this.pointEventProducer = pointEventProducer;
   }
 
+  @CacheEvict(value = CacheName.REVIEW_FEED, allEntries = true)
   @Transactional
   public Review register(long loginId, long bookId, ReviewParam param) {
     Member member = memberRepository.read(loginId);
@@ -63,12 +65,13 @@ public class ReviewService {
         weeklyFeaturedBookRepository.readAllForThisWeek().getContent().stream()
             .map(WeeklyFeaturedBook::book)
             .anyMatch(featuredBook -> Objects.equals(featuredBook.bookId(), book.bookId()));
-    pointService.creditPointForReviewRegistration(member.memberId(), isFeaturedBook);
+    pointEventProducer.creditPointForReviewRegistration(member.memberId(), isFeaturedBook);
 
     return reviewRepository.create(
         new Review(updateMember, book, param.reviewTitle(), param.reviewContent()));
   }
 
+  @CacheEvict(value = CacheName.REVIEW_FEED, allEntries = true)
   @Transactional
   public Review edit(long loginId, long reviewId, ReviewParam param) {
     Review review = reviewRepository.read(reviewId);
@@ -87,6 +90,7 @@ public class ReviewService {
             LocalDateTime.now()));
   }
 
+  @CacheEvict(value = CacheName.REVIEW_FEED, allEntries = true)
   @Transactional
   public void remove(long loginId, long reviewId) {
     Review review = reviewRepository.read(reviewId);
@@ -95,7 +99,7 @@ public class ReviewService {
 
     memberRepository.update(
         review.member().decreaseReviewCategoryStatics(review.book().categories()));
-    pointService.debitPointForReviewRemoval(loginId);
+    pointEventProducer.debitPointForReviewRemoval(loginId);
 
     reviewRepository.delete(reviewId);
   }
@@ -127,13 +131,12 @@ public class ReviewService {
   @Transactional(readOnly = true)
   public Page<Review> searchAllWithInterestedCategories(long memberId, Pageable pageable) {
     Set<Category> interestedCategories = memberRepository.read(memberId).interestedCategories();
-    List<Book> thisWeekInterestedCategoriesBooks =
-        weeklyFeaturedBookRepository.readAllForThisWeek().getContent().stream()
-            .map(WeeklyFeaturedBook::book)
+    List<Book> interestedCategoryBooks =
+        bookRepository.readAll(null, pageable).getContent().stream()
             .filter(book -> book.categories().stream().anyMatch(interestedCategories::contains))
             .toList();
 
-    return reviewRepository.readAll(thisWeekInterestedCategoriesBooks, pageable);
+    return reviewRepository.readAll(interestedCategoryBooks, pageable);
   }
 
   private void checkAuthentication(long loginId, Review review) {

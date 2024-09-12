@@ -3,7 +3,6 @@ package com.onetuks.librarypoint.repository.entity;
 import com.onetuks.dbstorage.common.BaseCreatedEntity;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
 import com.onetuks.libraryobject.annotation.Generated;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -29,9 +28,7 @@ public class PointHistoryEntity extends BaseCreatedEntity {
   @Column(name = "point_history_id", nullable = false)
   private Long pointHistoryId;
 
-  @ManyToOne(
-      fetch = FetchType.LAZY,
-      cascade = {CascadeType.REMOVE})
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id", nullable = false)
   private MemberEntity memberEntity;
 
