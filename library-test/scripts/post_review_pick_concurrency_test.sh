@@ -1,1 +1,1 @@
-k6 run -u 10 PostReviewPickConcurrencyTest.js
+k6 run PostReviewPickConcurrencyTest.js

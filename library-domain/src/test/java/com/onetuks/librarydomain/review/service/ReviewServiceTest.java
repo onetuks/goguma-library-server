@@ -273,9 +273,8 @@ class ReviewServiceTest extends DomainIntegrationTest {
     // Given
     Pageable pageable = PageRequest.of(0, 3);
     Member member = MemberFixture.create(126L, RoleType.USER);
-    List<Book> books = IntStream.range(0, 10)
-        .mapToObj(i -> BookFixture.create((long) i, member))
-        .toList();
+    List<Book> books =
+        IntStream.range(0, 10).mapToObj(i -> BookFixture.create((long) i, member)).toList();
     PageImpl<Review> reviews =
         new PageImpl<>(
             books.stream()

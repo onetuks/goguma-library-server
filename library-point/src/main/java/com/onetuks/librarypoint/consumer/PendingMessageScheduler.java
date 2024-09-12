@@ -3,12 +3,10 @@ package com.onetuks.librarypoint.consumer;
 import static com.onetuks.librarystream.util.MessageStreamer.ERROR_COUNT_KEY;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.onetuks.librarystream.producer.event.MessageEvent;
 import com.onetuks.librarystream.producer.event.PointEvent;
 import com.onetuks.librarystream.util.MessageStreamer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.data.redis.connection.stream.MapRecord;
 import org.springframework.data.redis.connection.stream.ObjectRecord;
 import org.springframework.data.redis.connection.stream.PendingMessage;
 import org.springframework.data.redis.connection.stream.PendingMessages;
@@ -61,8 +59,8 @@ public class PendingMessageScheduler implements InitializingBean {
 
         streamer.claimStream(pendingMessage, consumerName);
 
-        int errorCount = (int) streamer
-            .getRedisValue(ERROR_COUNT_KEY, pendingMessage.getIdAsString());
+        int errorCount =
+            (int) streamer.getRedisValue(ERROR_COUNT_KEY, pendingMessage.getIdAsString());
         if (errorCount >= 5) {
           log.warn("재처리 시도 제한 초과");
         } else if (pendingMessage.getTotalDeliveryCount() >= 2) {

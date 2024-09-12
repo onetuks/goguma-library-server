@@ -38,18 +38,6 @@ public class PointRepository {
   }
 
   @Transactional
-  public void creditPointsWithLock(long memberId, Activity activity) {
-    MemberEntity memberEntity =
-        memberEntityJpaRepository
-            .findByMemberId(memberId)
-            .orElseThrow(() -> new NoSuchEntityException("존재하지 않는 멤버입니다."));
-    memberEntity.addPoints(activity.getPoints());
-    pointHistoryEntityJpaRepository.save(
-        new PointHistoryEntity(
-            null, memberEntity, activity.getDescription(), activity.getPoints()));
-  }
-
-  @Transactional
   public void debitPoints(long memberId, Activity activity) {
     MemberEntity memberEntity = getMember(memberId);
     memberEntity.minusPoints(activity.getPoints());

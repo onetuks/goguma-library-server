@@ -55,7 +55,7 @@ public class PointService {
   }
 
   public void creditPointForReviewReceiver(long receiverMemberId) {
-    pointRepository.creditPointsWithLock(receiverMemberId, REVIEW_PICK_RECEIVER);
+    pointRepository.creditPoints(receiverMemberId, REVIEW_PICK_RECEIVER);
   }
 
   public void debitPointForReviewPicker(long pickerMemberId) {

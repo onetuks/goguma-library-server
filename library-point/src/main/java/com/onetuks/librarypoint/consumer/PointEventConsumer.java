@@ -78,8 +78,7 @@ public class PointEventConsumer extends StreamConsumer {
       case REVIEW_REGISTRATION_BASE -> pointService.creditPointForReviewRegistration(memberId);
       case REVIEW_PICK_PICKER -> pointService.creditPointForReviewPicker(memberId);
       case REVIEW_PICK_RECEIVER -> pointService.creditPointForReviewReceiver(memberId);
-      case MEMBER_POINT_HISTORIES -> {
-      }
+      case MEMBER_POINT_HISTORIES -> {}
       default -> pointService.creditPointForAttendance(memberId, activity);
     }
   }

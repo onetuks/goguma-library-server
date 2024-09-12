@@ -41,6 +41,7 @@ public class TestRestController {
    * @param roleType : 희망 권한
    * @return : 로그인 결과
    */
+  @OnlyForAdmin
   @PostMapping(path = "/api/test/login", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<LoginResponse> login(
       @RequestParam(name = "role-type", required = false, defaultValue = "USER")

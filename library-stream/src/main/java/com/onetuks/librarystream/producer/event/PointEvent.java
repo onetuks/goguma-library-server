@@ -29,18 +29,21 @@ public class PointEvent implements MessageEvent {
   public static PointEvent of(Map<String, String> value) {
     Map<String, String> regulatedValue = new ConcurrentHashMap<>();
 
-    value.keySet().forEach(key -> {
-      if (key.contains("creditType")) {
-        String[] creditTypeValue = value.get(key).split(" ");
-        regulatedValue.put("creditType", creditTypeValue[1]);
-      } else if (key.contains("activity")) {
-        String[] activityValue = value.get(key).split(" ");
-        regulatedValue.put("activity", activityValue[1]);
-      } else if (key.contains("memberId")) {
-        String[] memberIdValue = value.get(key).split(" ");
-        regulatedValue.put("memberId", memberIdValue[1]);
-      }
-    });
+    value
+        .keySet()
+        .forEach(
+            key -> {
+              if (key.contains("creditType")) {
+                String[] creditTypeValue = value.get(key).split(" ");
+                regulatedValue.put("creditType", creditTypeValue[1]);
+              } else if (key.contains("activity")) {
+                String[] activityValue = value.get(key).split(" ");
+                regulatedValue.put("activity", activityValue[1]);
+              } else if (key.contains("memberId")) {
+                String[] memberIdValue = value.get(key).split(" ");
+                regulatedValue.put("memberId", memberIdValue[1]);
+              }
+            });
 
     return new PointEvent(
         regulatedValue.get("creditType"),
@@ -50,10 +53,15 @@ public class PointEvent implements MessageEvent {
 
   @Override
   public String toString() {
-    return "PointEvent{" +
-        "creditType='" + creditType + '\'' +
-        ", activity='" + activity + '\'' +
-        ", memberId=" + memberId +
-        '}';
+    return "PointEvent{"
+        + "creditType='"
+        + creditType
+        + '\''
+        + ", activity='"
+        + activity
+        + '\''
+        + ", memberId="
+        + memberId
+        + '}';
   }
 }
