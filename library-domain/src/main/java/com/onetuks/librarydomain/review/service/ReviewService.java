@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,6 +49,7 @@ public class ReviewService {
     this.pointEventProducer = pointEventProducer;
   }
 
+  @CacheEvict(value = CacheName.REVIEW_FEED, allEntries = true)
   @Transactional
   public Review register(long loginId, long bookId, ReviewParam param) {
     Member member = memberRepository.read(loginId);
@@ -69,6 +71,7 @@ public class ReviewService {
         new Review(updateMember, book, param.reviewTitle(), param.reviewContent()));
   }
 
+  @CacheEvict(value = CacheName.REVIEW_FEED, allEntries = true)
   @Transactional
   public Review edit(long loginId, long reviewId, ReviewParam param) {
     Review review = reviewRepository.read(reviewId);
@@ -87,6 +90,7 @@ public class ReviewService {
             LocalDateTime.now()));
   }
 
+  @CacheEvict(value = CacheName.REVIEW_FEED, allEntries = true)
   @Transactional
   public void remove(long loginId, long reviewId) {
     Review review = reviewRepository.read(reviewId);
@@ -127,14 +131,6 @@ public class ReviewService {
   @Transactional(readOnly = true)
   public Page<Review> searchAllWithInterestedCategories(long memberId, Pageable pageable) {
     Set<Category> interestedCategories = memberRepository.read(memberId).interestedCategories();
-
-    // Fix: 기존 (금주도서 서평에서 조회) -> 변경 (전체 서평에서 조회)
-    //    List<Book> thisWeekInterestedCategoriesBooks =
-    //        weeklyFeaturedBookRepository.readAllForThisWeek().getContent().stream()
-    //            .map(WeeklyFeaturedBook::book)
-    //            .filter(book ->
-    // book.categories().stream().anyMatch(interestedCategories::contains))
-    //            .toList();
     List<Book> interestedCategoryBooks =
         bookRepository.readAll(null, pageable).getContent().stream()
             .filter(book -> book.categories().stream().anyMatch(interestedCategories::contains))
