@@ -72,8 +72,10 @@ public class PendingMessageScheduler implements InitializingBean {
         streamer.deleteFromStream(streamKey, pendingMessage.getId());
       } catch (Exception e) {
         streamer.increaseRedisValue(ERROR_COUNT_KEY, pendingMessage.getIdAsString());
-        log.warn("Failed to process pending message: gr: {} / cs: {}",
-            pendingMessage.getGroupName(), pendingMessage.getConsumerName());
+        log.warn(
+            "Failed to process pending message: gr: {} / cs: {}",
+            pendingMessage.getGroupName(),
+            pendingMessage.getConsumerName());
       }
     }
   }

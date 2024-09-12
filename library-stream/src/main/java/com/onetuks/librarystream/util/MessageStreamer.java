@@ -167,7 +167,8 @@ public class MessageStreamer {
     return false;
   }
 
-  public StreamMessageListenerContainer<String, ObjectRecord<String, String>> createStreamMessageListenerContainer() {
+  public StreamMessageListenerContainer<String, ObjectRecord<String, String>>
+      createStreamMessageListenerContainer() {
     log.info("StreamMessageListenerContainer created");
     return StreamMessageListenerContainer.create(
         Objects.requireNonNull(this.redisTemplate.getConnectionFactory()),

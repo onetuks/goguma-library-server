@@ -50,8 +50,7 @@ public class AttendanceService {
           public void afterCommit() {
             pointEventProducer.creditPointForAttendance(loginId, attendedCount + 1);
           }
-        }
-    );
+        });
 
     return attendance;
   }
