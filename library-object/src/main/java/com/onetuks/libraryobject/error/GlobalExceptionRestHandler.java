@@ -18,11 +18,22 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @RequiredArgsConstructor
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionRestHandler {
+
+  @ExceptionHandler(MaxUploadSizeExceededException.class)
+  protected ResponseEntity<ErrorResponse> handleMaxUploadSizeExceededException(
+      MaxUploadSizeExceededException e) {
+    logging(e);
+
+    final ErrorResponse response = ErrorResponse.of(ErrorCode.FILE_SIZE_EXCEEDED, e.getMessage());
+
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+  }
 
   @ExceptionHandler(NoSuchEntityException.class)
   protected ResponseEntity<ErrorResponse> handleNoSuchEntityException(NoSuchEntityException e) {

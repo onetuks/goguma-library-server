@@ -44,7 +44,7 @@ public class PointEventConsumer extends StreamConsumer {
     try {
       PointEvent pointEvent = objectMapper.readValue(message.getValue(), PointEvent.class);
       forwardByCreditType(pointEvent);
-      streamer.ackStream(this.getStreamKey(), message);
+      streamer.ackStream(this.getStreamKey(), this.getConsumerGroupName(), message);
       streamer.deleteFromStream(this.getStreamKey(), message.getId());
     } catch (NullPointerException e) {
       log.warn("Invalid Point Event Message", e);

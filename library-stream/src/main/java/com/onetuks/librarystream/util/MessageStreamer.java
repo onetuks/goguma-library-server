@@ -63,8 +63,9 @@ public class MessageStreamer {
     }
   }
 
-  public void ackStream(String consumerGroupName, ObjectRecord<String, String> message) {
-    this.redisTemplate.opsForStream().acknowledge(consumerGroupName, message);
+  public void ackStream(
+      String streamKey, String consumerGroupName, ObjectRecord<String, String> message) {
+    this.redisTemplate.opsForStream().acknowledge(streamKey, consumerGroupName, message.getId());
     log.info("Message responses ack: group: {} / mss: {}", consumerGroupName, message);
   }
 
@@ -152,19 +153,6 @@ public class MessageStreamer {
             streamKey, Consumer.from(consumerGroupName, consumerName), Range.unbounded(), 100L);
   }
 
-  public void deleteFromPending(
-      String streamKey, String consumerGroupName, String consumerName, RecordId id) {
-    this.redisTemplate
-        .opsForStream()
-        .pending(streamKey, Consumer.from(consumerGroupName, consumerName), Range.unbounded(), 100L)
-        .forEach(
-            pendingMessage -> {
-              if (Objects.equals(pendingMessage.getId(), id)) {
-                this.redisTemplate.opsForStream().delete(streamKey, pendingMessage.getId());
-              }
-            });
-  }
-
   public boolean isStreamConsumerGroupExist(String streamKey, String consumerGroupName) {
     Iterator<StreamInfo.XInfoGroup> iterator =
         this.redisTemplate.opsForStream().groups(streamKey).stream().iterator();
@@ -179,7 +167,8 @@ public class MessageStreamer {
     return false;
   }
 
-  public StreamMessageListenerContainer createStreamMessageListenerContainer() {
+  public StreamMessageListenerContainer<String, ObjectRecord<String, String>>
+      createStreamMessageListenerContainer() {
     log.info("StreamMessageListenerContainer created");
     return StreamMessageListenerContainer.create(
         Objects.requireNonNull(this.redisTemplate.getConnectionFactory()),

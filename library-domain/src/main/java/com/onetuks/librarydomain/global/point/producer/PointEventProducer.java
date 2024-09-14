@@ -58,10 +58,11 @@ public class PointEventProducer {
   }
 
   public void creditPointForAttendance(long loginId, int attendedCount) {
-    streamer.addToStream(
-        StreamKey.POINT_EVENT.getKey(), new PointEvent("CREDIT", "ATTENDANCE_DAILY", loginId));
-
     switch (attendedCount) {
+      case 1 ->
+          streamer.addToStream(
+              StreamKey.POINT_EVENT.getKey(),
+              new PointEvent("CREDIT", "ATTENDANCE_DAILY", loginId));
       case 3 ->
           streamer.addToStream(
               StreamKey.POINT_EVENT.getKey(),

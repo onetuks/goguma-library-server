@@ -94,6 +94,10 @@ public class DomainArchitectureTest extends DomainIntegrationTest {
               .resideOutsideOfPackage("..event..")
               .and()
               .resideOutsideOfPackage("..listener..")
+              .and()
+              .areNotAnonymousClasses() // 익명 클래스
+              .and()
+              .areNotMemberClasses() // 내부 클래스
               .should()
               .haveSimpleNameEndingWith("Service")
               .andShould()
@@ -122,7 +126,7 @@ public class DomainArchitectureTest extends DomainIntegrationTest {
               .areDeclaredInClassesThat()
               .haveSimpleNameNotContaining("Point")
               .should()
-              .haveNameMatching("^(register|search|edit|remove).*");
+              .haveNameMatching("^(register|search|edit|remove|afterCommit).*");
 
       rule.check(javaClasses);
     }

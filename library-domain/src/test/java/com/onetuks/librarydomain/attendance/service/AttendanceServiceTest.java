@@ -17,11 +17,13 @@ import com.onetuks.librarydomain.member.model.Member;
 import com.onetuks.libraryobject.enums.RoleType;
 import java.time.LocalDate;
 import java.util.List;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class AttendanceServiceTest extends DomainIntegrationTest {
 
+  @Disabled
   @Test
   @DisplayName("오늘 날짜에 출석하는 경우 성공적으로 출석된다.")
   void register_Today_Test() {

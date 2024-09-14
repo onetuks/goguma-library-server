@@ -16,6 +16,7 @@ public enum ErrorCode {
   UTIL_NOT_CONSTRUCTOR("G008", "유틸클래스는 생성자를 호출할 수 없습니다."),
   FILE_NOT_FOUND("G009", "해당 파일을 찾을 수 없습니다."),
   DUPLICATED_COLUMN_VALUE("G010", "이미 존재하는 값으로 설정할 수 없습니다."),
+  FILE_SIZE_EXCEEDED("G011", "업로드 가능한 파일 크기를 초과했습니다."),
 
   ILLEGAL_ARGUMENT_ERROR("E001", "잘못된 입력입니다."),
   ILLEGAL_STATE_ERROR("E002", "잘못된 상태입니다"),
@@ -31,8 +32,7 @@ public enum ErrorCode {
   IS_LOGOUT_TOKEN("L005", "이미 로그아웃한 토큰입니다."),
   EMPTY_HEADER_AUTHORIZATION("L006", "헤더에 Authorization 이 존재하지 않습니다."),
   AUTHORITY_ACCESS_DENIED("L007", "API 접근 권한이 없습니다."),
-  AUTH_WITH_OAUTH2_CLIENT("L008", "OAuth2 인증 토큰 혹은 코드로 로그인 중입니다."),
-  ;
+  AUTH_WITH_OAUTH2_CLIENT("L008", "OAuth2 인증 토큰 혹은 코드로 로그인 중입니다.");
 
   private final String code;
   private final String message;
