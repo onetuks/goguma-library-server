@@ -59,9 +59,11 @@ public class PendingMessageScheduler implements InitializingBean {
         int errorCount =
             (int) streamer.getRedisValue(ERROR_COUNT_KEY, pendingMessage.getIdAsString());
         if (errorCount >= 5) {
-          log.warn("재처리 시도 제한 초과");
+          log.warn("재처리 시도 제한 초과 - message: {}", messageToProcess.getValue());
+          streamer.deleteFromStream(streamKey, pendingMessage.getId());
         } else if (pendingMessage.getTotalDeliveryCount() >= 2) {
-          log.warn("delivery 제한 횟수 초과");
+          log.warn("delivery 제한 횟수 초과 - message: {}", messageToProcess.getValue());
+          streamer.deleteFromStream(streamKey, pendingMessage.getId());
         } else {
           PointEvent pointEvent =
               objectMapper.readValue(messageToProcess.getValue(), PointEvent.class);
@@ -73,9 +75,8 @@ public class PendingMessageScheduler implements InitializingBean {
       } catch (Exception e) {
         streamer.increaseRedisValue(ERROR_COUNT_KEY, pendingMessage.getIdAsString());
         log.warn(
-            "Failed to process pending message: gr: {} / cs: {}",
-            pendingMessage.getGroupName(),
-            pendingMessage.getConsumerName());
+            "Failed to process pending message. Remained PendingMessages Size: {}",
+            pendingMessages.size());
       }
     }
   }
