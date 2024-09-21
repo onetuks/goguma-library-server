@@ -79,6 +79,7 @@ dependencies {
     implementation(project(':library-storage:db-storage'))
     implementation(project(':library-storage:file-storage'))
 
+    implementation(project(':library-injector'))
     implementation(project(':library-test'))
     implementation('org.springframework.boot:spring-boot-starter-actuator')
 //    implementation(project(':library-monitoring'))

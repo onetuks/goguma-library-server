@@ -1,7 +1,7 @@
 package com.onetuks.libraryobject.enums;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public enum Category {
@@ -18,45 +18,45 @@ public enum Category {
   ART_BOOK, // 미술
   NON_LITERATURE; // 비문학
 
-  private static final Map<String, List<Category>> KDC_TO_CATEGORY_MAP = new ConcurrentHashMap<>();
+  private static final Map<String, Set<Category>> KDC_TO_CATEGORY_MAP = new ConcurrentHashMap<>();
 
   static {
-    KDC_TO_CATEGORY_MAP.put("0xx", List.of(NON_LITERATURE));
-    KDC_TO_CATEGORY_MAP.put("1xx", List.of(NON_LITERATURE));
-    KDC_TO_CATEGORY_MAP.put("2xx", List.of(NON_LITERATURE));
-    KDC_TO_CATEGORY_MAP.put("3xx", List.of(NON_LITERATURE));
-    KDC_TO_CATEGORY_MAP.put("4xx", List.of(NON_LITERATURE));
-    KDC_TO_CATEGORY_MAP.put("5xx", List.of(NON_LITERATURE));
-    KDC_TO_CATEGORY_MAP.put("7xx", List.of(NON_LITERATURE));
-    KDC_TO_CATEGORY_MAP.put("9xx", List.of(NON_LITERATURE));
-    KDC_TO_CATEGORY_MAP.put("657", List.of(CARTOON));
-    KDC_TO_CATEGORY_MAP.put("65x", List.of(ART_BOOK));
-    KDC_TO_CATEGORY_MAP.put("66x", List.of(PHOTO));
-    KDC_TO_CATEGORY_MAP.put("6xx", List.of(ESSAY));
-    KDC_TO_CATEGORY_MAP.put("804", List.of(ESSAY));
-    KDC_TO_CATEGORY_MAP.put("805", List.of(MAGAZINE));
-    KDC_TO_CATEGORY_MAP.put("8x1", List.of(POETRY));
-    KDC_TO_CATEGORY_MAP.put("8x2", List.of(NOVEL));
-    KDC_TO_CATEGORY_MAP.put("8x3", List.of(NOVEL));
-    KDC_TO_CATEGORY_MAP.put("8x4", List.of(ESSAY));
-    KDC_TO_CATEGORY_MAP.put("8x5", List.of(ESSAY));
-    KDC_TO_CATEGORY_MAP.put("8x6", List.of(TRAVEL, ESSAY));
-    KDC_TO_CATEGORY_MAP.put("8x7", List.of(ESSAY));
-    KDC_TO_CATEGORY_MAP.put("8x8", List.of(PHOTO, ESSAY));
+    KDC_TO_CATEGORY_MAP.put("0xx", Set.of(NON_LITERATURE));
+    KDC_TO_CATEGORY_MAP.put("1xx", Set.of(NON_LITERATURE));
+    KDC_TO_CATEGORY_MAP.put("2xx", Set.of(NON_LITERATURE));
+    KDC_TO_CATEGORY_MAP.put("3xx", Set.of(NON_LITERATURE));
+    KDC_TO_CATEGORY_MAP.put("4xx", Set.of(NON_LITERATURE));
+    KDC_TO_CATEGORY_MAP.put("5xx", Set.of(NON_LITERATURE));
+    KDC_TO_CATEGORY_MAP.put("7xx", Set.of(NON_LITERATURE));
+    KDC_TO_CATEGORY_MAP.put("9xx", Set.of(NON_LITERATURE));
+    KDC_TO_CATEGORY_MAP.put("657", Set.of(CARTOON));
+    KDC_TO_CATEGORY_MAP.put("65x", Set.of(ART_BOOK));
+    KDC_TO_CATEGORY_MAP.put("66x", Set.of(PHOTO));
+    KDC_TO_CATEGORY_MAP.put("6xx", Set.of(ESSAY));
+    KDC_TO_CATEGORY_MAP.put("804", Set.of(ESSAY));
+    KDC_TO_CATEGORY_MAP.put("805", Set.of(MAGAZINE));
+    KDC_TO_CATEGORY_MAP.put("8x1", Set.of(POETRY));
+    KDC_TO_CATEGORY_MAP.put("8x2", Set.of(NOVEL));
+    KDC_TO_CATEGORY_MAP.put("8x3", Set.of(NOVEL));
+    KDC_TO_CATEGORY_MAP.put("8x4", Set.of(ESSAY));
+    KDC_TO_CATEGORY_MAP.put("8x5", Set.of(ESSAY));
+    KDC_TO_CATEGORY_MAP.put("8x6", Set.of(TRAVEL, ESSAY));
+    KDC_TO_CATEGORY_MAP.put("8x7", Set.of(ESSAY));
+    KDC_TO_CATEGORY_MAP.put("8x8", Set.of(PHOTO, ESSAY));
   }
 
-  public static List<Category> parseRemainCode(String kdc) {
+  public static Set<Category> parseToCategory(String kdc) {
     if (kdc == null || kdc.isEmpty()) {
-      return List.of(ETC);
+      return Set.of(ETC);
     }
 
     String regulatedKdc = kdc + "x".repeat(3 - kdc.length());
     return regulatedKdc.length() < 3
-        ? List.of(ETC)
-        : KDC_TO_CATEGORY_MAP.getOrDefault(getSimilarKey(regulatedKdc), List.of(NON_LITERATURE));
+        ? Set.of(ETC)
+        : KDC_TO_CATEGORY_MAP.getOrDefault(getSimilarCode(regulatedKdc), Set.of(NON_LITERATURE));
   }
 
-  private static String getSimilarKey(String kdc) {
+  private static String getSimilarCode(String kdc) {
     String similarKey = null;
     int maxScore = 0;
 
