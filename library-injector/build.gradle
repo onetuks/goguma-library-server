@@ -1,0 +1,9 @@
+dependencies {
+    // Modules
+    implementation(project(':library-auth'))
+    implementation(project(':library-domain'))
+    implementation(project(':library-object'))
+
+    // OpenCSV
+    implementation('com.opencsv:opencsv:5.9')
+}
